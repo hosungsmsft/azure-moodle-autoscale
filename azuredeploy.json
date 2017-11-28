@@ -258,7 +258,7 @@
             "adminUsername": "[parameters('adminUsername')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
-            "baseTemplateUrl": "../nested/",
+            "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/tree/master/nested/",
             "computeApi": "2016-04-30-preview",
             "dbAvailabilitySetName": "[concat('db-',variables('rpfx'),'-as')]",
             "dbBeName": "[concat('db-',variables('rpfx'),'-BE')]",
