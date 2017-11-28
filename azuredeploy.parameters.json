@@ -3,22 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "adminPassword": {
-            "value": "Sw!mmingP00l"
+            "value": "me0wme0wM30WM30W"
         },
         "applyScriptsSwitch": {
-            "value": 1
+            "value": 0
         },
         "azureBackupSwitch": {
             "value": 0
         },
         "moodleVersion": {
-            "value": "MOODLE_32_STABLE"
+            "value": "MOODLE_34_STABLE"
         },
-        "mySqlRootPassword": {
-            "value": "Sw!mmingP00l"
+        "postgresqlRootPassword": {
+            "value": "me0wme0wM30WM30W"
         },
-        "mySqlUserPassword": {
-            "value": "Sw!mmingP00l"
+        "postgresqlUserPassword": {
+            "value": "me0wme0wM30WM30W"
         },
         "resourcesPrefix": {
             "value": "GEN-UNIQUE-4"

@@ -33,7 +33,7 @@
         }
     ],
     "variables": {
-        "cmdExec": "[concat('sh ',                                    parameters('moodleCommon').moodleInstallScriptFilename, ' ', parameters('moodleCommon').moodleVersion, ' ', concat(parameters('moodleCommon').gfsNameRoot, '0'), ' ', 'data', ' ', variables('dns'), ' ', parameters('moodleCommon').StaticIpMariaDb, ' ', 'moodle', ' ', 'moodledba', ' ', parameters('moodleCommon').mySqlUserPassword,' ', parameters('moodleCommon').adminPassword)]",
+        "cmdExec": "[concat('sh ', parameters('moodleCommon').moodleInstallScriptFilename, ' ', parameters('moodleCommon').moodleVersion, ' ', concat(parameters('moodleCommon').gfsNameRoot, '0'), ' ', 'data', ' ', variables('dns'), ' ', parameters('moodleCommon').StaticIppostgresql, ' ', 'moodle', ' ', 'moodledba', ' ', parameters('moodleCommon').postgresqlUserPassword,' ', parameters('moodleCommon').adminPassword)]",
         "dns": "[concat(parameters('moodleCommon').lbDnsName,'.',resourceGroup().location,'.cloudapp.azure.com')]",
         "documentation01": "This sub-template applies a specific post-deployment script to the controller vm",
         "documentation02": "It expects certain values in the 'common' datastructure.",
@@ -41,7 +41,7 @@
         "documentation04": "    moodleInstallScriptFilename - name of script file",
         "documentation05": "    lbDnsName                   - name of the dns entry for the vmscalse set",
         "documentation06": "    gfsNameRoot                 - nameroot of gluster farm - note that the code applies a 0 to get to the first node",
-        "documentation07": "    mySqlUserPassword           - database (mariadb) password",
+        "documentation07": "    postgresqlUserPassword           - database (postgresql) password",
         "documentation08": "    jboxVmName                  - name of the controller/jumpb ox VM",
         "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').moodleInstallScriptFilename)]"
     }

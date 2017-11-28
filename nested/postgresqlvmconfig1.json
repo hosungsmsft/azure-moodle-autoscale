@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "moodleCommon": {
+            "metadata": {
+                "description": "Common Moodle values"
+            },
+            "type": "object"
+        },
+        "vmName": {
+            "metadata": {
+                "description": "Name of VM to process script"
+            },
+            "type": "string"
+        },
+        "vmNameList": {
+            "metadata": {
+                "description": "list of all names in the Maria DB cluster"
+            },
+            "type": "string"
+        },
+        "vmNumber": {
+            "metadata": {
+                "description": "Number of the VM in the pool"
+            },
+            "type": "int"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "name": "[concat(parameters('vmName'),'/','install_mariadb')]",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.OSTCExtensions",
+                "settings": {
+                    "commandToExecute": "[variables('cmdExec')]",
+                    "fileUris": [
+                        "[variables('scriptUri')]"
+                    ]
+                },
+                "type": "CustomScriptForLinux",
+                "typeHandlerVersion": "1.4"
+            },
+            "tags": {
+                "displayName": "install_mariadb"
+            },
+            "type": "Microsoft.Compute/virtualMachines/extensions"
+        }
+    ],
+    "variables": {
+        "cmdExec": "[concat('bash ', parameters('moodleCommon').mariaDbScriptFilename,' ', parameters('vmNumber'), ' ', parameters('moodleCommon').mariadbVmCount, ' ', parameters('vmNameList'), ' ', parameters('moodleCommon').postgresqlUserPassword )]",
+        "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').mariaDbScriptFilename)]"
+    }
+}
