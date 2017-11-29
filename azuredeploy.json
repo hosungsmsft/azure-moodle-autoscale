@@ -49,18 +49,6 @@
             },
             "type": "string"
         },
-        "postgresqlTshirtSize": {
-            "allowedValues": [
-                "Small",
-                "Medium",
-                "Large"
-            ],
-            "defaultValue": "Small",
-            "metadata": {
-                "description": "VM size for the postgresql nodes"
-            },
-            "type": "string"
-        },
         "moodleVersion": {
             "allowedValues": [
 		"MOODLE_34_STABLE",
@@ -75,18 +63,6 @@
                 "description": "The Moodle version you want to install."
             },
             "type": "string"
-        },
-        "postgresqlRootPassword": {
-            "metadata": {
-                "description": "my sql root user password"
-            },
-            "type": "securestring"
-        },
-        "postgresqlUserPassword": {
-            "metadata": {
-                "description": "my sql regular user password"
-            },
-            "type": "securestring"
         },
         "resourcesPrefix": {
             "defaultValue": "changeme",
@@ -220,32 +196,19 @@
         "documentation04": "    redis             - creates a redis cache",
         "documentation05": "    vnet              - creates a virtual network with three subnets",
         "documentation06": "    gluster           - creates a gluster file system on a vm farm",
-        "documentation07": "    postgresqlb          - creates a postgresql (nosql)     on a vm farm",
         "documentation08": "    webvmss           - creates a vm scale set",
         "documentation09": "    controller        - creates a jumpbox and deploys code",
-        "documentation10": "Three sizing parameters are provided, one each for the gluster system, the postgresql system and one for the jumpbox",
-        "documentation11": "postgresql Sizing guidance:",
-        "documentation12": "Small - 0-2000 simultaneous users",
-        "documentation13": "Medium - 2001-5000 simultaneous users",
-        "documentation14": "Large - more than  5001 simultaneous users",
-        "documentation15": "GlusterFS Sizing guidance",
-        "documentation16": "Small - small number of courses, low interactiviness in the courses, low IOPSs required",
-        "documentation17": "Medium - interactive courses, with uploads; medium number of IOPS required",
-        "documentation18": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
+        "documentation10": "GlusterFS Sizing guidance",
+        "documentation11": "Small - small number of courses, low interactiviness in the courses, low IOPSs required",
+        "documentation12": "Medium - interactive courses, with uploads; medium number of IOPS required",
+        "documentation13": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
-            "StaticIppostgresql": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),2)),'.250') ]",
             "adminPassword": "[parameters('adminPassword')]",
             "adminUsername": "[parameters('adminUsername')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
             "computeApi": "2016-04-30-preview",
-            "dbAvailabilitySetName": "[concat('db-',variables('rpfx'),'-as')]",
-            "dbBeName": "[concat('db-',variables('rpfx'),'-BE')]",
-            "dbFeName": "[concat('db-',variables('rpfx'),'-FE')]",
-            "dbLoadBalancerName": "[concat('db-',variables('rpfx'),'-lb')]",
-            "dbNameRoot": "[concat('db',variables('rpfx'),'vm')]",
-            "dbProbe": "[concat('db-',variables('rpfx'),'-Probe')]",
             "extBeName": "[concat('lb-',variables('rpfx'),'-BE')]",
             "extFeName": "[concat('lb-',variables('rpfx'),'-FE')]",
             "extNatPool": "[concat('lb-',variables('rpfx'),'-NatPool')]",
@@ -262,14 +225,9 @@
             "lbDnsName": "[concat('lb-',variables('rpfx'))]",
             "lbName": "[concat('lb-',variables('rpfx'))]",
             "lbPipName": "[concat('lb-',variables('rpfx'),'-ip')]",
-            "postgresqlScriptFilename": "install_postgresql.sh",
-            "postgresqlTshirtSize": "[parameters('postgresqlTshirtSize')]",
-            "postgresqlVmCount": 2,
             "moodleInstallScriptFilename": "install_moodle.sh",
             "moodleSetupScriptFilename": "setup_moodle.sh",
             "moodleVersion": "[parameters('moodleVersion')]",
-            "postgresqlRootPassword": "[parameters('postgresqlRootPassword')]",
-            "postgresqlUserPassword": "[parameters('postgresqlUserPassword')]",
             "osType": {
                 "offer": "UbuntuServer",
                 "publisher": "Canonical",
