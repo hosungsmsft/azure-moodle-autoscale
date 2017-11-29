@@ -20,7 +20,7 @@
                 0,
                 1
             ],
-            "defaultValue": 1,
+            "defaultValue": 0,
             "metadata": {
                 "description": "Switch to process or bypass all scripts/extensions"
             },
@@ -168,26 +168,6 @@
                 },
                 "templateLink": {
                     "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'gluster.json')]"
-                }
-            },
-            "type": "Microsoft.Resources/deployments"
-        },
-        {
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/networkTemplate",
-                "Microsoft.Resources/deployments/recoveryTemplate"
-            ],
-            "name": "postgresqlTemplate",
-            "properties": {
-                "mode": "Incremental",
-                "parameters": {
-                    "moodleCommon": {
-                        "value": "[variables('moodleCommon')]"
-                    }
-                },
-                "templateLink": {
-                    "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'postgresql.json')]"
                 }
             },
             "type": "Microsoft.Resources/deployments"
