@@ -14,12 +14,6 @@
         "moodleVersion": {
             "value": "MOODLE_34_STABLE"
         },
-        "postgresqlRootPassword": {
-            "value": "me0wme0wM30WM30W"
-        },
-        "postgresqlUserPassword": {
-            "value": "me0wme0wM30WM30W"
-        },
         "resourcesPrefix": {
             "value": "GEN-UNIQUE-4"
         }
