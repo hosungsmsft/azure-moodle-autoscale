@@ -50,6 +50,27 @@
             },
             "type": "int"
         },
+        "firewallRuleName": {
+            "defaultValue": "all_private_ip_range",
+            "metadata": {
+                "description": "Postgres firewall rule name"
+            },
+            "type": "string"
+        },
+        "firewallStartIpAddress": {
+            "defaultValue": "172.31.0.0",
+            "metadata": {
+                "description": "Postgres firewall start ip address"
+            },
+            "type": "string"
+        },
+        "firewallEndIpAddress": {
+            "defaultValue": "172.31.255.255",
+            "metadata": {
+                "description": "Postgres firewall end ip address"
+            },
+            "type": "string"
+        },
         "glusterTshirtSize": {
             "allowedValues": [
                 "Small",
@@ -326,6 +347,9 @@
             "extFeName": "[concat('lb-',variables('rpfx'),'-frontend')]",
             "extNatPool": "[concat('lb-',variables('rpfx'),'-natpool')]",
             "extProbe": "[concat('lb-',variables('rpfx'),'-probe')]",
+            "firewallRuleName": "[parameters('firewallRuleName')]",
+            "firewallStartIpAddress": "[parameters('firewallStartIpAddress')]",
+            "firewallEndIpAddress": "[parameters('firewallEndIpAddress')]",
             "gfsNameRoot": "[concat('gluster-',variables('rpfx'),'-vm')]",
             "gfxAvailabilitySetName": "[concat('gluster-',variables('rpfx'),'-as')]",
             "glusterScriptFilename": "install_gluster.sh",
