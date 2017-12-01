@@ -26,7 +26,7 @@
     glusterNode=$2
     glusterVolume=$3 
     siteFQDN=$4
-    mariadbIP=$5
+    postgresIP=$5
     moodledbname=$6
     moodledbuser=$7
     moodledbpass=$8
@@ -36,7 +36,7 @@
 	echo $glusterNode    >> /tmp/vars.txt
 	echo $glusterVolume  >> /tmp/vars.txt
 	echo $siteFQDN       >> /tmp/vars.txt
-	echo $mariadbIP      >> /tmp/vars.txt
+	echo $postgresIP      >> /tmp/vars.txt
 	echo $moodledbname   >> /tmp/vars.txt
 	echo $moodledbuser   >> /tmp/vars.txt
 	echo $moodledbpass   >> /tmp/vars.txt
@@ -48,7 +48,7 @@
     #configure gluster repository & install gluster client
     sudo add-apt-repository ppa:gluster/glusterfs-3.8 -y                     >> /tmp/apt1.log
     sudo apt-get -y update                                                   >> /tmp/apt2.log
-    sudo apt-get -y --force-yes install glusterfs-client mysql-client git    >> /tmp/apt3.log
+    sudo apt-get -y --force-yes install glusterfs-client postgresql-client git    >> /tmp/apt3.log
 
 
 
@@ -65,26 +65,17 @@
     # create moodledata directory
     sudo mkdir -p /moodle/moodledata
 
-     # configuring PHP 5.6 repository (NEW LINES TO ADD BEFORE THE �Install Lamp Stack� BELLOW) 
-    sudo add-apt-repository -y ppa:ondrej/php                                >> /tmp/apt4.log
-    sudo apt-get -y update                                                   >> /tmp/apt4.log
-
     # install pre-requisites
     sudo apt-get install -y --fix-missing python-software-properties unzip
 
-    # install the LAMP stack
-    sudo apt-get -y  --force-yes install apache2                             >> /tmp/apt5a.log
-    sudo apt-get -y  --force-yes install php5.6 php5.6-cli php5.6-curl php5.6-zip >> /tmp/apt5b.log
+    # install the entire stack
+    sudo apt-get -y  --force-yes install nginx php-fpm varnish pound >> /tmp/apt5a.log
+    sudo apt-get -y  --force-yes install php php-cli php-curl php-zip >> /tmp/apt5b.log
 
-    # install moodle requirements
-    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
-    sudo add-apt-repository 'deb http://mirror.edatel.net.co/mariadb/repo/10.1/ubuntu trusty main'
-
+    # Moodle requirements
     sudo apt-get -y update > /dev/null
-    sudo apt-get install -y --force-yes mariadb-client 
-    sudo apt-get install -y --force-yes graphviz aspell php5.6-common php5.6-soap php5.6-json php5.6-zip         > /tmp/apt6.log
-    sudo apt-get install -y --force-yes php5.6-bcmath php5.6-gd php5.6-mysql php5.6-xmlrpc php5.6-intl php5.6-xml php5.6-bz2 >> /tmp/apt6.log
-    sudo apt-get install -y --force-yes php5.6-redis php5.6-curl php5.6-mysql >> /tmp/apt6.log
+    sudo apt-get install -y --force-yes graphviz aspell php-common php-soap php-json php-redis > /tmp/apt6.log
+    sudo apt-get install -y --force-yes php-bcmath php-gd php-pgsql php-xmlrpc php-intl php-xml php-bz2 >> /tmp/apt6.log
 
     # install Moodle 
     echo '#!/bin/bash
@@ -112,45 +103,136 @@
     echo '0 0 * * * php /moodle/html/moodle/admin/cli/cron.php > /dev/null 2>&1' > cronjob
     sudo crontab cronjob
 
-    # update Apache configuration
-    sudo cp /etc/apache2/apache2.conf apache2.conf.bak
-    sudo sed -i 's/\/var\/www/\/\moodle/g' /etc/apache2/apache2.conf
-    sudo echo ServerName \"localhost\"  >> /etc/apache2/apache2.conf
 
-    #enable ssl 
-    a2enmod rewrite ssl
+    # Build nginx config
+    cat <<EOF >> /etc/nginx/nginx.conf
+user www-data;
+worker_processes 2;
+pid /run/nginx.pid;
+
+events {
+	worker_connections 768;
+}
+
+http {
+
+  sendfile on;
+  tcp_nopush on;
+  tcp_nodelay on;
+  keepalive_timeout 65;
+  types_hash_max_size 2048;
+  client_max_body_size 0;
+  proxy_max_temp_file_size 0;
+  limit_conn_zone $server_name zone=pervhost:5M;
+  limit_conn_zone $binary_remote_addr zone=perip:10m;
+  server_names_hash_bucket_size  128;
+  fastcgi_buffers 16 16k; 
+  fastcgi_buffer_size 32k;
+  proxy_buffering off;
+  include /etc/nginx/mime.types;
+  default_type application/octet-stream;
+
+  access_log /var/log/nginx/access.log;
+  error_log /var/log/nginx/error.log;
+
+  set_real_ip_from   127.0.0.1;
+  real_ip_header      X-Forwarded-For;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+  ssl_prefer_server_ciphers on;
+
+  gzip on;
+  gzip_disable "msie6";
+  gzip_vary on;
+  gzip_proxied any;
+  gzip_comp_level 6;
+  gzip_buffers 16 8k;
+  gzip_http_version 1.1;
+  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+  map $http_x_forwarded_proto $fastcgi_https {                                                                                          
+    default $https;                                                                                                                   
+    http '';                                                                                                                          
+    https on;                                                                                                                         
+  }   
+
+  log_format moodle_combined '$remote_addr - $upstream_http_x_moodleuser [$time_local] '
+                             '"$request" $status $body_bytes_sent '
+                             '"$http_referer" "$http_user_agent"';
+
+
+  include /etc/nginx/conf.d/*.conf;
+  include /etc/nginx/sites-enabled/*;
+}
+EOF
+
+    cat <<EOF >> /etc/nginx/sites-enabled/${siteFQDN}.conf
+server {
+        listen 81;
+        listen 443 ssl;
+        root /moodle/html/moodle;
+	index index.php index.html index.htm;
+
+        ssl on;
+        ssl_certificate /moodle/certs/nginx.crt
+        ssl_certificate_key /moodle/certs/nginx.key
+
+        # Log to syslog
+        error_log syslog:server=localhost,facility=local1,severity=error,tag=${siteFQDN};
+        access_log syslog:server=localhost,facility=local1,severity=notice,tag=${siteFQDN} moodle_combined;
+
+        # Log XFF IP instead of varnish
+        set_real_ip_from    10.0.0.0/8;
+        set_real_ip_from    127.0.0.1;
+        set_real_ip_from    172.16.0.0/12;
+        set_real_ip_from    192.168.0.0/16;
+        real_ip_header      X-Forwarded-For;
+        real_ip_recursive   on;
+
+
+        # Redirect to https
+        if ($http_x_forwarded_proto = http) {
+                return 301 https://$server_name$request_uri;
+        }
+        rewrite ^/(.*\.php)(/)(.*)$ /$1?file=/$3 last;
+
+
+        # Filter out php-fpm status page
+        location ~ ^/server-status {
+            return 404;
+        }
+
+	location / {
+		try_files $uri $uri/index.php?$query_string;
+	}
+ 
+        location ~ [^/]\.php(/|$) {
+          fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+          if (!-f $document_root$fastcgi_script_name) {
+                  return 404;
+          }
+ 
+          fastcgi_buffers 16 16k;
+          fastcgi_buffer_size 32k;
+          fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+          fastcgi_read_timeout 3600;
+          fastcgi_index index.php;
+          include fastcgi_params;
+        }
+}
+EOF
 
     echo -e "Generating SSL self-signed certificate"
-    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /moodle/certs/apache.key -out /moodle/certs/apache.crt -subj "/C=BR/ST=SP/L=SaoPaulo/O=IT/CN=$siteFQDN"
-
-    echo -e "\n\rUpdating PHP and site configuration\n\r" 
-    #update virtual site configuration 
-    echo -e '
-    <VirtualHost *:80>
-            #ServerName www.example.com
-            ServerAdmin webmaster@localhost
-            DocumentRoot /moodle/html/moodle
-            #LogLevel info ssl:warn
-            ErrorLog ${APACHE_LOG_DIR}/error.log
-            CustomLog ${APACHE_LOG_DIR}/access.log combined
-            #Include conf-available/serve-cgi-bin.conf
-    </VirtualHost>
-    <VirtualHost *:443>
-            DocumentRoot /moodle/html/moodle
-            ErrorLog ${APACHE_LOG_DIR}/error.log
-            CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-            SSLEngine on
-            SSLCertificateFile /moodle/certs/apache.crt
-            SSLCertificateKeyFile /moodle/certs/apache.key
-            BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
-            BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown        
-
-    </VirtualHost>' > /etc/apache2/sites-enabled/000-default.conf
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /moodle/certs/nginx.key -out /moodle/certs/nginx.crt -subj "/C=BR/ST=SP/L=SaoPaulo/O=IT/CN=$siteFQDN"
 
    # php config 
-   PhpIni=/etc/php5/apache2/php.ini
+   PhpIni=/etc/php/7.0/fpm/php.ini
    sed -i "s/memory_limit.*/memory_limit = 512M/" $PhpIni
+   sed -i "s/max_execution_time.*/max_execution_time = 18000/" $PhpIni
+   sed -i "s/max_input_vars.*/max_input_vars = 100000/" $PhpIni
+   sed -i "s/max_input_time.*/max_input_time = 600/" $PhpIni
+   sed -i "s/upload_max_filesize.*/upload_max_filesize = 1024M/" $PhpIni
+   sed -i "s/post_max_size.*/post_max_size = 1056M/" $PhpIni
    sed -i "s/;opcache.use_cwd.*/opcache.use_cwd = 1/" $PhpIni
    sed -i "s/;opcache.validate_timestamps.*/opcache.validate_timestamps = 1/" $PhpIni
    sed -i "s/;opcache.save_comments.*/opcache.save_comments = 1/" $PhpIni
@@ -167,13 +249,12 @@
     sudo chmod -R 770 /moodle/moodledata
 
 
-
-   # restart Apache
-    echo -e "\n\rRestarting Apache2 httpd server\n\r"
-    sudo service apache2 restart 
+   # restart Nginx
+    sudo service nginx restart 
     
-    echo -e "sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=pt_br --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$mariadbIP" --dbname="$moodledbname" --dbuser="$moodledbuser" --dbpass="$moodledbpass" --dbtype=mariadb --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
-	         sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$mariadbIP   --dbname=$moodledbname   --dbuser=$moodledbuser   --dbpass=$moodledbpass   --dbtype=mariadb --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
+    # Fire off moodle setup
+    echo -e "sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=pt_br --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$postgresIP" --dbname="$moodledbname" --dbuser="$moodledbuser" --dbpass="$moodledbpass" --dbtype=mariadb --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
+	         sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$moodledbuser   --dbpass=$moodledbpass   --dbtype=mariadb --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
 
     echo -e "\n\rDone! Installation completed!\n\r"
 }  > /tmp/install.log
