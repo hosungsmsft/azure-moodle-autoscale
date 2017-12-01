@@ -2,6 +2,19 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "administratorLogin": {
+            "defaultValue": "postgresadmin",
+            "metadata": {
+                "description": "postgresql admin username"
+            },
+            "type": "string"
+        },
+        "administratorLoginPassword": {
+            "metadata": {
+                "description": "postgresql admin password"
+            },
+            "type": "securestring"
+        },
         "adminPassword": {
             "metadata": {
                 "description": "ssh password"
@@ -49,6 +62,26 @@
             },
             "type": "string"
         },
+        "location": {
+            "allowedValues": [
+                "East Asia",
+                "East US 2",
+                "East US",
+                "Japan East",
+                "Japan West",
+                "North Central US",
+                "North Europe",
+                "South Central US",
+                "Southeast Asia",
+                "West Europe",
+                "West US"
+            ],
+            "defaultValue": "West US",
+            "metadata": {
+                "description": "Postgresql server location"
+            },
+            "type": "string"
+        },
         "moodleVersion": {
             "allowedValues": [
 		"MOODLE_34_STABLE",
@@ -58,16 +91,76 @@
                 "MOODLE_30_STABLE",
                 "MOODLE_29_STABLE"
             ],
-            "defaultValue": "MOODLE_32_STABLE",
+            "defaultValue": "MOODLE_34_STABLE",
             "metadata": {
                 "description": "The Moodle version you want to install."
             },
             "type": "string"
         },
         "resourcesPrefix": {
-            "defaultValue": "changeme",
+            "defaultValue": "idontknow",
             "metadata": {
                 "description": "Prefix of storage account name, network, virtual machines, and so on"
+            },
+            "type": "string"
+        },
+        "skuCapacityDTU": {
+            "allowedValues": [
+                50,
+                100
+            ],
+            "defaultValue": "50",
+            "metadata": {
+                "description": "Postgresql database trasaction units"
+            },
+            "type": "int"
+        },
+        "skuFamily": {
+            "allowedValues": [
+                "SkuFamily"
+            ],
+            "defaultValue": "SkuFamily",
+            "metadata": {
+                "description": "Postgresql sku family"
+            },
+            "type": "string"
+        },
+        "skuName": {
+            "allowedValues": [
+                "PGSQLB50",
+                "PGSQLB100"
+            ],
+            "defaultValue": "PGSQLB50",
+            "metadata": {
+                "description": "Postgresql sku name"
+            },
+            "type": "string"
+        },
+        "skuSizeMB": {
+            "defaultValue": "51200",
+            "metadata": {
+                "description": "Postgresql sku size in mb"
+            },
+            "type": "int"
+        },
+        "skuTier": {
+            "allowedValues": [
+                "Basic"
+            ],
+            "defaultValue": "Basic",
+            "metadata": {
+                "description": "Postgresql sku tier"
+            },
+            "type": "string"
+        },
+        "version": {
+            "allowedValues": [
+                "9.5",
+                "9.6"
+            ],
+            "defaultValue": "9.6",
+            "metadata": {
+                "description": "Postgresql version"
             },
             "type": "string"
         },
@@ -80,6 +173,22 @@
         }
     },
     "resources": [
+        {
+            "apiVersion": "2016-02-01-privatepreview",
+            "name": "postgresTemplate",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "moodleCommon": {
+                        "value": "[variables('moodleCommon')]"
+                    }
+                },
+                "templateLink": {
+                    "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'postgres.json')]"
+                }
+            },
+            "type": "Microsoft.Resources/deployments"
+        },
         {
             "apiVersion": "2015-01-01",
             "name": "recoveryTemplate",
@@ -172,7 +281,8 @@
             "apiVersion": "2015-01-01",
             "dependsOn": [
                 "Microsoft.Resources/deployments/controllerTemplate",
-                "Microsoft.Resources/deployments/redisTemplate"
+                "Microsoft.Resources/deployments/redisTemplate",
+                "Microsoft.Resources/deployments/postgresTemplate"
             ],
             "name": "ScaleSetTemplate",
             "properties": {
@@ -194,8 +304,9 @@
         "documentation02": "    recoveryservices0 - dummy template (see next statement)",
         "documentation03": "    recoveryservices1 - creates a recovery vault that will be subsequently used by the VM Backup - a paramter swtich controls whethe is is called or bypassed",
         "documentation04": "    redis             - creates a redis cache",
-        "documentation05": "    vnet              - creates a virtual network with three subnets",
-        "documentation06": "    gluster           - creates a gluster file system on a vm farm",
+        "documentation05": "    postgresql        - creates a postgresql server",
+        "documentation06": "    vnet              - creates a virtual network with three subnets",
+        "documentation07": "    gluster           - creates a gluster file system on a vm farm",
         "documentation08": "    webvmss           - creates a vm scale set",
         "documentation09": "    controller        - creates a jumpbox and deploys code",
         "documentation10": "GlusterFS Sizing guidance",
@@ -203,28 +314,31 @@
         "documentation12": "Medium - interactive courses, with uploads; medium number of IOPS required",
         "documentation13": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
+            "administratorLogin": "[parameters('administratorLogin')]",
+            "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
             "adminPassword": "[parameters('adminPassword')]",
             "adminUsername": "[parameters('adminUsername')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
             "computeApi": "2016-04-30-preview",
-            "extBeName": "[concat('lb-',variables('rpfx'),'-BE')]",
-            "extFeName": "[concat('lb-',variables('rpfx'),'-FE')]",
-            "extNatPool": "[concat('lb-',variables('rpfx'),'-NatPool')]",
-            "extProbe": "[concat('lb-',variables('rpfx'),'-Probe')]",
-            "gfsNameRoot": "[concat('gfs',variables('rpfx'),'vm')]",
-            "gfxAvailabilitySetName": "[concat('gfs-',variables('rpfx'),'-as')]",
+            "extBeName": "[concat('lb-',variables('rpfx'),'-backend')]",
+            "extFeName": "[concat('lb-',variables('rpfx'),'-frontend')]",
+            "extNatPool": "[concat('lb-',variables('rpfx'),'-natpool')]",
+            "extProbe": "[concat('lb-',variables('rpfx'),'-probe')]",
+            "gfsNameRoot": "[concat('gluster-',variables('rpfx'),'-vm')]",
+            "gfxAvailabilitySetName": "[concat('gluster-',variables('rpfx'),'-as')]",
             "glusterScriptFilename": "install_gluster.sh",
             "glusterTshirtSize": "[parameters('glusterTshirtSize')]",
             "glusterVmCount": 2,
-            "jboxNicName": "[concat('jbox',variables('rpfx'),'vm-nic')]",
-            "jboxNsgName": "[concat('jbox',variables('rpfx'),'-nsg')]",
-            "jboxPipName": "[concat('jbox',variables('rpfx'))]",
-            "jboxVmName": "[concat('jbox',variables('rpfx'),'vm')]",
+            "jboxNicName": "[concat('jumpbox-',variables('rpfx'),'-vm-nic')]",
+            "jboxNsgName": "[concat('jumpbox-',variables('rpfx'),'-nsg')]",
+            "jboxPipName": "[concat('jumpbox-',variables('rpfx'))]",
+            "jboxVmName": "[concat('jumpbox-',variables('rpfx'),'-vm')]",
             "lbDnsName": "[concat('lb-',variables('rpfx'))]",
             "lbName": "[concat('lb-',variables('rpfx'))]",
             "lbPipName": "[concat('lb-',variables('rpfx'),'-ip')]",
+            "location": "[parameters('location')]",
             "moodleInstallScriptFilename": "install_moodle.sh",
             "moodleSetupScriptFilename": "setup_moodle.sh",
             "moodleVersion": "[parameters('moodleVersion')]",
@@ -234,10 +348,16 @@
                 "sku": "16.04-LTS",
                 "version": "latest"
             },
-            "policyName": "[concat(variables('rpfx'),'-policy')]",
-            "redisCacheName": "[concat(variables('rpfx'),'-redis')]",
+            "policyName": "[concat('policy-',variables('rpfx'))]",
+            "redisCacheName": "[concat('redis-',variables('rpfx'))]",
             "resourcesPrefix": "[variables('rpfx')]",
             "scriptLocation": "../scripts/",
+            "serverName": "[concat('postgres-',variables('rpfx')]",
+            "skuCapacityDTU": "[parameters('skuCapacityDTU')]",
+            "skuFamily": "[parameters('skuFamily')]",
+            "skuName": "[parameters('skuName')]",
+            "skuSizeMB": "[parameters('skuSizeMB')]",
+            "skuTier": "[parameters('skuTier')]",
             "subnetDb": "[concat('data-',variables('rpfx'),'-subnet')]",
             "subnetDbPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),2)))]",
             "subnetDbRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),2)), '.0/24')]",
@@ -249,9 +369,10 @@
             "subnetWebRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),0)), '.0/24')]",
             "vNetAddressSpace": "[parameters('vNetAddressSpace')]",
             "vaultName": "[concat(variables('rpfx'),'-vault')]",
-            "vmssName": "[concat('vmss',variables('rpfx'))]",
+            "version": "[parameters('version')]",
+            "vmssName": "[concat('vmss-',variables('rpfx'))]",
             "vmssdStorageAccounttName": "[concat('vmss',uniqueString(resourceGroup().id))]",
-            "vnetName": "[concat(variables('rpfx'),'-vnet')]"
+            "vnetName": "[concat('vnet-',variables('rpfx'))]"
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "rpfx": "[tolower(parameters('resourcesPrefix'))]"
