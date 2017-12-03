@@ -25,7 +25,7 @@
                 {
                     "apiVersion": "2016-02-01-privatepreview",
                     "dependsOn": [
-                        "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('moodleCommon')..serverName)]"
+                        "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('moodleCommon').serverName)]"
                     ],
                     "location": "[parameters('moodleCommon').location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
