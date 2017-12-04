@@ -386,7 +386,7 @@
             "firewallStartIpAddress": "[parameters('firewallStartIpAddress')]",
             "firewallEndIpAddress": "[parameters('firewallEndIpAddress')]",
             "gatewayName": "[concat('vnet-',variables('rpfx'),'-gateway')]",
-            "gatewayPublicIPName": "[concat('vnet-',variables('rpfx'),'-gw-pubip')]",
+            "gatewayPublicIPName": "[concat('vnet-',variables('rpfx'),'-gw-ip')]",
             "gatewaySubnet": "[parameters('gatewaySubnet')]",
             "gatewaySubnetPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)))]",
             "gatewaySubnetRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)), '.0/24')]",
