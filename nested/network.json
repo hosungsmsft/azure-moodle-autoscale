@@ -63,6 +63,17 @@
         },
         {
             "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('moodleCommon').vnetName, '/', parameters('moodleCommon').gatwaySubnet)]",
+            "properties": {
+                "addressPrefix": "[parameters('moodleCommon').gatewaySubnetRange]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName)]"
+            ]
+        },
+        {
+            "apiVersion": "2015-06-15",
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').gatewayName]",
             "properties": {
