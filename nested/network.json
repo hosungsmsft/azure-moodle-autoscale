@@ -54,7 +54,7 @@
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').gatewayPublicIPName]",
             "properties": {
-                "publicIPAllocationMethod": "Dynamic"
+                "publicIPAllocationMethod": "Static"
             },
             "tags": {
                 "displayName": "Virtual network gateway Public IP"
@@ -110,7 +110,7 @@
                 "dnsSettings": {
                     "domainNameLabel": "[parameters('moodleCommon').lbDnsName]"
                 },
-                "publicIPAllocationMethod": "Dynamic"
+                "publicIPAllocationMethod": "Static"
             },
             "tags": {
                 "displayName": "Load Balancer Public IP"
