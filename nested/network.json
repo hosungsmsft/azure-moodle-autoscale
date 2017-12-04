@@ -89,6 +89,11 @@
                         }
                     }
                 ],
+                "sku": {
+                    "name": "VpnGw1",
+                    "tier": "VpnGw1",
+                    "capacity": 2
+                },
                 "vpnType": "[parameters('moodleCommon').vpnType]"
             },
             "dependsOn": [
