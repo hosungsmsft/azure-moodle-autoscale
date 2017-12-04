@@ -54,7 +54,7 @@
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').gatewayPublicIPName]",
             "properties": {
-                "publicIPAllocationMethod": "Static"
+                "publicIPAllocationMethod": "Dynamic"
             },
             "tags": {
                 "displayName": "Virtual network gateway Public IP"
@@ -98,6 +98,11 @@
                         }
                     }
                 ],
+                "sku": {
+                    "name": "VpnGw1",
+                    "tier": "VpnGw1",
+                    "capacity": 2
+                },
                 "vpnType": "[parameters('moodleCommon').vpnType]"
             },
             "type": "Microsoft.Network/virtualNetworkGateways"
@@ -194,7 +199,6 @@
                         }
                     }
                 ],
-                "privateIPAllocationMethod": "Dynamic",
                 "probes": [
                     {
                         "name": "[parameters('moodleCommon').extProbe  ]",
@@ -205,13 +209,7 @@
                             "protocol": "tcp"
                         }
                     }
-                ],
-                "publicIPAddress": {
-                    "id": "[parameters('moodleCommon').lbPipName]",
-                    "properties": {
-                        "publicIPAllocationMethod": "Static"
-                    }
-                }
+                ]
             },
             "type": "Microsoft.Network/loadBalancers"
         }
