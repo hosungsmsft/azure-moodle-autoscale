@@ -71,6 +71,27 @@
             },
             "type": "string"
         },
+        "gatewaySubnet": {
+            "allowedValues": [
+                "GatewaySubnet"
+            ],
+            "defaultValue": "GatewaySubnet",
+            "metadata": {
+                "description": "name for Virtual network gateway subnet"
+            },
+            "type": "string"
+        },
+        "gatewayType": {
+            "allowedValues": [
+                "Vpn",
+                "ER"
+            ],
+            "defaultValue": "Vpn",
+            "metadata": {
+                "description": "Virtual network gateway type"
+            },
+            "type": "string"
+        },
         "glusterTshirtSize": {
             "allowedValues": [
                 "Small",
@@ -191,12 +212,26 @@
                 "description": "Address range for the Moodle virtual network - presumed /16 - further subneting during vnet creation"
             },
             "type": "string"
+        },
+        "vpnType": {
+            "allowedValues": [
+                "RouteBased",
+                "PolicyBased"
+            ],
+            "defaultValue": "RouteBased",
+            "metadata": {
+                "description": "Virtual network gateway vpn type"
+            },
+            "type": "string"
         }
     },
     "resources": [
         {
             "apiVersion": "2015-01-01",
             "name": "postgresTemplate",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/networkTemplate"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
@@ -350,6 +385,12 @@
             "firewallRuleName": "[parameters('firewallRuleName')]",
             "firewallStartIpAddress": "[parameters('firewallStartIpAddress')]",
             "firewallEndIpAddress": "[parameters('firewallEndIpAddress')]",
+            "gatewayName": "[concat('vnet-',variables('rpfx'),'-gateway')]",
+            "gatewayPublicIPName": "[concat('vnet-',variables('rpfx'),'-gw-pubip')]",
+            "gatewaySubnet": "[parameters('gatewaySubnet')]",
+            "gatewaySubnetPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)))]",
+            "gatewaySubnetRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)), '.0/24')]",
+            "gatewayType": "[parameters('gatewayType')]",
             "gfsNameRoot": "[concat('gluster-',variables('rpfx'),'-vm')]",
             "gfxAvailabilitySetName": "[concat('gluster-',variables('rpfx'),'-as')]",
             "glusterScriptFilename": "install_gluster.sh",
@@ -396,7 +437,8 @@
             "version": "[parameters('version')]",
             "vmssName": "[concat('vmss-',variables('rpfx'))]",
             "vmssdStorageAccounttName": "[concat('vmss',uniqueString(resourceGroup().id))]",
-            "vnetName": "[concat('vnet-',variables('rpfx'))]"
+            "vnetName": "[concat('vnet-',variables('rpfx'))]",
+            "vpnType": "[parameters('vpnType')]"
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "rpfx": "[tolower(parameters('resourcesPrefix'))]"
