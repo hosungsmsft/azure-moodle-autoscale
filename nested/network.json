@@ -93,7 +93,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnet)]"
+                                "id": "[variables('gatewaySubnetRef')]"
                             }
                         }
                     }
@@ -230,6 +230,7 @@
         "extLbID": "[resourceId('Microsoft.Network/loadBalancers',parameters('moodleCommon').lbName)]",
         "extNatPoolID": "[concat(variables('extLbID'),'/inboundNatPools/',parameters('moodleCommon').extNatPool)]",
         "extProbeID": "[concat(variables('extLbID'),'/probes/',parameters('moodleCommon').extProbe)]",
+        "gatewaySubnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName),'/subnets/',parameters('moodleCommon').gatewaySubnet)]",
         "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]"
     }
 }
