@@ -38,12 +38,6 @@
                         "properties": {
                             "addressPrefix": "[parameters('moodleCommon').subnetDbRange]"
                         }
-                    },
-                    {
-                        "name": "[parameters('moodleCommon').gatewaySubnet]",
-                        "properties": {
-                            "addressPrefix": "[parameters('moodleCommon').gatewaySubnetPrefix]"
-                        }
                     }
                 ]
             },
@@ -64,13 +58,21 @@
         {
             "apiVersion": "2015-06-15",
             "location": "[resourceGroup().location]",
+            "name": "[parameters('moodleCommon').gatewaySubnetName]",
+            "properties": {
+                "addressPrefix": "[parameters('moodleCommon').gatewaySubnetPrefix]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName)]"
+            ],
+            "type": "Microsoft.Network/virtualNetworks/subnets"
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').gatewayName]",
             "properties": {
                 "activeActive": false,
-                "dependsOn": [
-                    "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]",
-                    "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnet)]"
-                ],
                 "enableBgp": false,
                 "gatewayType": "[parameters('moodleCommon').gatewayType]",
                 "ipConfigurations": [
@@ -82,13 +84,17 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]"
                             },
                             "subnet": {
-                                "id": "[variables('gatewaySubnetRef')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName), parameters(''))]"
                             }
                         }
                     }
                 ],
                 "vpnType": "[parameters('moodleCommon').vpnType]"
             },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName)]"
+            ],
             "type": "Microsoft.Network/virtualNetworkGateways"
         },
         {
@@ -214,8 +220,6 @@
         "extLbID": "[resourceId('Microsoft.Network/loadBalancers',parameters('moodleCommon').lbName)]",
         "extNatPoolID": "[concat(variables('extLbID'),'/inboundNatPools/',parameters('moodleCommon').extNatPool)]",
         "extProbeID": "[concat(variables('extLbID'),'/probes/',parameters('moodleCommon').extProbe  )]",
-        "gatewaySubnetRef": "[concat(variables('vnetID'),'/subnets/',parameters('moodleCommon').gatewaySubnet)]",
-        "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]",
-        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('moodleCommon').vnetName)]"
+        "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]"
     }
 }
