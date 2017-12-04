@@ -38,10 +38,58 @@
                         "properties": {
                             "addressPrefix": "[parameters('moodleCommon').subnetDbRange]"
                         }
+                    },
+                    {
+                        "name": "[parameters('moodleCommon').gatewaySubnet]",
+                        "properties": {
+                            "addressPrefix": "[parameters('moodleCommon').gatewaySubnetPrefix]"
+                        }
                     }
                 ]
             },
             "type": "Microsoft.Network/virtualNetworks"
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "name": "[parameters('moodleCommon').gatewayPublicIPName]",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            },
+            "tags": {
+                "displayName": "Virtual network gateway Public IP"
+            },
+            "type": "Microsoft.Network/publicIPAddresses"
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "name": "[parameters('moodleCommon').gatewayName]",
+            "properties": {
+                "activeActive": false,
+                "dependsOn": [
+                    "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]",
+                    "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnet)]"
+                ],
+                "enableBgp": false,
+                "gatewayType": "[parameters('moodleCommon').gatewayType]",
+                "ipConfigurations": [
+                    {
+                        "name": "vnetGatewayConfig",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]"
+                            },
+                            "subnet": {
+                                "id": "[variables('gatewaySubnetRef')]"
+                            }
+                        }
+                    }
+                ],
+                "vpnType": "[parameters('moodleCommon').vpnType]"
+            },
+            "type": "Microsoft.Network/virtualNetworkGateways"
         },
         {
             "apiVersion": "2015-06-15",
@@ -161,11 +209,13 @@
         "documentation08": "    lbPipName        - name of public IP",
         "documentation09": "    lbDnsName        - DNS entry for public consumption",
         "documentation10": "    lbName           - name of Moodl load balancer",
-        "extBeID": "[concat(variables('extLbID'),'/backendAddressPools/',      parameters('moodleCommon').extBeName )]",
-        "extFeID": "[concat(variables('extLbID'),'/frontendIPConfigurations/', parameters('moodleCommon').extFeName )]",
-        "extLbID": "[resourceId('Microsoft.Network/loadBalancers',   parameters('moodleCommon').lbName)]",
-        "extNatPoolID": "[concat(variables('extLbID'),'/inboundNatPools/',          parameters('moodleCommon').extNatPool)]",
-        "extProbeID": "[concat(variables('extLbID'),'/probes/',                   parameters('moodleCommon').extProbe  )]",
-        "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',  parameters('moodleCommon').lbPipName)]"
+        "extBeID": "[concat(variables('extLbID'),'/backendAddressPools/',parameters('moodleCommon').extBeName )]",
+        "extFeID": "[concat(variables('extLbID'),'/frontendIPConfigurations/',parameters('moodleCommon').extFeName )]",
+        "extLbID": "[resourceId('Microsoft.Network/loadBalancers',parameters('moodleCommon').lbName)]",
+        "extNatPoolID": "[concat(variables('extLbID'),'/inboundNatPools/',parameters('moodleCommon').extNatPool)]",
+        "extProbeID": "[concat(variables('extLbID'),'/probes/',parameters('moodleCommon').extProbe  )]",
+        "gatewaySubnetRef": "[concat(variables('vnetID'),'/subnets/',parameters('moodleCommon').gatewaySubnet)]",
+        "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('moodleCommon').vnetName)]"
     }
 }
