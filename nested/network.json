@@ -84,7 +84,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName), parameters(''))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnetName)]"
                             }
                         }
                     }
