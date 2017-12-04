@@ -38,6 +38,12 @@
                         "properties": {
                             "addressPrefix": "[parameters('moodleCommon').subnetDbRange]"
                         }
+                    },
+                    {
+                        "name": "[parameters('moodleCommon').gatewaySubnet]",
+                        "properties": {
+                            "addressPrefix": "[parameters('moodleCommon').gatewaySubnetRange]"
+                        }
                     }
                 ]
             },
@@ -54,18 +60,6 @@
                 "displayName": "Virtual network gateway Public IP"
             },
             "type": "Microsoft.Network/publicIPAddresses"
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "location": "[resourceGroup().location]",
-            "name": "[parameters('moodleCommon').gatewaySubnetName]",
-            "properties": {
-                "addressPrefix": "[parameters('moodleCommon').gatewaySubnetPrefix]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName)]"
-            ],
-            "type": "Microsoft.Network/virtualNetworks/subnets"
         },
         {
             "apiVersion": "2015-06-15",
