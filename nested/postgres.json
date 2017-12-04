@@ -30,8 +30,8 @@
                     "location": "[parameters('moodleCommon').location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
                     "properties": {
-                        "endIpAddress": "[parameters('moodleCommon').endIpAddress]",
-                        "startIpAddress": "[parameters('moodleCommon').startIpAddress]"
+                        "endIpAddress": "[parameters('moodleCommon').firewallEndIpAddress]",
+                        "startIpAddress": "[parameters('moodleCommon').firewallStartIpAddress]"
                     },
                     "type": "firewallrules"
                 }
