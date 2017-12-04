@@ -87,7 +87,7 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName]"
             ],
             "type": "Microsoft.Network/virtualNetworkGateways"
         },
