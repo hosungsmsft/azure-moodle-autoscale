@@ -63,17 +63,21 @@
         },
         {
             "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName)]"
+            ],
             "name": "[concat(parameters('moodleCommon').vnetName, '/', parameters('moodleCommon').gatewaySubnet)]",
             "properties": {
                 "addressPrefix": "[parameters('moodleCommon').gatewaySubnetRange]"
             },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName)]"
-            ]
+            "type": "Microsoft.Network/virtualNetworks/subnets"
         },
         {
             "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnet)]"
+            ],
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').gatewayName]",
             "properties": {
@@ -96,10 +100,6 @@
                 ],
                 "vpnType": "[parameters('moodleCommon').vpnType]"
             },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnet)]"
-            ],
             "type": "Microsoft.Network/virtualNetworkGateways"
         },
         {
@@ -194,6 +194,7 @@
                         }
                     }
                 ],
+                "privateIPAllocationMethod": "Dynamic",
                 "probes": [
                     {
                         "name": "[parameters('moodleCommon').extProbe  ]",
@@ -204,7 +205,13 @@
                             "protocol": "tcp"
                         }
                     }
-                ]
+                ],
+                "publicIPAddress": {
+                    "id": "[parameters('moodleCommon').lbPipName]",
+                    "properties": {
+                        "publicIPAllocationMethod": "Static"
+                    }
+                }
             },
             "type": "Microsoft.Network/loadBalancers"
         }
