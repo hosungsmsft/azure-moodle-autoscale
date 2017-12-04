@@ -84,16 +84,11 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnetName)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('moodleCommon').vnetName, parameters('moodleCommon').gatewaySubnet)]"
                             }
                         }
                     }
                 ],
-                "sku": {
-                    "name": "VpnGw1",
-                    "tier": "VpnGw1",
-                    "capacity": 2
-                },
                 "vpnType": "[parameters('moodleCommon').vpnType]"
             },
             "dependsOn": [
