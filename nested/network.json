@@ -89,7 +89,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').gatewayPublicIPName)]"
                             },
                             "subnet": {
-                                "id": "[variables('gatewaySubnetRef')"
+                                "id": "[variables('gatewaySubnetRef')]"
                             }
                         }
                     }
