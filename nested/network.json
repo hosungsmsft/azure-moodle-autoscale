@@ -110,7 +110,7 @@
                 "dnsSettings": {
                     "domainNameLabel": "[parameters('moodleCommon').lbDnsName]"
                 },
-                "publicIPAllocationMethod": "Dynamic"
+                "publicIPAllocationMethod": "Static"
             },
             "tags": {
                 "displayName": "Load Balancer Public IP"
