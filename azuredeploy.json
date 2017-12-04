@@ -388,7 +388,7 @@
             "gatewayName": "[concat('vnet-',variables('rpfx'),'-gateway')]",
             "gatewayPublicIPName": "[concat('vnet-',variables('rpfx'),'-gw-pubip')]",
             "gatewaySubnet": "[parameters('gatewaySubnet')]",
-            "gatewaySubnetName": "[concat('vnet-',variables('rpfx'),'/',parameters('gatewaySubnet')]",
+            "gatewaySubnetName": "[concat('vnet-',variables('rpfx'),'/',parameters('gatewaySubnet'))]",
             "gatewaySubnetPrefix": "[concat(parameters('vNetAddressSpace'),'/16')]",
             "gatewayType": "[parameters('gatewayType')]",
             "gfsNameRoot": "[concat('gluster-',variables('rpfx'),'-vm')]",
