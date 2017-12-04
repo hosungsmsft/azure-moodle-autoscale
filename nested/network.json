@@ -64,7 +64,7 @@
         {
             "apiVersion": "2015-06-15",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "[concat(parameters('moodleCommon').vnetName, '/', parameters('moodleCommon').gatwaySubnet)]",
+            "name": "[concat(parameters('moodleCommon').vnetName, '/', parameters('moodleCommon').gatewaySubnet)]",
             "properties": {
                 "addressPrefix": "[parameters('moodleCommon').gatewaySubnetRange]"
             },
