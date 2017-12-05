@@ -51,23 +51,9 @@
             "type": "int"
         },
         "firewallRuleName": {
-            "defaultValue": "all_private_ip_range",
+            "defaultValue": "vnet-gateway-ip",
             "metadata": {
                 "description": "Postgres firewall rule name"
-            },
-            "type": "string"
-        },
-        "firewallStartIpAddress": {
-            "defaultValue": "172.31.0.0",
-            "metadata": {
-                "description": "Postgres firewall start ip address"
-            },
-            "type": "string"
-        },
-        "firewallEndIpAddress": {
-            "defaultValue": "172.31.255.255",
-            "metadata": {
-                "description": "Postgres firewall end ip address"
             },
             "type": "string"
         },
@@ -383,8 +369,8 @@
             "extNatPool": "[concat('lb-',variables('rpfx'),'-natpool')]",
             "extProbe": "[concat('lb-',variables('rpfx'),'-probe')]",
             "firewallRuleName": "[parameters('firewallRuleName')]",
-            "firewallStartIpAddress": "[parameters('firewallStartIpAddress')]",
-            "firewallEndIpAddress": "[parameters('firewallEndIpAddress')]",
+            "firewallStartIpAddress": "[reference('networkTemplate').outputs.gatewayPublicIP.value]",
+            "firewallEndIpAddress": "[reference('networkTemplate').outputs.gatewayPublicIP.value]",
             "gatewayName": "[concat('vnet-',variables('rpfx'),'-gateway')]",
             "gatewayPublicIPName": "[concat('vnet-',variables('rpfx'),'-gw-ip')]",
             "gatewaySubnet": "[parameters('gatewaySubnet')]",
