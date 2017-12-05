@@ -9,20 +9,6 @@
             },
             "type": "string"
         },
-        "administratorLoginPassword": {
-            "defaultValue": "[uniqeString(resourceGroup().id, deployment().name)]",
-            "metadata": {
-                "description": "postgresql admin password"
-            },
-            "type": "securestring"
-        },
-        "adminPassword": {
-            "defaultValue": "[substring(uniqeString(resourceGroup().id, deployment().name), 0, 8)]",
-            "metadata": {
-                "description": "ssh password"
-            },
-            "type": "securestring"
-        },
         "adminUsername": {
             "defaultValue": "azureadmin",
             "metadata": {
@@ -124,13 +110,6 @@
             "defaultValue": "MOODLE_34_STABLE",
             "metadata": {
                 "description": "The Moodle version you want to install."
-            },
-            "type": "string"
-        },
-        "resourcesPrefix": {
-            "defaultValue": "[substring(uniqeString(resourceGroup().id, deployment().name), 3, 6)]",
-            "metadata": {
-                "description": "Prefix of storage account name, network, virtual machines, and so on"
             },
             "type": "string"
         },
@@ -362,36 +341,36 @@
         "documentation13": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
             "administratorLogin": "[parameters('administratorLogin')]",
-            "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
-            "adminPassword": "[parameters('adminPassword')]",
+            "administratorLoginPassword": "[uniqueString(resourceGroup().id, deployment().name)]",
+            "adminPassword": "[substring(uniqueString(resourceGroup().id, deployment().name), 4, 8)]",
             "adminUsername": "[parameters('adminUsername')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
             "computeApi": "2016-04-30-preview",
-            "extBeName": "[concat('lb-backend-',variables('rpfx'))]",
-            "extFeName": "[concat('lb-frontend-',variables('rpfx'))]",
-            "extNatPool": "[concat('lb-natpool-',variables('rpfx'))]",
-            "extProbe": "[concat('lb-probe-',variables('rpfx'))]",
+            "extBeName": "[concat('lb-backend-',variables('resourceprefix'))]",
+            "extFeName": "[concat('lb-frontend-',variables('resourceprefix'))]",
+            "extNatPool": "[concat('lb-natpool-',variables('resourceprefix'))]",
+            "extProbe": "[concat('lb-probe-',variables('resourceprefix'))]",
             "firewallRuleName": "[parameters('firewallRuleName')]",
-            "gatewayName": "[concat('vnet-gateway-',variables('rpfx'))]",
-            "gatewayPublicIPName": "[concat('vnet-gw-ip-',variables('rpfx'))]",
+            "gatewayName": "[concat('vnet-gateway-',variables('resourceprefix'))]",
+            "gatewayPublicIPName": "[concat('vnet-gw-ip-',variables('resourceprefix'))]",
             "gatewaySubnet": "[parameters('gatewaySubnet')]",
             "gatewaySubnetPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)))]",
             "gatewaySubnetRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)), '.0/24')]",
             "gatewayType": "[parameters('gatewayType')]",
-            "gfsNameRoot": "[concat('gluster-vm-',variables('rpfx'))]",
-            "gfxAvailabilitySetName": "[concat('gluster-avset-',variables('rpfx'))]",
+            "gfsNameRoot": "[concat('gluster-vm-',variables('resourceprefix'))]",
+            "gfxAvailabilitySetName": "[concat('gluster-avset-',variables('resourceprefix'))]",
             "glusterScriptFilename": "install_gluster.sh",
             "glusterTshirtSize": "[parameters('glusterTshirtSize')]",
             "glusterVmCount": 2,
-            "jboxNicName": "[concat('jumpbox-vm-nic-',variables('rpfx'))]",
-            "jboxNsgName": "[concat('jumpbox-nsg-',variables('rpfx'))]",
-            "jboxPipName": "[concat('jumpbox-pubip-',variables('rpfx'))]",
-            "jboxVmName": "[concat('jumpbox-vm-',variables('rpfx'))]",
-            "lbDnsName": "[concat('lb-',variables('rpfx'))]",
-            "lbName": "[concat('lb-',variables('rpfx'))]",
-            "lbPipName": "[concat('lb-pubip-',variables('rpfx'))]",
+            "jboxNicName": "[concat('jumpbox-vm-nic-',variables('resourceprefix'))]",
+            "jboxNsgName": "[concat('jumpbox-nsg-',variables('resourceprefix'))]",
+            "jboxPipName": "[concat('jumpbox-pubip-',variables('resourceprefix'))]",
+            "jboxVmName": "[concat('jumpbox-vm-',variables('resourceprefix'))]",
+            "lbDnsName": "[concat('lb-',variables('resourceprefix'))]",
+            "lbName": "[concat('lb-',variables('resourceprefix'))]",
+            "lbPipName": "[concat('lb-pubip-',variables('resourceprefix'))]",
             "location": "[parameters('location')]",
             "moodleInstallScriptFilename": "install_moodle.sh",
             "moodleSetupScriptFilename": "setup_moodle.sh",
@@ -402,34 +381,34 @@
                 "sku": "16.04-LTS",
                 "version": "latest"
             },
-            "policyName": "[concat('policy-',variables('rpfx'))]",
-            "redisCacheName": "[concat('redis-',variables('rpfx'))]",
-            "resourcesPrefix": "[variables('rpfx')]",
+            "policyName": "[concat('policy-',variables('resourceprefix'))]",
+            "redisCacheName": "[concat('redis-',variables('resourceprefix'))]",
+            "resourcesPrefix": "[variables('resourceprefix')]",
             "scriptLocation": "../scripts/",
-            "serverName": "[concat('postgres-',variables('rpfx'))]",
+            "serverName": "[concat('postgres-',variables('resourceprefix'))]",
             "skuCapacityDTU": "[parameters('skuCapacityDTU')]",
             "skuFamily": "[parameters('skuFamily')]",
             "skuName": "[parameters('skuName')]",
             "skuSizeMB": "[parameters('skuSizeMB')]",
             "skuTier": "[parameters('skuTier')]",
-            "subnetDb": "[concat('data-subnet-',variables('rpfx'))]",
+            "subnetDb": "[concat('data-subnet-',variables('resourceprefix'))]",
             "subnetDbPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),2)))]",
             "subnetDbRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),2)), '.0/24')]",
-            "subnetSan": "[concat('san-subnet-',variables('rpfx'))]",
+            "subnetSan": "[concat('san-subnet-',variables('resourceprefix'))]",
             "subnetSanPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),1)))]",
             "subnetSanRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),1)), '.0/24')]",
-            "subnetWeb": "[concat('web-subnet-',variables('rpfx'))]",
+            "subnetWeb": "[concat('web-subnet-',variables('resourceprefix'))]",
             "subnetWebPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),0)))]",
             "subnetWebRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),0)), '.0/24')]",
             "vNetAddressSpace": "[parameters('vNetAddressSpace')]",
-            "vaultName": "[concat('vault-',variables('rpfx'))]",
+            "vaultName": "[concat('vault-',variables('resourceprefix'))]",
             "version": "[parameters('version')]",
-            "vmssName": "[concat('vmss-',variables('rpfx'))]",
+            "vmssName": "[concat('vmss-',variables('resourceprefix'))]",
             "vmssdStorageAccounttName": "[concat('vmss',uniqueString(resourceGroup().id))]",
-            "vnetName": "[concat('vnet-',variables('rpfx'))]",
+            "vnetName": "[concat('vnet-',variables('resourceprefix'))]",
             "vpnType": "[parameters('vpnType')]"
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
-        "rpfx": "[tolower(parameters('resourcesPrefix'))]"
+        "resourceprefix": "[substring(uniqueString(resourceGroup().id, deployment().name), 3, 6)]"
     }
 }
