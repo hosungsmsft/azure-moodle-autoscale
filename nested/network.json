@@ -235,8 +235,8 @@
     },
     "outputs": {
         "gatewayPublicIP": {
-            "type": "string",
-            "value": "[reference(parameters('moodleCommon').gatewayPublicIPName).ipAddress]"
+            "type": "object",
+            "value": "[reference(parameters('moodleCommon').gatewayPublicIPName)]"
         }
     }
 }
