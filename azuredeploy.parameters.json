@@ -2,23 +2,5 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "administratorLoginPassword": {
-            "value": "me0wme0wM30WM30W"
-        },
-        "adminPassword": {
-            "value": "me0wme0wM30WM30W"
-        },
-        "applyScriptsSwitch": {
-            "value": 0
-        },
-        "azureBackupSwitch": {
-            "value": 0
-        },
-        "moodleVersion": {
-            "value": "MOODLE_34_STABLE"
-        },
-        "resourcesPrefix": {
-            "value": "new17"
-        }
     }
 }
