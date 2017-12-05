@@ -31,16 +31,20 @@
     moodledbuser=$7
     moodledbpass=$8
        adminpass=$9
+     pgadminlogin=$10
+     pgadminpass=$11
 
 	echo $moodleVersion  >> /tmp/vars.txt
 	echo $glusterNode    >> /tmp/vars.txt
 	echo $glusterVolume  >> /tmp/vars.txt
 	echo $siteFQDN       >> /tmp/vars.txt
-	echo $postgresIP      >> /tmp/vars.txt
+	echo $postgresIP     >> /tmp/vars.txt
 	echo $moodledbname   >> /tmp/vars.txt
 	echo $moodledbuser   >> /tmp/vars.txt
 	echo $moodledbpass   >> /tmp/vars.txt
 	echo    $adminpass   >> /tmp/vars.txt
+	echo $pgadminlogin   >> /tmp/vars.txt
+	echo $pgadminpass    >> /tmp/vars.txt
 
     # create gluster mount point
     mkdir -p /moodle
@@ -87,14 +91,16 @@
     echo -e \n\rMoving moodle files to Gluster\n\r 
     mv -v moodle-'$moodleVersion' /moodle/html/moodle
 
+    # Commented out as the plugin is not available
     # install Office 365 plugins
     #if [ "$installOfficePlugins" = "True" ]; then
-            curl -k --max-redirs 10 https://github.com/Microsoft/o365-moodle/archive/'$moodleVersion'.zip -L -o o365.zip
-            unzip -q o365.zip
-            cp -r o365-moodle-'$moodleVersion'/* /moodle/html/moodle
-            rm -rf o365-moodle-'$moodleVersion'
+    #        curl -k --max-redirs 10 https://github.com/Microsoft/o365-moodle/archive/'$moodleVersion'.zip -L -o o365.zip
+    #        unzip -q o365.zip
+    #        cp -r o365-moodle-'$moodleVersion'/* /moodle/html/moodle
+    #        rm -rf o365-moodle-'$moodleVersion'
     #fi
     ' > /tmp/setup-moodle.sh 
+
     sudo chmod +x /tmp/setup-moodle.sh
     sudo /tmp/setup-moodle.sh                  >> /tmp/apt7.log
 
@@ -105,7 +111,7 @@
 
 
     # Build nginx config
-    cat <<EOF >> /etc/nginx/nginx.conf
+    cat <<EOF > /etc/nginx/nginx.conf
 user www-data;
 worker_processes 2;
 pid /run/nginx.pid;
@@ -123,8 +129,6 @@ http {
   types_hash_max_size 2048;
   client_max_body_size 0;
   proxy_max_temp_file_size 0;
-  limit_conn_zone $server_name zone=pervhost:5M;
-  limit_conn_zone $binary_remote_addr zone=perip:10m;
   server_names_hash_bucket_size  128;
   fastcgi_buffers 16 16k; 
   fastcgi_buffer_size 32k;
@@ -149,15 +153,15 @@ http {
   gzip_http_version 1.1;
   gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
-  map $http_x_forwarded_proto $fastcgi_https {                                                                                          
-    default $https;                                                                                                                   
+  map \$http_x_forwarded_proto \$fastcgi_https {                                                                                          
+    default \$https;                                                                                                                   
     http '';                                                                                                                          
     https on;                                                                                                                         
   }   
 
-  log_format moodle_combined '$remote_addr - $upstream_http_x_moodleuser [$time_local] '
-                             '"$request" $status $body_bytes_sent '
-                             '"$http_referer" "$http_user_agent"';
+  log_format moodle_combined '\$remote_addr - \$upstream_http_x_moodleuser [\$time_local] '
+                             '"\$request" \$status \$body_bytes_sent '
+                             '"\$http_referer" "\$http_user_agent"';
 
 
   include /etc/nginx/conf.d/*.conf;
@@ -167,13 +171,14 @@ EOF
 
     cat <<EOF >> /etc/nginx/sites-enabled/${siteFQDN}.conf
 server {
-        listen 81;
+        listen 81 default;
+        server_name ${siteFQDN};
         root /moodle/html/moodle;
 	index index.php index.html index.htm;
 
         # Log to syslog
-        error_log syslog:server=localhost,facility=local1,severity=error,tag=${siteFQDN};
-        access_log syslog:server=localhost,facility=local1,severity=notice,tag=${siteFQDN} moodle_combined;
+        error_log syslog:server=localhost,facility=local1,severity=error,tag=moodle;
+        access_log syslog:server=localhost,facility=local1,severity=notice,tag=moodle moodle_combined;
 
         # Log XFF IP instead of varnish
         set_real_ip_from    10.0.0.0/8;
@@ -185,10 +190,10 @@ server {
 
 
         # Redirect to https
-        if ($http_x_forwarded_proto = http) {
-                return 301 https://$server_name$request_uri;
+        if (\$http_x_forwarded_proto != https) {
+                return 301 https://\$server_name\$request_uri;
         }
-        rewrite ^/(.*\.php)(/)(.*)$ /$1?file=/$3 last;
+        rewrite ^/(.*\.php)(/)(.*)$ /\$1?file=/\$3 last;
 
 
         # Filter out php-fpm status page
@@ -197,18 +202,18 @@ server {
         }
 
 	location / {
-		try_files $uri $uri/index.php?$query_string;
+		try_files \$uri \$uri/index.php?\$query_string;
 	}
  
         location ~ [^/]\.php(/|$) {
           fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-          if (!-f $document_root$fastcgi_script_name) {
+          if (!-f \$document_root\$fastcgi_script_name) {
                   return 404;
           }
  
           fastcgi_buffers 16 16k;
           fastcgi_buffer_size 32k;
-          fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          fastcgi_param   SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
           fastcgi_pass unix:/run/php/php7.0-fpm.sock;
           fastcgi_read_timeout 3600;
           fastcgi_index index.php;
@@ -222,12 +227,12 @@ server {
 	index index.php index.html index.htm;
 
         ssl on;
-        ssl_certificate /moodle/certs/nginx.crt
-        ssl_certificate_key /moodle/certs/nginx.key
+        ssl_certificate /moodle/certs/nginx.crt;
+        ssl_certificate_key /moodle/certs/nginx.key;
 
         # Log to syslog
-        error_log syslog:server=localhost,facility=local1,severity=error,tag=${siteFQDN};
-        access_log syslog:server=localhost,facility=local1,severity=notice,tag=${siteFQDN} moodle_combined;
+        error_log syslog:server=localhost,facility=local1,severity=error,tag=moodle;
+        access_log syslog:server=localhost,facility=local1,severity=notice,tag=moodle moodle_combined;
 
         # Log XFF IP instead of varnish
         set_real_ip_from    10.0.0.0/8;
@@ -238,13 +243,13 @@ server {
         real_ip_recursive   on;
 
         location / {
-          proxy_set_header Host $host;
-          proxy_set_header HTTP_REFERER $http_referer;
-          proxy_set_header X-Forwarded-Host $host;
-          proxy_set_header X-Forwarded-Server $host;
+          proxy_set_header Host \$host;
+          proxy_set_header HTTP_REFERER \$http_referer;
+          proxy_set_header X-Forwarded-Host \$host;
+          proxy_set_header X-Forwarded-Server \$host;
           proxy_set_header X-Forwarded-Proto https;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_pass http://localhost:8080;
+          proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+          proxy_pass http://localhost:80;
         }
 }
 EOF
@@ -276,11 +281,14 @@ EOF
     sudo chmod -R 770 /moodle/moodledata
 
 
+   # Remove the default site. Moodle is the only site we want
+   rm -f /etc/nginx/sites-enabled/default
+
    # restart Nginx
     sudo service nginx restart 
 
    # Configure varnish startup for 16.04
-   VARNISHSTART="ExecStart=/usr/sbin/varnishd -j unix,user=vcache -F -a :8080 -T localhost:6082 -f /etc/varnish/moodle.vcl -S /etc/varnish/secret -s malloc,10240m -p thread_pool_min=200 -p thread_pool_max=4000 -p thread_pool_add_delay=2 -p timeout_linger=100 -p timeout_idle=30 -p send_timeout=1800 -p thread_pools=4 -p http_max_hdr=512 -p workspace_backend=512k"
+   VARNISHSTART="ExecStart=\/usr\/sbin\/varnishd -j unix,user=vcache -F -a :80 -T localhost:6082 -f \/etc\/varnish\/moodle.vcl -S \/etc\/varnish\/secret -s malloc,10240m -p thread_pool_min=200 -p thread_pool_max=4000 -p thread_pool_add_delay=2 -p timeout_linger=100 -p timeout_idle=30 -p send_timeout=1800 -p thread_pools=4 -p http_max_hdr=512 -p workspace_backend=512k"
    sed -i "s/^ExecStart.*/${VARNISHSTART}/" /lib/systemd/system/varnish.service
 
    # Configure varnish VCL for moodle
@@ -528,14 +536,23 @@ sub vcl_synth {
 EOF
 
     # Restart Varnish
+    systemctl daemon-reload
     service varnish restart
 
-    # Configure Pound for SSL termination
+    # Create postgres db
+    echo "${postgresIP}:5432:postgres:${pgadminlogin}:${pgadminpass}" > /root/.pgpass
+    chmod 600 /root/.pgpass
+    psql -h $postgresIP -U $pgadminlogin -c "CREATE DATABASE ${moodledbname};" postgres
+    psql -h $postgresIP -U $pgadminlogin -c "CREATE USER ${moodledbuser} WITH PASSWORD '${moodledbpass}';" postgres
+    psql -h $postgresIP -U $pgadminlogin -c "GRANT ALL ON DATABASE ${moodledbname} TO ${moodledbuser};" postgres
+    rm -f /root/.pgpass
 
-  
     # Fire off moodle setup
-    echo -e "sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=pt_br --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$postgresIP" --dbname="$moodledbname" --dbuser="$moodledbuser" --dbpass="$moodledbpass" --dbtype=mariadb --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
-	         sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$moodledbuser   --dbpass=$moodledbpass   --dbtype=mariadb --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
+    echo -e "cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=pt_br --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$postgresIP" --dbname="$moodledbname" --dbuser="$moodledbuser" --dbpass="$moodledbpass" --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
+	         cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$moodledbuser   --dbpass=$moodledbpass   --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
 
     echo -e "\n\rDone! Installation completed!\n\r"
+
+    # We proxy ssl, so moodle needs to know this
+    sed -i "23 a \$CFG->sslproxy  = 'true';" /moodle/html/moodle/config.php
 }  > /tmp/install.log
