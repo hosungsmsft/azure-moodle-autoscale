@@ -277,12 +277,6 @@
                     "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'network.json')]"
                 }
             },
-            "outputs": {
-                "gatewayPubIP": {
-                    "type": "string",
-                    "value": "[reference(parameters('moodleCommon').gatewayPublicIPName).outputs.gatewayPublicIP.value]"
-                }
-            }, 
             "type": "Microsoft.Resources/deployments"
         },
         {
@@ -432,5 +426,11 @@
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "rpfx": "[tolower(parameters('resourcesPrefix'))]"
-    }
+    },
+    "outputs": {
+        "gatewayPubIP": {
+            "type": "string",
+            "value": "[reference(parameters('moodleCommon').gatewayPublicIPName).outputs.gatewayPublicIP.value]"
+         }
+    } 
 }
