@@ -426,11 +426,5 @@
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "rpfx": "[tolower(parameters('resourcesPrefix'))]"
-    },
-    "outputs": {
-        "gatewayPubIP": {
-            "type": "string",
-            "value": "[reference(concat('Microsoft.Network/publicIPAddresses/',parameters('moodleCommon').gatewayPublicIPName)).outputs.gatewayPublicIP.value]"
-         }
-    } 
+    }
 }

@@ -236,7 +236,7 @@
     "outputs": {
         "gatewayPublicIP": {
             "type": "string",
-            "value": "[reference(concat('Microsoft.Network/publicIPAddresses/',parameters('moodleCommon').gatewayPublicIPName)).properties.ipAddress]"
+            "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('moodleCommon').gatewayPublicIPName), '2015-06-15').ipAddress]"
         }
     }
 }
