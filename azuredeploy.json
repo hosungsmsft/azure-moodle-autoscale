@@ -369,8 +369,6 @@
             "extNatPool": "[concat('lb-',variables('rpfx'),'-natpool')]",
             "extProbe": "[concat('lb-',variables('rpfx'),'-probe')]",
             "firewallRuleName": "[parameters('firewallRuleName')]",
-            "firewallStartIpAddress": "[reference('networkTemplate').outputs.gatewayPublicIP.value]",
-            "firewallEndIpAddress": "[reference('networkTemplate').outputs.gatewayPublicIP.value]",
             "gatewayName": "[concat('vnet-',variables('rpfx'),'-gateway')]",
             "gatewayPublicIPName": "[concat('vnet-',variables('rpfx'),'-gw-ip')]",
             "gatewaySubnet": "[parameters('gatewaySubnet')]",
