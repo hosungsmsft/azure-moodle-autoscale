@@ -223,6 +223,9 @@
                 "parameters": {
                     "moodleCommon": {
                         "value": "[variables('moodleCommon')]"
+                    },
+                    "gw-ip": {
+                        "value": "[reference('networkTemplate').outputs.gatewayPublicIP.value]"
                     }
                 },
                 "templateLink": {

@@ -7,6 +7,12 @@
                 "description": "Common Moodle values"
             },
             "type": "object"
+        },
+        "gw-ip": {
+            "metadata": {
+                "description": "virtual network gateway public ip"
+            },
+            "type": "string"
         }
     },
     "resources": [
@@ -30,8 +36,8 @@
                     "location": "[parameters('moodleCommon').location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
                     "properties": {
-                        "endIpAddress": "[reference(parameters('moodleCommon').gatewayPublicIPName).outputs.gatewayPublicIP.value]",
-                        "startIpAddress": "[reference(parameters('moodleCommon').gatewayPublicIPName).outputs.gatewayPublicIP.value]"
+                        "endIpAddress": "[parameters('gw-ip')]",
+                        "startIpAddress": "[parameters('gw-ip')]"
                     },
                     "type": "firewallrules"
                 }
