@@ -30,8 +30,8 @@
                     "location": "[parameters('moodleCommon').location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
                     "properties": {
-                        "endIpAddress": "[reference('networkTemplate').outputs.gatewayPublicIP.value]",
-                        "startIpAddress": "[reference('networkTemplate').outputs.gatewayPublicIP.value]"
+                        "endIpAddress": "[reference('networkTemplate').outputs.gatewayPubIP.value]",
+                        "startIpAddress": "[reference('networkTemplate').outputs.gatewayPubIP.value]"
                     },
                     "type": "firewallrules"
                 }
