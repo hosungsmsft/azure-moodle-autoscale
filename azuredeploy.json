@@ -430,7 +430,7 @@
     "outputs": {
         "gatewayPubIP": {
             "type": "string",
-            "value": "[reference(parameters('moodleCommon').gatewayPublicIPName).outputs.gatewayPublicIP.value]"
+            "value": "[reference(concat('Microsoft.Network/publicIPAddresses/',parameters('moodleCommon').gatewayPublicIPName)).outputs.gatewayPublicIP.value]"
          }
     } 
 }
