@@ -206,6 +206,7 @@
                         "value": "[variables('moodleCommon')]"
                     },
                     "gw-ip": {
+                        "type": "string",
                         "value": "[reference('networkTemplate').outputs.gatewayPublicIP.value]"
                     }
                 },

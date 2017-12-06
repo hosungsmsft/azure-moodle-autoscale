@@ -11,8 +11,7 @@
         "gw-ip": {
             "metadata": {
                 "description": "virtual network gateway public ip"
-            },
-            "type": "string"
+            }
         }
     },
     "resources": [
