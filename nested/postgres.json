@@ -7,11 +7,6 @@
                 "description": "Common Moodle values"
             },
             "type": "object"
-        },
-        "gw-ip": {
-            "metadata": {
-                "description": "virtual network gateway public ip"
-            }
         }
     },
     "resources": [
