@@ -341,8 +341,8 @@
         "documentation13": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
             "administratorLogin": "[parameters('administratorLogin')]",
-            "administratorLoginPassword": "[uniqueString(resourceGroup().id, deployment().name)]",
-            "adminPassword": "[substring(uniqueString(resourceGroup().id, deployment().name), 4, 8)]",
+            "administratorLoginPassword": "[concat('5%',uniqueString(resourceGroup().id, deployment().name),'&7')]",
+            "adminPassword": "[concat('$4',substring(uniqueString(resourceGroup().id, deployment().name), 4, 4),'2@')]",
             "adminUsername": "[parameters('adminUsername')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
