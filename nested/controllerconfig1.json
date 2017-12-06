@@ -41,6 +41,8 @@
         "documentation05": "    lbDns                       - name of the dns entry for the vmscalse set",
         "documentation06": "    gfsNameRoot                 - nameroot of gluster farm - note that the code applies a 0 to get to the first node",
         "documentation07": "    jboxVmName                  - name of the controller/jumpb ox VM",
-        "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').moodleInstallScriptFilename)]"
+        "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').moodleInstallScriptFilename)]",
+        "blobStorageAccountId": "[concat(resourceGroup().id,'/providers/Microsoft.Storage/storageAccounts/', parameters('moodleCommon').blobStorageAccountName)]",
+        "blobStorageAccountKey": "[listKeys(variables('blobStorageAccountId')).key1))]"
     }
 }
