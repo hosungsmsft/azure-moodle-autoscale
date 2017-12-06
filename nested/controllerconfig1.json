@@ -33,7 +33,7 @@
         }
     ],
     "variables": {
-        "cmdExec": "[concat('sh ', parameters('moodleCommon').moodleInstallScriptFilename, ' ', parameters('moodleCommon').moodleVersion, ' ', concat(parameters('moodleCommon').gfsNameRoot, '0'), ' ', 'data', ' ', variables('dns'), ' ', 'moodle', ' ', parameters('moodleCommon').sshPassword)]",
+        "cmdExec": "[concat('sh ', parameters('moodleCommon').moodleInstallScriptFilename, ' ', parameters('moodleCommon').moodleVersion, ' ', concat(parameters('moodleCommon').gfsNameRoot, '0'), ' ', 'data', ' ', variables('dns'), ' ', concat('postgres-', parameters('moodleCommon').resourcesPrefix, '.postgres.database.azure.com', ' ','moodle', ' ', parameters('moodleCommon').moodleAdminPass), ' ', parameters('moodleCommon').administratorLogin, ' ', parameters('moodleCommon').administratorLoginPassword]",
         "dns": "[concat(parameters('moodleCommon').lbDnsName,'.',resourceGroup().location,'.cloudapp.azure.com')]",
         "documentation01": "This sub-template applies a specific post-deployment script to the controller vm",
         "documentation02": "It expects certain values in the 'common' datastructure.",
