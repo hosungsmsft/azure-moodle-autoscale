@@ -7,11 +7,6 @@
                 "description": "Common Moodle values"
             },
             "type": "object"
-        },
-        "gw-ip": {
-            "metadata": {
-                "description": "virtual network gateway public ip"
-            }
         }
     },
     "resources": [
@@ -26,21 +21,6 @@
                 "storageMB": "[parameters('moodleCommon').skuSizeMB]",
                 "version": "[parameters('moodleCommon').version]"
             },
-            "resources": [
-                {
-                    "apiVersion": "2016-02-01-privatepreview",
-                    "dependsOn": [
-                        "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('moodleCommon').serverName)]"
-                    ],
-                    "location": "[parameters('moodleCommon').location]",
-                    "name": "[parameters('moodleCommon').firewallRuleName]",
-                    "properties": {
-                        "endIpAddress": "[parameters('gw-ip')]",
-                        "startIpAddress": "[parameters('gw-ip')]"
-                    },
-                    "type": "firewallrules"
-                }
-            ],
             "sku": {
                 "capacity": "[parameters('moodleCommon').skuCapacityDTU]",
                 "family": "[parameters('moodleCommon').skuFamily]",
@@ -53,18 +33,15 @@
     ],
     "variables": {
         "documentation1": "This sub-template creates a postgresql server.  It expects certain values in the 'common' datastructure.",
-        "documentation10": " serverName                 - Postgresql server name",
-        "documentation11": " version                    - Postgresql version",
         "documentation2": " administratorLogin          - postgresql admin username",
         "documentation3": " administratorLoginPassword  - postgresql admin password",
         "documentation4": " location                    - Postgresql server location",
-        "documentation5": " firewallRuleName            - Postgresql firewall rule name",
-        "documentation6": " firewallStartIpAddress      - Postgresql firewall rule start ip",
-        "documentation7": " firewallEndIpAddress        - Postgresql firewall rule end ip",
-        "documentation8": " skuCapacityDTU              - Postgresql database trasaction units",
-        "documentation9": " skuFamily                   - Postgresql sku family",
-        "documentation10": " skuName                    - Postgresql sku name",
-        "documentation11": " skuSizeMB                  - Postgresql sku size in mb",
-        "documentation12": " skuTier                    - Postgresql sku tier"
+        "documentation5": " skuCapacityDTU              - Postgresql database trasaction units",
+        "documentation6": " skuFamily                   - Postgresql sku family",
+        "documentation7": " skuName                    - Postgresql sku name",
+        "documentation8": " skuSizeMB                  - Postgresql sku size in mb",
+        "documentation9": " skuTier                    - Postgresql sku tier",
+        "documentation10": " serverName                 - Postgresql server name",
+        "documentation11": " version                    - Postgresql version"
     }
 }

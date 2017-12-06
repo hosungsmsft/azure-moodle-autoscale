@@ -232,11 +232,5 @@
         "extProbeID": "[concat(variables('extLbID'),'/probes/',parameters('moodleCommon').extProbe)]",
         "gatewaySubnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName),'/subnets/',parameters('moodleCommon').gatewaySubnet)]",
         "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]"
-    },
-    "outputs": {
-        "gatewayPublicIP": {
-            "type": "string",
-            "value": "[reference(parameters('moodleCommon').gatewayName).ipConfigurations[0].properties.pbulicIPAddress]"
-        }
     }
 }

@@ -196,18 +196,11 @@
         {
             "apiVersion": "2015-01-01",
             "name": "postgresTemplate",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/networkTemplate"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
                     "moodleCommon": {
                         "value": "[variables('moodleCommon')]"
-                    },
-                    "gw-ip": {
-                        "type": "string",
-                        "value": "[reference('networkTemplate').outputs.gatewayPublicIP.value]"
                     }
                 },
                 "templateLink": {
