@@ -162,6 +162,17 @@
             },
             "type": "string"
         },
+        "sslEnforcement": {
+            "allowedValues": [
+                "Disabled",
+                "Enabled"
+            ],
+            "defaultValue": "Disabled",
+            "metadata": {
+                "description": "Postgresql SSL connection"
+            },
+            "type": "string"
+        },
         "version": {
             "allowedValues": [
                 "9.5",
@@ -364,6 +375,7 @@
             "jboxPipName": "[concat('jumpbox-pubip-',variables('resourceprefix'))]",
             "jboxVmName": "[concat('jumpbox-vm-',variables('resourceprefix'))]",
             "lbDnsName": "[concat('lb-',variables('resourceprefix'))]",
+            "lbdns": "[concat('lb-',variables('resourceprefix'),'.',resourceGroup().location,'.cloudapp.azure.com')]",
             "lbName": "[concat('lb-',variables('resourceprefix'))]",
             "lbPipName": "[concat('lb-pubip-',variables('resourceprefix'))]",
             "location": "[parameters('location')]",
@@ -386,6 +398,7 @@
             "skuName": "[parameters('skuName')]",
             "skuSizeMB": "[parameters('skuSizeMB')]",
             "skuTier": "[parameters('skuTier')]",
+            "sslEnforcement": "[parameters('sslEnforcement')]",
             "subnetDb": "[concat('data-subnet-',variables('resourceprefix'))]",
             "subnetDbPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),2)))]",
             "subnetDbRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),2)), '.0/24')]",
