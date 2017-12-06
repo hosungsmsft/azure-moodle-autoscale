@@ -103,8 +103,8 @@
                     ]
                 },
                 "osProfile": {
-                    "adminPassword": "[parameters('moodleCommon').adminPassword]",
-                    "adminUsername": "[parameters('moodleCommon').adminUsername]",
+                    "adminPassword": "[parameters('moodleCommon').sshPassword]",
+                    "adminUsername": "[parameters('moodleCommon').sshUsername]",
                     "computerName": "[variables('vmName')]"
                 },
                 "storageProfile": {
@@ -199,8 +199,8 @@
         "documentation06": " subnetSan               - name of subnet for gluster",
         "documentation07": " gfsNameRoot             - nameroot for the gluster nodes - combined with counter to get actual name of each node - disk and nic follow the naming scheme",
         "documentation08": " glusterTshirtSize       - supports flexible sizing - translates to a CPU/MEM/DISK details",
-        "documentation09": " adminUsername           - OS accountusername",
-        "documentation10": " adminPassword           - OS account password",
+        "documentation09": " sshUsername           - OS accountusername",
+        "documentation10": " sshPassword           - OS account password",
         "documentation11": " osType                  - an array of value that specifies the type of VM",
         "documentation15": "This sub-template calls other sub-templates",
         "documentation16": " diskSelection           - returns an arry of disk names - for flexible sizing",

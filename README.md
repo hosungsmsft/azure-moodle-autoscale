@@ -39,8 +39,8 @@ Summarizing, the following resources will be created during this process:
 - moodleVersion: The Moodle version you want to install.
 - glusterTshirtSize: VM size for the gluster nodes (please check for more guidance below)
 - postgresqlTshirtSize: VM size for the postgresql nodes (please check for more guidance below)
-- adminUsername: ssh user name (do not use 'root' or 'administrator', using any of these will cause the deployment to fail)
-- adminPassword: ssh password & moodle 'admin' password
+- sshUsername: ssh user name (do not use 'root' or 'administrator', using any of these will cause the deployment to fail)
+- sshPassword: ssh password & moodle 'admin' password
 - postgresqlUserPassword: my sql regular user password
 - postgresqlRootPassword: my sql root user password (take note of this, would be necessary for database maintenance tasks)
 - applyScriptsSwitch: Use '1' ALWAYS; Switch to process or bypass all scripts/extensions; if you use '0' (zero), this template will only create the machines;

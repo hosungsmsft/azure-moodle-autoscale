@@ -21,8 +21,8 @@
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').serverName]",
             "properties": {
-                "administratorLogin": "[parameters('moodleCommon').administratorLogin]",
-                "administratorLoginPassword": "[parameters('moodleCommon').administratorLoginPassword]",
+                "administratorLogin": "[parameters('moodleCommon').postgresLogin]",
+                "administratorLoginPassword": "[parameters('moodleCommon').postgresLoginPassword]",
                 "storageMB": "[parameters('moodleCommon').skuSizeMB]",
                 "version": "[parameters('moodleCommon').version]"
             },

@@ -85,8 +85,8 @@
                         ]
                     },
                     "osProfile": {
-                        "adminPassword": "[parameters('moodleCommon').adminPassword]",
-                        "adminUsername": "[parameters('moodleCommon').adminUsername]",
+                        "adminPassword": "[parameters('moodleCommon').sshPassword]",
+                        "adminUsername": "[parameters('moodleCommon').sshUsername]",
                         "computerNamePrefix": "[parameters('moodleCommon').vmssName]"
                     },
                     "storageProfile": {

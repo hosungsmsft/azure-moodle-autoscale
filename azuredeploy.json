@@ -2,20 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "administratorLogin": {
-            "defaultValue": "postgresadmin",
-            "metadata": {
-                "description": "postgresql admin username"
-            },
-            "type": "string"
-        },
-        "adminUsername": {
-            "defaultValue": "azureadmin",
-            "metadata": {
-                "description": "ssh user name"
-            },
-            "type": "string"
-        },
         "applyScriptsSwitch": {
             "allowedValues": [
                 0,
@@ -113,6 +99,13 @@
             },
             "type": "string"
         },
+        "postgresLogin": {
+            "defaultValue": "postgresadmin",
+            "metadata": {
+                "description": "postgresql admin username"
+            },
+            "type": "string"
+        },
         "skuCapacityDTU": {
             "allowedValues": [
                 50,
@@ -159,6 +152,13 @@
             "defaultValue": "Basic",
             "metadata": {
                 "description": "Postgresql sku tier"
+            },
+            "type": "string"
+        },
+        "sshUsername": {
+            "defaultValue": "azureadmin",
+            "metadata": {
+                "description": "ssh user name"
             },
             "type": "string"
         },
@@ -341,10 +341,10 @@
         "documentation12": "Medium - interactive courses, with uploads; medium number of IOPS required",
         "documentation13": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
-            "administratorLogin": "[parameters('administratorLogin')]",
-            "administratorLoginPassword": "[concat('5%',uniqueString(resourceGroup().id, deployment().name),'&7')]",
-            "adminPassword": "[concat('$4',substring(uniqueString(resourceGroup().id, deployment().name), 4, 4),'2@')]",
-            "adminUsername": "[parameters('adminUsername')]",
+            "postgresLogin": "[parameters('postgresLogin')]",
+            "postgresLoginPassword": "[concat('5%',uniqueString(resourceGroup().id, deployment().name),'&7')]",
+            "sshPassword": "[concat('$4',substring(uniqueString(resourceGroup().id, deployment().name), 4, 4),'2@')]",
+            "sshUsername": "[parameters('sshUsername')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
