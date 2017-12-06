@@ -383,7 +383,7 @@
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
             "blobStorageAccountType": "[parameters('blobStorageAccountType')]",
-            "blobStorageAccountName": "[tolower(concat('abs',variables('rpfx')))]",
+            "blobStorageAccountName": "[tolower(concat('abs',variables('resourceprefix')))]",
             "computeApi": "2016-04-30-preview",
             "extBeName": "[concat('lb-backend-',variables('resourceprefix'))]",
             "extFeName": "[concat('lb-frontend-',variables('resourceprefix'))]",
