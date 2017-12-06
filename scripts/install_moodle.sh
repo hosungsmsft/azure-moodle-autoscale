@@ -33,6 +33,8 @@
        adminpass=$9
      pgadminlogin=$10
      pgadminpass=$11
+     wabsacctname=$12
+     wabsacctkey=$13
 
 	echo $moodleVersion  >> /tmp/vars.txt
 	echo $glusterNode    >> /tmp/vars.txt
@@ -45,16 +47,47 @@
 	echo    $adminpass   >> /tmp/vars.txt
 	echo $pgadminlogin   >> /tmp/vars.txt
 	echo $pgadminpass    >> /tmp/vars.txt
+    echo $wabsacctname   >> /tmp/vars.txt
+    echo $wabsacctkey    >> /tmp/vars.txt
 
     # create gluster mount point
     mkdir -p /moodle
 
-    #configure gluster repository & install gluster client
+    # configure gluster repository & install gluster client
     sudo add-apt-repository ppa:gluster/glusterfs-3.8 -y                     >> /tmp/apt1.log
     sudo apt-get -y update                                                   >> /tmp/apt2.log
     sudo apt-get -y --force-yes install glusterfs-client postgresql-client git    >> /tmp/apt3.log
 
+    # install azure cli & setup container
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | \
+        sudo tee /etc/apt/sources.list.d/azure-cli.list
 
+    sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893 >> /tmp/apt4.log
+    sudo apt-get -y install apt-transport-https >> /tmp/apt4.log
+    sudo apt-get -y update > /dev/null
+    sudo apt-get -y install azure-cli >> /tmp/apt4.log
+
+    az storage container create \
+        --name objectfs \
+        --account-name $wabsacctname \
+        --account-key $wabsacctkey \
+        --public-access off \
+        --fail-on-exist >> /tmp/wabs.log
+
+    az storage container policy create \
+        --account-name $wabsacctname \
+        --account-key $wabsacctkey \
+        --container-name objectfs \
+        --name readwrite \
+        --start $(date +%F) \
+        --permissions rw >> /tmp/wabs.log
+
+    sas=$(az storage container generate-sas \
+        --account-name $wabsacctname \
+        --account-key $wabsacctkey \
+        --name objectfs \
+        --policy readwrite \
+        --output tsv)
 
     # mount gluster files system
     echo -e '\n\rInstalling GlusterFS on '$glusterNode':/'$glusterVolume '/moodle\n\r' 
@@ -99,6 +132,20 @@
     #        cp -r o365-moodle-'$moodleVersion'/* /moodle/html/moodle
     #        rm -rf o365-moodle-'$moodleVersion'
     #fi
+
+    # Install the ObjectFS plugin
+    curl -k --max-redirs 10 https://github.com/catalyst/moodle-tool_objectfs/archive/master.zip -L -o plugin-objectfs.zip
+    unzip -q plugin-objectfs.zip
+    mkdir -p /moodle/html/moodle/admin/tool/objectfs
+    cp -r moodle-tool_objectfs-master/* /moodle/html/moodle/admin/tool/objectfs
+    rm -rf moodle-tool_objectfs-master
+
+    # Install the ObjectFS Azure library
+    curl -k --max-redirs 10 https://github.com/catalyst/moodle-local_azure_storage/archive/master.zip -L -o plugin-azurelibrary.zip
+    unzip -q plugin-azurelibrary.zip
+    mkdir -p /moodle/html/moodle/local/azure_storage
+    cp -r moodle-local_azure_storage-master/* /moodle/html/moodle/local/azure_storage
+    rm -rf moodle-local_azure_storage-master
     ' > /tmp/setup-moodle.sh 
 
     sudo chmod +x /tmp/setup-moodle.sh

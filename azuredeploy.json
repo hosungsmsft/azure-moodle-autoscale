@@ -24,6 +24,19 @@
             },
             "type": "int"
         },
+        "blobStorageAccountType": {
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS",
+                "Premium_LRS"
+            ],
+            "metadata": {
+                "description": "Blob Storage Account type"
+            },
+            "type": "string"
+        },
         "firewallRuleName": {
             "defaultValue": "vnet-gateway-ip",
             "metadata": {
@@ -86,7 +99,7 @@
         },
         "moodleVersion": {
             "allowedValues": [
-		"MOODLE_34_STABLE",
+                "MOODLE_34_STABLE",
                 "MOODLE_33_STABLE",
                 "MOODLE_32_STABLE",
                 "MOODLE_31_STABLE",
@@ -317,6 +330,22 @@
                 }
             },
             "type": "Microsoft.Resources/deployments"
+        },
+        {
+            "apiVersion": "2015-01-01",
+            "name": "blobStorageAccountTemplate",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "moodleCommon": {
+                        "value": "[variables('moodleCommon')]"
+                    }
+                },
+                "templateLink": {
+                    "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'blobStorageAccount.json')]"
+                }
+            },
+            "type": "Microsoft.Resources/deployments"
         }
     ],
     "variables": {
@@ -342,6 +371,8 @@
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
+            "blobStorageAccountType": "[parameters('blobStorageAccountType')]",
+            "blobStorageAccountName": "[tolower(concat('abs',variables('rpfx')))]",
             "computeApi": "2016-04-30-preview",
             "extBeName": "[concat('lb-backend-',variables('resourceprefix'))]",
             "extFeName": "[concat('lb-frontend-',variables('resourceprefix'))]",
