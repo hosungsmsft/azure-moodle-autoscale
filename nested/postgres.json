@@ -36,8 +36,8 @@
                     "location": "[parameters('moodleCommon').location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
                     "properties": {
-                        "endIpAddress": "[parameters('gw-ip').ipConfigurations[0].properties.publicIPAddress]",
-                        "startIpAddress": "[parameters('gw-ip').ipConfigurations[0].properties.publicIPAddress]"
+                        "endIpAddress": "[parameters('gw-ip').properties.ipConfigurations[0].properties.publicIPAddress]",
+                        "startIpAddress": "[parameters('gw-ip').properties.ipConfigurations[0].properties.publicIPAddress]"
                     },
                     "type": "firewallrules"
                 }
