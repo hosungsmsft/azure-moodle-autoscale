@@ -19,6 +19,7 @@
                 "administratorLogin": "[parameters('moodleCommon').postgresLogin]",
                 "administratorLoginPassword": "[parameters('moodleCommon').postgresLoginPassword]",
                 "storageMB": "[parameters('moodleCommon').skuSizeMB]",
+                "sslEnforcement": "[parameters('moodleCommon').sslEnforcement]",
                 "version": "[parameters('moodleCommon').version]"
             },
             "sku": {
