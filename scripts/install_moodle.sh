@@ -79,7 +79,7 @@
         --account-key $wabsacctkey \
         --container-name objectfs \
         --name readwrite \
-        --start $(date +%F) \
+        --start $(date --date="1 day ago" +%F) \
         --permissions rw >> /tmp/wabs.log
 
     sas=$(az storage container generate-sas \
@@ -595,11 +595,18 @@ EOF
     rm -f /root/.pgpass
 
     # Fire off moodle setup
-    echo -e "cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=pt_br --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$postgresIP" --dbname="$moodledbname" --dbuser="$moodledbuser" --dbpass="$moodledbpass" --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
+    echo -e "cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$postgresIP" --dbname="$moodledbname" --dbuser="$moodledbuser" --dbpass="$moodledbpass" --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
 	         cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$moodledbuser   --dbpass=$moodledbpass   --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
+
+    # Add the ObjectFS configuration to Moodle.
+    # We need to use $sas and $wabsacctname
 
     echo -e "\n\rDone! Installation completed!\n\r"
 
     # We proxy ssl, so moodle needs to know this
     sed -i "23 a \$CFG->sslproxy  = 'true';" /moodle/html/moodle/config.php
+
+    # Set the ObjectFS alternate filesystem
+    sed -i "23 a \$CFG->alternative_file_system_class = '\tool_objectfs\azure_file_system';" /moodle/html/moodle/config.php
+
 }  > /tmp/install.log
