@@ -113,7 +113,7 @@
             "name": "[parameters('moodleCommon').lbPipName]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[parameters('moodleCommon').lbDnsName]"
+                    "domainNameLabel": "[parameters('moodleCommon').lbName]"
                 },
                 "publicIPAllocationMethod": "Static"
             },
@@ -223,7 +223,6 @@
         "documentation06": "    subnetSan        - name of subnet inside virtual network - will be assigned the .1.0/24 range",
         "documentation07": "    subnetDb         - name of subnet inside virtual network - will be assigned the .2.0/24 range",
         "documentation08": "    lbPipName        - name of public IP",
-        "documentation09": "    lbDnsName        - DNS entry for public consumption",
         "documentation10": "    lbName           - name of Moodl load balancer",
         "extBeID": "[concat(variables('extLbID'),'/backendAddressPools/',parameters('moodleCommon').extBeName)]",
         "extFeID": "[concat(variables('extLbID'),'/frontendIPConfigurations/',parameters('moodleCommon').extFeName)]",
