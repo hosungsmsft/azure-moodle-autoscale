@@ -99,6 +99,20 @@
     #        cp -r o365-moodle-'$moodleVersion'/* /moodle/html/moodle
     #        rm -rf o365-moodle-'$moodleVersion'
     #fi
+
+    # Install the ObjectFS plugin
+    curl -k --max-redirs 10 https://github.com/catalyst/moodle-tool_objectfs/archive/master.zip -L -o plugin-objectfs.zip
+    unzip -q plugin-objectfs.zip
+    mkdir -p /moodle/html/moodle/admin/tool/objectfs
+    cp -r moodle-tool_objectfs-master/* /moodle/html/moodle/admin/tool/objectfs
+    rm -rf moodle-tool_objectfs-master
+
+    # Install the ObjectFS Azure library
+    curl -k --max-redirs 10 https://github.com/catalyst/moodle-local_azure_storage/archive/master.zip -L -o plugin-azurelibrary.zip
+    unzip -q plugin-azurelibrary.zip
+    mkdir -p /moodle/html/moodle/local/azure_storage
+    cp -r moodle-local_azure_storage-master/* /moodle/html/moodle/local/azure_storage
+    rm -rf moodle-local_azure_storage-master
     ' > /tmp/setup-moodle.sh 
 
     sudo chmod +x /tmp/setup-moodle.sh
