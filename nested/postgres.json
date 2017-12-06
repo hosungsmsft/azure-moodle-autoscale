@@ -12,7 +12,7 @@
             "metadata": {
                 "description": "virtual network gateway public ip"
             },
-            "type": "object"
+            "type": "string"
         }
     },
     "resources": [
@@ -36,8 +36,8 @@
                     "location": "[parameters('moodleCommon').location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
                     "properties": {
-                        "endIpAddress": "[parameters('gw-ip').properties.ipAddress]",
-                        "startIpAddress": "[parameters('gw-ip').properties.ipAddress]"
+                        "endIpAddress": "[parameters('gw-ip')]",
+                        "startIpAddress": "[parameters('gw-ip')]"
                     },
                     "type": "firewallrules"
                 }
