@@ -409,7 +409,8 @@
         "documentation12": "Medium - interactive courses, with uploads; medium number of IOPS required",
         "documentation13": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
-            "postgresLogin": "[concat(parameters('postgresLogin'), '@postgres-', variables('resourceprefix'))]",
+            "postgresLogin": "[parameters('postgresLogin')]",
+            "postgresUsername": "[concat(parameters('postgresLogin'), '@postgres-', variables('resourceprefix'))]",
             "postgresLoginPassword": "[concat('5%',uniqueString(resourceGroup().id, deployment().name),'&7')]",
             "sshPassword": "[concat('$4',substring(uniqueString(resourceGroup().id, deployment().name), 4, 4),'2@')]",
             "sshUsername": "[parameters('sshUsername')]",
