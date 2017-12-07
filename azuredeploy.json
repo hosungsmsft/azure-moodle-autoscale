@@ -237,8 +237,7 @@
                         "value": "[variables('moodleCommon')]"
                     },
                     "gw-ip": {
-                        "value": "[reference('networkTemplate').outputs.gwIP.value]",
-                        "type": "string"
+                        "value": "[reference('networkTemplate').outputs.gwIP.value]"
                     }
                 },
                 "templateLink": {
