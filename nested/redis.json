@@ -15,11 +15,11 @@
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').redisCacheName]",
             "properties": {
-                "enableNonSslPort": false,
+                "enableNonSslPort": true,
                 "sku": {
                     "capacity": 1,
-                    "family": "C",
-                    "name": "Basic"
+                    "family": "P",
+                    "name": "Premium"
                 }
             },
             "type": "Microsoft.Cache/Redis"
