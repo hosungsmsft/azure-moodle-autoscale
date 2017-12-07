@@ -24,34 +24,36 @@
 {
     moodleVersion=$1
     glusterNode=$2
-    glusterVolume=$3 
+    glusterVolume=$3
     siteFQDN=$4
     postgresIP=$5
     moodledbname=$6
     moodledbuser=$7
     moodledbpass=$8
-       adminpass=$9
-     pgadminlogin=$10
-     pgadminpass=$11
-     wabsacctname=$12
-     wabsacctkey=$13
+    adminpass=$9
+    pgadminlogin=$10
+    pgadminpass=$11
+    wabsacctname=$12
+    wabsacctkey=$13
 
-	echo $moodleVersion  >> /tmp/vars.txt
-	echo $glusterNode    >> /tmp/vars.txt
-	echo $glusterVolume  >> /tmp/vars.txt
-	echo $siteFQDN       >> /tmp/vars.txt
-	echo $postgresIP     >> /tmp/vars.txt
-	echo $moodledbname   >> /tmp/vars.txt
-	echo $moodledbuser   >> /tmp/vars.txt
-	echo $moodledbpass   >> /tmp/vars.txt
-	echo    $adminpass   >> /tmp/vars.txt
-	echo $pgadminlogin   >> /tmp/vars.txt
-	echo $pgadminpass    >> /tmp/vars.txt
+    echo $moodleVersion  >> /tmp/vars.txt
+    echo $glusterNode    >> /tmp/vars.txt
+    echo $glusterVolume  >> /tmp/vars.txt
+    echo $siteFQDN       >> /tmp/vars.txt
+    echo $postgresIP     >> /tmp/vars.txt
+    echo $moodledbname   >> /tmp/vars.txt
+    echo $moodledbuser   >> /tmp/vars.txt
+    echo $moodledbpass   >> /tmp/vars.txt
+    echo    $adminpass   >> /tmp/vars.txt
+    echo $pgadminlogin   >> /tmp/vars.txt
+    echo $pgadminpass    >> /tmp/vars.txt
     echo $wabsacctname   >> /tmp/vars.txt
     echo $wabsacctkey    >> /tmp/vars.txt
 
     # create gluster mount point
     mkdir -p /moodle
+
+    export DEBIAN_FRONTEND=noninteractive
 
     # configure gluster repository & install gluster client
     sudo add-apt-repository ppa:gluster/glusterfs-3.8 -y                     >> /tmp/apt1.log
