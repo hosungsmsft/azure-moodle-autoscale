@@ -153,9 +153,7 @@
 
     # create cron entry
     # It is scheduled for once per day. It can be changed as needed.
-    echo '0 0 * * * php /moodle/html/moodle/admin/cli/cron.php > /dev/null 2>&1' > cronjob
-    sudo crontab cronjob
-
+    echo '* * * * * www-data /usr/bin/php /moodle/html/moodle/admin/cli/cron.php 2>&1 | /usr/bin/logger -p local2.notice -t moodle' > /etc/cron.d/moodle-cron
 
     # Build nginx config
     cat <<EOF > /etc/nginx/nginx.conf
