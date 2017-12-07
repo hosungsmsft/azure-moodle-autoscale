@@ -280,6 +280,9 @@
         {
             "apiVersion": "2015-01-01",
             "name": "redisTemplate",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/networkTemplate"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "parameters": {

@@ -20,7 +20,9 @@
                     "capacity": 1,
                     "family": "P",
                     "name": "Premium"
-                }
+                },
+                "subnet": "[parameters('moodleCommon').subnetWebRange]",
+                "virtualNetwork": "[parameters('moodleCommon').vnetName]"
             },
             "type": "Microsoft.Cache/Redis"
         }
