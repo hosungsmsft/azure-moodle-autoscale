@@ -5,7 +5,8 @@
         "gw-ip": {
             "metadata": {
                 "description": "gateway ip address"
-            }
+            },
+            "type": "string"
         },
         "moodleCommon": {
             "metadata": {
