@@ -321,7 +321,8 @@
             "apiVersion": "2015-01-01",
             "dependsOn": [
                 "Microsoft.Resources/deployments/glusterTemplate",
-                "Microsoft.Resources/deployments/recoveryTemplate"
+                "Microsoft.Resources/deployments/recoveryTemplate",
+                "Microsoft.Resources/deployments/blobStorageAccountTemplate"
             ],
             "name": "ControllerTemplate",
             "properties": {
@@ -329,6 +330,9 @@
                 "parameters": {
                     "moodleCommon": {
                         "value": "[variables('moodleCommon')]"
+                    },
+                    "blobStorageAccountKey": {
+                        "value": "[reference('blobStorageAccountTemplate').outputs.blobStorageAccountKey.value]"
                     }
                 },
                 "templateLink": {
