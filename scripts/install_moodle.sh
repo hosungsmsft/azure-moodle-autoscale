@@ -108,7 +108,7 @@
     sudo apt-get install -y --fix-missing python-software-properties unzip
 
     # install the entire stack
-    sudo apt-get -y  --force-yes install nginx php-fpm varnish pound >> /tmp/apt5a.log
+    sudo apt-get -y  --force-yes install nginx php-fpm varnish >> /tmp/apt5a.log
     sudo apt-get -y  --force-yes install php php-cli php-curl php-zip >> /tmp/apt5b.log
 
     # Moodle requirements
