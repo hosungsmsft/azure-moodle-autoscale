@@ -228,6 +228,9 @@
                 "parameters": {
                     "moodleCommon": {
                         "value": "[variables('moodleCommon')]"
+                    },
+                    "gw-ip": {
+                        "value": "[reference('networkTemplate').outputs.gwIP.value]"
                     }
                 },
                 "templateLink": {
@@ -235,19 +238,6 @@
                 }
             },
             "type": "Microsoft.Resources/deployments"
-        },
-        {
-            "type":"firewallrules",
-            "apiVersion":"2016-02-01-privatepreview",
-            "dependsOn":[
-                "[concat('Microsoft.DBforPostgreSQL/servers/', variables('moodleCommon').serverName)]"
-            ],
-            "location":"[resourceGroup().location]",
-            "name":"[parameters('moodleCommon').firewallRuleName]",
-            "properties":{
-                "startIpAddress":"[reference('networkTemplate').outputs.gwIP.value']",
-                "endIpAddress":"[reference('networkTemplate').outputs.gwIP.value]"
-            }
         },
         {
             "apiVersion": "2015-01-01",
