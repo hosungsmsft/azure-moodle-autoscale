@@ -231,11 +231,5 @@
         "extProbeID": "[concat(variables('extLbID'),'/probes/',parameters('moodleCommon').extProbe)]",
         "gatewaySubnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName),'/subnets/',parameters('moodleCommon').gatewaySubnet)]",
         "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]"
-    },
-    "outputs": {
-        "gwIP": {
-            "type": "string",
-            "value": "[reference(parameters('moodleCommon').gatewayPublicIPName).ipAddress]"
-        }
     }
 }
