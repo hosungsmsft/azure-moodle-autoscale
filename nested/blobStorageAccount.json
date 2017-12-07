@@ -47,8 +47,7 @@
         "documentation2": " blobStorageAccountName - name of storage account",
         "documentation3": " blobStorageAccountType - type of storage account",
         "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').moodleInstallScriptFilename)]",
-        "blobStorageAccountId": "[concat(resourceGroup().id,'/providers/Microsoft.Storage/storageAccounts/', parameters('moodleCommon').blobStorageAccountName)]",
-        "blobStorageAccountKey": "[listKeys(variables('blobStorageAccountId')).key1))]"
+        "blobStorageAccountId": "[concat(resourceGroup().id,'/providers/Microsoft.Storage/storageAccounts/', parameters('moodleCommon').blobStorageAccountName)]"
     },
     "outputs": {
         "blobStorageAccountKey": {
