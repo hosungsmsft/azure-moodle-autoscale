@@ -25,6 +25,7 @@
 glusterNode=$1
 glusterVolume=$2 
 siteFQDN=$3
+syslogserver=$4
 
 echo $glusterNode    >> /tmp/vars.txt
 echo $glusterVolume  >> /tmp/vars.txt
@@ -33,7 +34,7 @@ echo $siteFQDN >> /tmp/vars.txt
 {
 
   # install pre-requisites
-  sudo apt-get -y install python-software-properties unzip
+  sudo apt-get -y install python-software-properties unzip rsyslog
 
   #configure gluster repository & install gluster client
   sudo add-apt-repository ppa:gluster/glusterfs-3.8 -y
@@ -54,6 +55,13 @@ echo $siteFQDN >> /tmp/vars.txt
   sudo mount -t glusterfs $glusterNode:/$glusterVolume /moodle
   sudo echo -e $glusterNode':/'$glusterVolume'   /moodle         glusterfs       defaults,_netdev,log-level=WARNING,log-file=/var/log/gluster.log 0 0' >> /etc/fstab
   sudo mount -a
+
+  # Configure syslog to forward
+  cat <<EOF >> /etc/rsyslog.d/40-remote.conf
+local1.*   @${syslogserver}:514
+local2.*   @${syslogserver}:514
+EOF
+  service syslog restart
 
   # Build nginx config
   cat <<EOF > /etc/nginx/nginx.conf
