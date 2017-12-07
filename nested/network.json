@@ -234,8 +234,8 @@
     },
     "outputs": {
         "gwIP": {
-            "type": "object",
-            "value": "[reference(parameters('moodleCommon').gatewayPublicIPName)]"
+            "type": "string",
+            "value": "[reference(parameters('moodleCommon').gatewayPublicIPName).ipAddress]"
         }
     }
 }
