@@ -6,7 +6,7 @@
             "metadata": {
                 "description": "gateway ip address"
             },
-            "type": "string"
+            "type": "object"
         },
         "moodleCommon": {
             "metadata": {
@@ -37,8 +37,8 @@
                     "location": "[resourceGroup().location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
                     "properties": {
-                        "endIpAddress": "[parameters('gw-ip').value]",
-                        "startIpAddress": "[parameters('gw-ip').value]"
+                        "endIpAddress": "[parameters('gw-ip').ipAddress]",
+                        "startIpAddress": "[parameters('gw-ip').ipAddress]"
                     },
                     "type": "firewallrules"
                 }
