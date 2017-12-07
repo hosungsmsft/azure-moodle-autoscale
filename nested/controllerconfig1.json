@@ -39,7 +39,7 @@
         }
     ],
     "variables": {
-        "cmdExec": "[concat('sh ', parameters('moodleCommon').moodleInstallScriptFilename, ' ', parameters('moodleCommon').moodleVersion, ' ', concat(parameters('moodleCommon').gfsNameRoot, '0'), ' ', 'data', ' ', parameters('moodleCommon').siteURL, ' ', concat('postgres-', parameters('moodleCommon').resourceprefix, '.postgres.database.azure.com'), ' ', 'moodle', ' ', 'moodle', ' ', 'moodle', ' ', parameters('moodleCommon').moodleAdminPass, ' ', concat(parameters('moodleCommon').postgresLogin, '@postgres-', parameters('moodleCommon').resourceprefix), ' ', parameters('moodleCommon').postgresLoginPassword, ' ', parameters('moodleCommon').blobStorageAccountName, ' ', parameters('blobStorageAccountKey'))]",
+        "cmdExec": "[concat('sh ', parameters('moodleCommon').moodleInstallScriptFilename, ' ', parameters('moodleCommon').moodleVersion, ' ', concat(parameters('moodleCommon').gfsNameRoot, '0'), ' ', 'data', ' ', parameters('moodleCommon').siteURL, ' ', concat('postgres-', parameters('moodleCommon').resourcesPrefix, '.postgres.database.azure.com'), ' ', 'moodle', ' ', 'moodle', ' ', 'moodle', ' ', parameters('moodleCommon').moodleAdminPass, ' ', concat(parameters('moodleCommon').postgresLogin, '@postgres-', parameters('moodleCommon').resourcesPrefix), ' ', parameters('moodleCommon').postgresLoginPassword, ' ', parameters('moodleCommon').blobStorageAccountName, ' ', parameters('blobStorageAccountKey'))]",
         "documentation01": "This sub-template applies a specific post-deployment script to the controller vm",
         "documentation02": "It expects certain values in the 'common' datastructure.",
         "documentation03": "    ScriptLocation              - web URI",
