@@ -316,7 +316,7 @@
                         "value": "[variables('moodleCommon')]"
                     },
                     "blobStorageAccountKey": {
-                        "value": "[reference('blobStorageAccountTemplate').outputs.storageAccountKey.value"
+                        "value": "[reference('blobStorageAccountTemplate').outputs.storageAccountKey.value]"
                     }
                 },
                 "templateLink": {
