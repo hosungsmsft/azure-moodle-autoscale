@@ -7,6 +7,12 @@
                 "description": "Common Moodle values"
             },
             "type": "object"
+        },
+        "blobStorageAccountKey": {
+            "metadata": {
+                "description": "Key used to create a storage container"
+            },
+            "type": "string"
         }
     },
     "resources": [
@@ -146,6 +152,9 @@
                 "parameters": {
                     "moodleCommon": {
                         "value": "[parameters('moodleCommon')]"
+                    },
+                    "blobStorageAccountKey": {
+                        "value": "parameters('blobStorageAccountKey').value)]"
                     }
                 },
                 "templateLink": {
