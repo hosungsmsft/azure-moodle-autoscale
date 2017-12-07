@@ -119,6 +119,13 @@
             },
             "type": "string"
         },
+        "siteURL": {
+            "defaultValue": "www.example.org",
+            "metadata": {
+                "description": "URL for Moodle site"
+            },
+            "type": "string"
+        },
         "skuCapacityDTU": {
             "allowedValues": [
                 50,
@@ -460,6 +467,7 @@
             "resourcesPrefix": "[variables('resourceprefix')]",
             "scriptLocation": "https://git.catalyst-au.net/internal/azure/raw/master/scripts/",
             "serverName": "[concat('postgres-',variables('resourceprefix'))]",
+            "siteURL": "[parameters('siteURL')]",
             "skuCapacityDTU": "[parameters('skuCapacityDTU')]",
             "skuFamily": "[parameters('skuFamily')]",
             "skuName": "[parameters('skuName')]",
