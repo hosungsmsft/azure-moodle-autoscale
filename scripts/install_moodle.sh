@@ -56,7 +56,7 @@
     # configure gluster repository & install gluster client
     sudo add-apt-repository ppa:gluster/glusterfs-3.8 -y                     >> /tmp/apt1.log
     sudo apt-get -y update                                                   >> /tmp/apt2.log
-    sudo apt-get -y --force-yes install glusterfs-client postgresql-client git    >> /tmp/apt3.log
+    sudo apt-get -y --force-yes install rsyslog glusterfs-client postgresql-client git    >> /tmp/apt3.log
 
     # install azure cli & setup container
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | \
@@ -593,6 +593,23 @@ EOF
     psql -h $postgresIP -U $pgadminlogin -c "CREATE USER ${moodledbuser} WITH PASSWORD '${moodledbpass}';" postgres
     psql -h $postgresIP -U $pgadminlogin -c "GRANT ALL ON DATABASE ${moodledbname} TO ${moodledbuser};" postgres
     rm -f /root/.pgpass
+
+    # Master config for syslog
+    mkdir /var/log/sitelogs
+    chown syslog.adm /var/log/sitelogs
+    cat <<EOF >> /etc/rsyslog.conf
+\$ModLoad imudp
+\$UDPServerRun 514
+EOF
+    cat <<EOF >> /etc/rsyslog.d/40-sitelogs.conf
+$template InternalAccess,"/var/log/sitelogs/%fromhost%/%syslogtag:2:$:pos-end-relative%/access.log"
+$template InternalErrors,"/var/log/sitelogs/%fromhost%/%syslogtag:2:$:pos-end-relative%/error.log"
+$template InternalCron,"/var/log/sitelogs/%fromhost%/%syslogtag:2:$:pos-end-relative%/cron.log"
+local1.err -?InternalErrors
+local1.* -?InternalAccess
+local2.* -?InternalCron
+EOF
+    service rsyslog restart
 
     # Fire off moodle setup
     echo -e "cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$postgresIP" --dbname="$moodledbname" --dbuser="$moodledbuser" --dbpass="$moodledbpass" --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
