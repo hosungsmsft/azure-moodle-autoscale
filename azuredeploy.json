@@ -448,7 +448,7 @@
             "skuSizeMB": "[parameters('skuSizeMB')]",
             "skuTier": "[parameters('skuTier')]",
             "sslEnforcement": "[parameters('sslEnforcement')]",
-            "subnetRedis": "[concat('san-subnet-',variables('resourceprefix'))]",
+            "subnetRedis": "[concat('redis-subnet-',variables('resourceprefix'))]",
             "subnetRedisPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)))]",
             "subnetRedisRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),3)), '.0/24')]",
             "subnetSan": "[concat('san-subnet-',variables('resourceprefix'))]",
