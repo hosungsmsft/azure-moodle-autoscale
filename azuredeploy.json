@@ -7,7 +7,7 @@
                 0,
                 1
             ],
-            "defaultValue": 0,
+            "defaultValue": 1,
             "metadata": {
                 "description": "Switch to process or bypass all scripts/extensions"
             },
