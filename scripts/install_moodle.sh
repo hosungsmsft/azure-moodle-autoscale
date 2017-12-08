@@ -124,7 +124,6 @@
     # downloading moodle 
     curl -k --max-redirs 10 https://github.com/moodle/moodle/archive/'$moodleVersion'.zip -L -o moodle.zip
     unzip -q moodle.zip
-    echo -e \n\rMoving moodle files to Gluster\n\r 
     mv -v moodle-'$moodleVersion' /moodle/html/moodle
 
     # Commented out as the plugin is not available
