@@ -21,7 +21,7 @@
                     "family": "P",
                     "name": "Premium"
                 },
-                "subnetId": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName), '/subnets/', parameters('moodleCommon').subnetWeb)]"
+                "subnetId": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName), '/subnets/', parameters('moodleCommon').subnetRedis)]"
             },
             "type": "Microsoft.Cache/Redis"
         }
