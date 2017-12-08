@@ -34,12 +34,6 @@
                         }
                     },
                     {
-                        "name": "[parameters('moodleCommon').subnetDb]",
-                        "properties": {
-                            "addressPrefix": "[parameters('moodleCommon').subnetDbRange]"
-                        }
-                    },
-                    {
                         "name": "[parameters('moodleCommon').gatewaySubnet]",
                         "properties": {
                             "addressPrefix": "[parameters('moodleCommon').gatewaySubnetRange]"
@@ -221,7 +215,7 @@
         "documentation04": "    vNetAddressSpace - base of address of 16 bit address range",
         "documentation05": "    subnetWeb        - name of subnet inside virtual network - will be assigned the .0.0/24 range",
         "documentation06": "    subnetSan        - name of subnet inside virtual network - will be assigned the .1.0/24 range",
-        "documentation07": "    subnetDb         - name of subnet inside virtual network - will be assigned the .2.0/24 range",
+        "documentation07": "    gatewaySubnet    - name of subnet inside virtual network - will be assigned the .2.0/24 range",
         "documentation08": "    lbPipName        - name of public IP",
         "documentation10": "    lbName           - name of Moodl load balancer",
         "extBeID": "[concat(variables('extLbID'),'/backendAddressPools/',parameters('moodleCommon').extBeName)]",
