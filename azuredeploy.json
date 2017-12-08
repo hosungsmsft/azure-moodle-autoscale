@@ -38,7 +38,7 @@
             "type": "string"
         },
         "firewallRuleName": {
-            "defaultValue": "vnet-gateway-ip",
+            "defaultValue": "open-to-the-world",
             "metadata": {
                 "description": "Postgres firewall rule name"
             },
