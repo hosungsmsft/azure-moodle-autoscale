@@ -2,12 +2,6 @@
     "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "gw-ip": {
-            "metadata": {
-                "description": "gateway ip address"
-            },
-            "type": "string"
-        },
         "moodleCommon": {
             "metadata": {
                 "description": "Common Moodle values"
@@ -37,8 +31,8 @@
                     "location": "[resourceGroup().location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
                     "properties": {
-                        "endIpAddress": "[parameters('gw-ip')]",
-                        "startIpAddress": "[parameters('gw-ip')]"
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "255.255.255.255"
                     },
                     "type": "firewallrules"
                 }

@@ -227,44 +227,16 @@
         {
             "apiVersion": "2015-01-01",
             "name": "postgresTemplate",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/network2Template"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
                     "moodleCommon": {
                         "value": "[variables('moodleCommon')]"
-                    },
-                    "gw-ip": {
-                        "value": "[reference('networkTemplate').outputs.gwIP.value]"
                     }
                 },
                 "templateLink": {
                     "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'postgres.json')]"
                 }
-            },
-            "type": "Microsoft.Resources/deployments"
-        },
-        {
-            "apiVersion": "2015-01-01",
-            "name": "network2Template",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/networkTemplate"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "parameters": {
-                    "moodleCommon": {
-                        "value": "[variables('moodleCommon')]"
-                    }
-                },
-                "templateLink": {
-                    "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'network.json')]"
-                }
-            },
-            "metadata": {
-                "description": "to parse network template second time to get gw ip"
             },
             "type": "Microsoft.Resources/deployments"
         },
