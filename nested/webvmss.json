@@ -132,7 +132,7 @@
               },
               "type": "Microsoft.Compute/virtualMachines/extensions",
               "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('moodleCommon').vmssName)]"
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('moodleCommon').vmssName)]"
               ]
            
             }
