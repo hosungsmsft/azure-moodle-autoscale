@@ -109,7 +109,34 @@
             "tags": {
                 "displayName": "webfarm"
             },
-            "type": "Microsoft.Compute/virtualMachineScaleSets"
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "resources": [
+              {
+                "apiVersion": "2015-06-15",
+                "location": "[resourceGroup().location]",
+                "name": "[concat(parameters('moodleCommon').vmssName, '/', 'setup_moodle')]",
+                "properties": {
+                  "autoUpgradeMinorVersion": true,
+                  "publisher": "Microsoft.OSTCExtensions",
+                  "settings": {
+                    "commandToExecute": "[variables('cmdExec')]",
+                    "fileUris": [
+                        "[variables('scriptUri')]"
+                    ]
+                },
+                "type": "CustomScriptForLinux",
+                "typeHandlerVersion": "1.4"
+              },
+              "tags": {
+                "displayName": "setup_moodle"
+              },
+              "type": "Microsoft.Compute/virtualMachines/extensions",
+              "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('moodleCommon').vmssName)]"
+              ]
+           
+            }
+          ]
         },
         {
             "apiVersion": "2015-04-01",
@@ -174,31 +201,6 @@
                 "targetResourceUri": "[variables('vmssID')]"
             },
             "type": "Microsoft.Insights/autoscaleSettings"
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "location": "[resourceGroup().location]",
-            "name": "[concat(parameters('moodleCommon').vmssName, '/', 'setup_moodle')]",
-            "properties": {
-                "autoUpgradeMinorVersion": true,
-                "publisher": "Microsoft.OSTCExtensions",
-                "settings": {
-                    "commandToExecute": "[variables('cmdExec')]",
-                    "fileUris": [
-                        "[variables('scriptUri')]"
-                    ]
-                },
-                "type": "CustomScriptForLinux",
-                "typeHandlerVersion": "1.4"
-            },
-            "tags": {
-                "displayName": "setup_moodle"
-            },
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "dependsOn": [
-               "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('moodleCommon').vmssName)]"
-            ]
-
         }
     ],
     "variables": {
