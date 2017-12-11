@@ -602,12 +602,9 @@ EOF
 \$UDPServerRun 514
 EOF
     cat <<EOF >> /etc/rsyslog.d/40-sitelogs.conf
-$template InternalAccess,"/var/log/sitelogs/%fromhost%/%syslogtag:2:$:pos-end-relative%/access.log"
-$template InternalErrors,"/var/log/sitelogs/%fromhost%/%syslogtag:2:$:pos-end-relative%/error.log"
-$template InternalCron,"/var/log/sitelogs/%fromhost%/%syslogtag:2:$:pos-end-relative%/cron.log"
-local1.err -?InternalErrors
-local1.* -?InternalAccess
-local2.* -?InternalCron
+local1.*   /var/log/sitelogs/moodle/access.log
+local1.err   /var/log/sitelogs/moodle/error.log
+local2.*   /var/log/sitelogs/moodle/cron.log
 EOF
     service rsyslog restart
 
