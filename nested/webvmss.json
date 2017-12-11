@@ -178,7 +178,7 @@
         {
             "apiVersion": "2015-06-15",
             "location": "[resourceGroup().location]",
-            "name": "autoscale/setup_moodle",
+            "name": "autoscale_setup_moodle",
             "properties": {
                 "autoUpgradeMinorVersion": true,
                 "publisher": "Microsoft.OSTCExtensions",
