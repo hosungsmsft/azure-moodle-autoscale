@@ -636,7 +636,14 @@ EOF
     cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$azuremoodledbuser   --dbpass=$moodledbpass   --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
 
     # Add the ObjectFS configuration to Moodle.
-    # We need to use $sas and $wabsacctname
+    echo "${postgresIP}:5432:postgres:${pgadminlogin}:${pgadminpass}" > /root/.pgpass
+    chmod 600 /root/.pgpass
+    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'enabletasks', 1);" ${moodledbname}
+    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'filesystem', '\tool_objectfs\azure_file_system');" ${moodledbname}
+    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_accountname', '${wabsacctname}');" ${moodledbname}
+    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_container', 'objectfs');" ${moodledbname}
+    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_sastoken', '${sas}');" ${moodledbname}
+    rm -f /root/.pgpass
 
     echo -e "\n\rDone! Installation completed!\n\r"
 
@@ -647,12 +654,12 @@ EOF
     sed -i "23 a \$CFG->session_redis_database = 0;  // Optional, default is db 0." /moodle/html/moodle/config.php
     sed -i "23 a \$CFG->session_redis_port = 6379;  // Optional." /moodle/html/moodle/config.php
     sed -i "23 a \$CFG->session_redis_host = '$redisDns';" /moodle/html/moodle/config.php
-    sed -i "23 a \$CFG->session_handler_class = '\core\session\redis';" /moodle/html/moodle/config.php
+    sed -i "23 a \$CFG->session_handler_class = '\\\core\\\session\\\redis';" /moodle/html/moodle/config.php
 
     # We proxy ssl, so moodle needs to know this
     sed -i "23 a \$CFG->sslproxy  = 'true';" /moodle/html/moodle/config.php
 
     # Set the ObjectFS alternate filesystem
-    sed -i "23 a \$CFG->alternative_file_system_class = '\tool_objectfs\azure_file_system';" /moodle/html/moodle/config.php
+    sed -i "23 a \$CFG->alternative_file_system_class = '\\\tool_objectfs\\\azure_file_system';" /moodle/html/moodle/config.php
 
 }  > /tmp/install.log
