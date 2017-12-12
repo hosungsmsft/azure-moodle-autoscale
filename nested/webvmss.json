@@ -109,34 +109,7 @@
             "tags": {
                 "displayName": "webfarm"
             },
-            "type": "Microsoft.Compute/virtualMachineScaleSets",
-            "resources": [
-              {
-                "apiVersion": "2015-06-15",
-                "location": "[resourceGroup().location]",
-                "name": "[concat(parameters('moodleCommon').vmssName, '/', 'setup_moodle')]",
-                "properties": {
-                  "autoUpgradeMinorVersion": true,
-                  "publisher": "Microsoft.OSTCExtensions",
-                  "settings": {
-                    "commandToExecute": "[variables('cmdExec')]",
-                    "fileUris": [
-                        "[variables('scriptUri')]"
-                    ]
-                },
-                "type": "CustomScriptForLinux",
-                "typeHandlerVersion": "1.4"
-              },
-              "tags": {
-                "displayName": "setup_moodle"
-              },
-              "type": "Microsoft.Compute/virtualMachines/extensions",
-              "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('moodleCommon').vmssName)]"
-              ]
-           
-            }
-          ]
+            "type": "Microsoft.Compute/virtualMachineScaleSets"
         },
         {
             "apiVersion": "2015-04-01",
