@@ -36,20 +36,23 @@
     wabsacctname=$12
     wabsacctkey=$13
     azuremoodledbuser=$14
+    redisDns=$15
 
-    echo $moodleVersion  >> /tmp/vars.txt
-    echo $glusterNode    >> /tmp/vars.txt
-    echo $glusterVolume  >> /tmp/vars.txt
-    echo $siteFQDN       >> /tmp/vars.txt
-    echo $postgresIP     >> /tmp/vars.txt
-    echo $moodledbname   >> /tmp/vars.txt
-    echo $moodledbuser   >> /tmp/vars.txt
-    echo $moodledbpass   >> /tmp/vars.txt
-    echo    $adminpass   >> /tmp/vars.txt
-    echo $pgadminlogin   >> /tmp/vars.txt
-    echo $pgadminpass    >> /tmp/vars.txt
-    echo $wabsacctname   >> /tmp/vars.txt
-    echo $wabsacctkey    >> /tmp/vars.txt
+    echo $moodleVersion        >> /tmp/vars.txt
+    echo $glusterNode          >> /tmp/vars.txt
+    echo $glusterVolume        >> /tmp/vars.txt
+    echo $siteFQDN             >> /tmp/vars.txt
+    echo $postgresIP           >> /tmp/vars.txt
+    echo $moodledbname         >> /tmp/vars.txt
+    echo $moodledbuser         >> /tmp/vars.txt
+    echo $moodledbpass         >> /tmp/vars.txt
+    echo    $adminpass         >> /tmp/vars.txt
+    echo $pgadminlogin         >> /tmp/vars.txt
+    echo $pgadminpass          >> /tmp/vars.txt
+    echo $wabsacctname         >> /tmp/vars.txt
+    echo $wabsacctkey          >> /tmp/vars.txt
+    echo $azuremoodledbuser    >> /tmp/vars.txt
+    echo $redisDns             >> /tmp/vars.txt
 
     # create gluster mount point
     mkdir -p /moodle
@@ -327,6 +330,26 @@ EOF
     sudo chmod -R 770 /moodle/certs
     sudo chmod -R 770 /moodle/moodledata
 
+#   # add redis configuration in /moodle/moodledata/muc/config.php
+#   cat <<EOF > /moodle/moodledata/muc/config.php
+#    'redis_store' =>
+#    array (
+#      'name' => 'redis_store',
+#      'plugin' => 'redis',
+#      'configuration' =>
+#      array (
+#        'server' => '$redisDns',
+#        'prefix' => 'moodle_prod',
+#      ),
+#      'features' => 2,
+#      'modes' => 1,
+#      'mappingsonly' => false,
+#      'class' => 'cachestore_redis',
+#      'default' => false,
+#      'lock' => 'cachelock_file_default',
+#    ),
+#  ),
+#EOF
 
    # Remove the default site. Moodle is the only site we want
    rm -f /etc/nginx/sites-enabled/default
@@ -610,12 +633,21 @@ EOF
 
     # Fire off moodle setup
     echo -e "cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://"$siteFQDN" --dataroot=/moodle/moodledata --dbhost="$postgresIP" --dbname="$moodledbname" --dbuser="$azuremoodledbuser" --dbpass="$moodledbpass" --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass="$adminpass" --adminemail=admin@"$siteFQDN" --non-interactive --agree-license --allow-unstable || true "
-	         cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$azuremoodledbuser   --dbpass=$moodledbpass   --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
+    cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$azuremoodledbuser   --dbpass=$moodledbpass   --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
 
     # Add the ObjectFS configuration to Moodle.
     # We need to use $sas and $wabsacctname
 
     echo -e "\n\rDone! Installation completed!\n\r"
+
+    # redis configuration in /moodle/html/moodle/config.php
+    sed -i "23 a \"$CFG->session_redis_lock_expire = 7200;" /moodle/html/moodle/config.php
+    sed -i "23 a \"$CFG->session_redis_acquire_lock_timeout = 120;" /moodle/html/moodle/config.php
+    sed -i "23 a \"$CFG->session_redis_prefix = 'moodle_prod'; // Optional, default is don't set one." /moodle/html/moodle/config.php
+    sed -i "23 a \"$CFG->session_redis_database = 0;  // Optional, default is db 0." /moodle/html/moodle/config.php
+    sed -i "23 a \"$CFG->session_redis_port = 6379;  // Optional." /moodle/html/moodle/config.php
+    sed -i "23 a \"$CFG->session_redis_host = '$redisDns';" /moodle/html/moodle/config.php
+    sed -i "23 a \"$CFG->session_handler_class = '\core\session\redis';" /moodle/html/moodle/config.php
 
     # We proxy ssl, so moodle needs to know this
     sed -i "23 a \$CFG->sslproxy  = 'true';" /moodle/html/moodle/config.php

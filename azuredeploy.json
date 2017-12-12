@@ -316,6 +316,7 @@
             "dependsOn": [
                 "Microsoft.Resources/deployments/glusterTemplate",
                 "Microsoft.Resources/deployments/recoveryTemplate",
+                "Microsoft.Resources/deployments/redisTemplate",
                 "Microsoft.Resources/deployments/blobStorageAccountTemplate"
             ],
             "name": "ControllerTemplate",
@@ -439,6 +440,7 @@
             },
             "policyName": "[concat('policy-',variables('resourceprefix'))]",
             "redisCacheName": "[concat('redis-',variables('resourceprefix'))]",
+            "redisDns": "[concat('redis-',variables('resourceprefix'),'.redis.cache.windows.net')]",
             "resourcesPrefix": "[variables('resourceprefix')]",
             "scriptLocation": "https://git.catalyst-au.net/internal/azure/raw/master/scripts/",
             "serverName": "[concat('postgres-',variables('resourceprefix'))]",
