@@ -174,10 +174,28 @@
                 "targetResourceUri": "[variables('vmssID')]"
             },
             "type": "Microsoft.Insights/autoscaleSettings"
-        }
+        },
+        {
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('moodleCommon').vmssName)]"
+            ],
+            "name": "[concat(parameters('moodleCommon').vmssName,'-ScriptProcessor')]",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "moodleCommon": {
+                        "value": "[parameters('moodleCommon')]"
+                    }
+                },
+                "templateLink": {
+                    "uri": "[concat(    parameters('moodleCommon').baseTemplateUrl,'webvmssconfig',parameters('moodleCommon').applyScriptsSwitch,'.json')]"
+                }
+            },
+            "type": "Microsoft.Resources/deployments"
+        },
     ],
     "variables": {
-        "cmdExec": "[concat('bash ',parameters('moodleCommon').moodleSetupScriptFilename,' ',parameters('moodleCommon').gfsNameRoot,'0', ' ','data', ' ', parameters('moodleCommon').lbDns, ' ', concat('jumpbox-vm-',parameters('moodleCommon').resourcesPrefix))]",
         "dstorID": "[resourceId('Microsoft.Storage/storageAccounts',parameters('moodleCommon').vmssdStorageAccounttName)]",
         "extBeID": "[concat(variables('extLbID'),'/backendAddressPools/',parameters('moodleCommon').extBeName)]",
         "extFeID": "[concat(variables('extLbID'),'/frontendIPConfigurations/',parameters('moodleCommon').extFeName)]",
