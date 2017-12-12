@@ -57,6 +57,10 @@ echo $siteFQDN >> /tmp/vars.txt
   sudo mount -a
 
   # Configure syslog to forward
+  cat <<EOF >> /etc/rsyslog.conf
+\$ModLoad imudp
+\$UDPServerRun 514
+EOF
   cat <<EOF >> /etc/rsyslog.d/40-remote.conf
 local1.*   @${syslogserver}:514
 local2.*   @${syslogserver}:514
