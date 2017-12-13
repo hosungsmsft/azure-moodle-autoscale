@@ -88,6 +88,7 @@
         --container-name objectfs \
         --name readwrite \
         --start $(date --date="1 day ago" +%F) \
+        --expiry $(date --date="2199-01-01" +%F) \
         --permissions rw >> /tmp/wabs.log
 
     sas=$(az storage container generate-sas \
@@ -101,15 +102,8 @@
     echo -e '\n\rInstalling GlusterFS on '$glusterNode':/'$glusterVolume '/moodle\n\r' 
     sudo mount -t glusterfs $glusterNode:/$glusterVolume /moodle
 
-    #create html directory for storing moodle files
-    sudo mkdir -p /moodle/html
-
-    # create directory for apache ssl certs
-    sudo mkdir -p /moodle/certs
-
-    # create moodledata directory
-    sudo mkdir -p /moodle/moodledata
-
+    
+    
     # install pre-requisites
     sudo apt-get install -y --fix-missing python-software-properties unzip
 
@@ -122,14 +116,21 @@
     sudo apt-get install -y --force-yes graphviz aspell php-common php-soap php-json php-redis > /tmp/apt6.log
     sudo apt-get install -y --force-yes php-bcmath php-gd php-pgsql php-xmlrpc php-intl php-xml php-bz2 >> /tmp/apt6.log
 
+
+    # Set up initial moodle dirs
+    mkdir -p /moodle/html
+    mkdir -p /moodle/certs
+    mkdir -p /moodle/moodledata
+    chown -R www-data.www-data /moodle
+
     # install Moodle 
     echo '#!/bin/bash
     cd /tmp
 
     # downloading moodle 
-    curl -k --max-redirs 10 https://github.com/moodle/moodle/archive/'$moodleVersion'.zip -L -o moodle.zip
-    unzip -q moodle.zip
-    mv -v moodle-'$moodleVersion' /moodle/html/moodle
+    /usr/bin/curl -k --max-redirs 10 https://github.com/moodle/moodle/archive/'$moodleVersion'.zip -L -o moodle.zip
+    /usr/bin/unzip -q moodle.zip
+    /bin/mv -v moodle-'$moodleVersion' /moodle/html/moodle
 
     # Commented out as the plugin is not available
     # install Office 365 plugins
@@ -141,21 +142,21 @@
     #fi
 
     # Install the ObjectFS plugin
-    curl -k --max-redirs 10 https://github.com/catalyst/moodle-tool_objectfs/archive/master.zip -L -o plugin-objectfs.zip
-    unzip -q plugin-objectfs.zip
-    mkdir -p /moodle/html/moodle/admin/tool/objectfs
-    cp -r moodle-tool_objectfs-master/* /moodle/html/moodle/admin/tool/objectfs
-    rm -rf moodle-tool_objectfs-master
+    /usr/bin/curl -k --max-redirs 10 https://github.com/catalyst/moodle-tool_objectfs/archive/master.zip -L -o plugin-objectfs.zip
+    /usr/bin/unzip -q plugin-objectfs.zip
+    /bin/mkdir -p /moodle/html/moodle/admin/tool/objectfs
+    /bin/cp -r moodle-tool_objectfs-master/* /moodle/html/moodle/admin/tool/objectfs
+    /bin/rm -rf moodle-tool_objectfs-master
 
     # Install the ObjectFS Azure library
-    curl -k --max-redirs 10 https://github.com/catalyst/moodle-local_azure_storage/archive/master.zip -L -o plugin-azurelibrary.zip
-    unzip -q plugin-azurelibrary.zip
-    mkdir -p /moodle/html/moodle/local/azure_storage
-    cp -r moodle-local_azure_storage-master/* /moodle/html/moodle/local/azure_storage
-    rm -rf moodle-local_azure_storage-master
+    /usr/bin/curl -k --max-redirs 10 https://github.com/catalyst/moodle-local_azure_storage/archive/master.zip -L -o plugin-azurelibrary.zip
+    /usr/bin/unzip -q plugin-azurelibrary.zip
+    /bin/mkdir -p /moodle/html/moodle/local/azure_storage
+    /bin/cp -r moodle-local_azure_storage-master/* /moodle/html/moodle/local/azure_storage
+    /bin/rm -rf moodle-local_azure_storage-master
     ' > /tmp/setup-moodle.sh 
 
-    sudo chmod +x /tmp/setup-moodle.sh
+    sudo -u www-data /tmp/setup-moodle.sh
     sudo /tmp/setup-moodle.sh                  >> /tmp/apt7.log
 
     # create cron entry
@@ -307,7 +308,7 @@ server {
 EOF
 
     echo -e "Generating SSL self-signed certificate"
-    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /moodle/certs/nginx.key -out /moodle/certs/nginx.crt -subj "/C=BR/ST=SP/L=SaoPaulo/O=IT/CN=$siteFQDN"
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /moodle/certs/nginx.key -out /moodle/certs/nginx.crt -subj "/C=BR/ST=SP/L=SaoPaulo/O=IT/CN=$siteFQDN"
 
    # php config 
    PhpIni=/etc/php/7.0/fpm/php.ini
@@ -1557,13 +1558,13 @@ EOF
     cd /tmp; sudo -u www-data /usr/bin/php /moodle/html/moodle/admin/cli/install.php --chmod=770 --lang=en_us --wwwroot=https://$siteFQDN   --dataroot=/moodle/moodledata --dbhost=$postgresIP   --dbname=$moodledbname   --dbuser=$azuremoodledbuser   --dbpass=$moodledbpass   --dbtype=pgsql --fullname='Moodle LMS' --shortname='Moodle' --adminuser=admin --adminpass=$adminpass   --adminemail=admin@$siteFQDN   --non-interactive --agree-license --allow-unstable || true
 
     # Add the ObjectFS configuration to Moodle.
-    echo "${postgresIP}:5432:postgres:${pgadminlogin}:${pgadminpass}" > /root/.pgpass
+    echo "${postgresIP}:5432:${moodledbname}:${azuremoodledbuser}:${moodledbpass}" > /root/.pgpass
     chmod 600 /root/.pgpass
-    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'enabletasks', 1);" ${moodledbname}
-    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'filesystem', '\tool_objectfs\azure_file_system');" ${moodledbname}
-    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_accountname', '${wabsacctname}');" ${moodledbname}
-    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_container', 'objectfs');" ${moodledbname}
-    psql -h $postgresIP -U $pgadminlogin -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_sastoken', '${sas}');" ${moodledbname}
+    psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'enabletasks', 1);" $moodledbname
+    psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'filesystem', '\tool_objectfs\azure_file_system');" $moodledbname
+    psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_accountname', '$wabsacctname');" $moodledbname
+    psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_container', 'objectfs');" $moodledbname
+    psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_sastoken', '$sas');" $moodledbname
     rm -f /root/.pgpass
 
     echo -e "\n\rDone! Installation completed!\n\r"
