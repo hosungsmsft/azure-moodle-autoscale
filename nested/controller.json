@@ -13,6 +13,12 @@
                 "description": "Key used to create a storage container"
             },
             "type": "string"
+        },
+        "redisPrimaryKey": {
+            "metadata": {
+                "description": "Key used for Redis authentication"
+            },
+            "type": "string"
         }
     },
     "resources": [
@@ -155,7 +161,11 @@
                     },
                     "blobStorageAccountKey": {
                         "value": "[parameters('blobStorageAccountKey')]"
+                    },
+                    "redisPrimaryKey": {
+                        "value": "[parameters('redisPrimaryKey')]"
                     }
+
                 },
                 "templateLink": {
                     "uri": "[concat(    parameters('moodleCommon').baseTemplateUrl,'controllerconfig',parameters('moodleCommon').applyScriptsSwitch,'.json')]"
