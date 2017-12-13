@@ -326,14 +326,7 @@ EOF
    sed -i "s/;opcache.memory_consumption.*/opcache.memory_consumption = 256/" $PhpIni
    sed -i "s/;opcache.max_accelerated_files.*/opcache.max_accelerated_files = 8000/" $PhpIni
     
-    sudo chown -R www-data /moodle/html/moodle
-    sudo chown -R www-data /moodle/certs
-    sudo chown -R www-data /moodle/moodledata
-    sudo chmod -R 770 /moodle/html/moodle
-    sudo chmod -R 770 /moodle/certs
-    sudo chmod -R 770 /moodle/moodledata
-
-   # add redis configuration in /moodle/moodledata/muc/config.php
+   # create redis configuration in /moodle/moodledata/muc/config.php
    cat <<EOF > /moodle/moodledata/muc/config.php
 <?php defined('MOODLE_INTERNAL') || die();
  $configuration = array (
