@@ -37,7 +37,7 @@
     wabsacctkey=$13
     azuremoodledbuser=$14
     redisDns=$15
-    redisKey=$16
+    redisAuth=$16
 
     echo $moodleVersion        >> /tmp/vars.txt
     echo $glusterNode          >> /tmp/vars.txt
@@ -54,7 +54,7 @@
     echo $wabsacctkey          >> /tmp/vars.txt
     echo $azuremoodledbuser    >> /tmp/vars.txt
     echo $redisDns             >> /tmp/vars.txt
-    echo $redisKey             >> /tmp/vars.txt
+    echo $redisAuth            >> /tmp/vars.txt
 
     # create gluster mount point
     mkdir -p /moodle
@@ -656,6 +656,7 @@ EOF
     sed -i "23 a \$CFG->session_redis_database = 0;  // Optional, default is db 0." /moodle/html/moodle/config.php
     sed -i "23 a \$CFG->session_redis_port = 6379;  // Optional." /moodle/html/moodle/config.php
     sed -i "23 a \$CFG->session_redis_host = '$redisDns';" /moodle/html/moodle/config.php
+    sed -i "23 a \$CFG->session_redis_auth = '$redisAuth';" /moodle/html/moodle/config.php
     sed -i "23 a \$CFG->session_handler_class = '\\\core\\\session\\\redis';" /moodle/html/moodle/config.php
 
     # We proxy ssl, so moodle needs to know this
