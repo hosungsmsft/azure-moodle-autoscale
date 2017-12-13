@@ -37,6 +37,7 @@
     wabsacctkey=$13
     azuremoodledbuser=$14
     redisDns=$15
+    redisKey=$16
 
     echo $moodleVersion        >> /tmp/vars.txt
     echo $glusterNode          >> /tmp/vars.txt
@@ -53,6 +54,7 @@
     echo $wabsacctkey          >> /tmp/vars.txt
     echo $azuremoodledbuser    >> /tmp/vars.txt
     echo $redisDns             >> /tmp/vars.txt
+    echo $redisKey             >> /tmp/vars.txt
 
     # create gluster mount point
     mkdir -p /moodle

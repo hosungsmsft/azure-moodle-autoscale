@@ -328,6 +328,9 @@
                     },
                     "blobStorageAccountKey": {
                         "value": "[reference('blobStorageAccountTemplate').outputs.blobStorageAccountKey.value]"
+                    },
+                    "redisPrimaryKey": {
+                        "value": "[reference('redisTemplate').outputs.redisPrimaryKey.value]"
                     }
                 },
                 "templateLink": {

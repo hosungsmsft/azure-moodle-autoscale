@@ -11,7 +11,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2016-04-01",
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').redisCacheName]",
             "properties": {
@@ -28,6 +28,13 @@
     ],
     "variables": {
         "documentation1": "This sub-template creates a redis cache.  It expects certain values in the 'common' datastructure.",
-        "documentation2": " redisCacheName - name of cache"
+        "documentation2": " redisCacheName - name of cache",
+        "redisResourceId": "[concat(resourceGroup().id,'/providers/Microsoft.Cache/Redis/', parameters('moodleCommon').redisCacheName)]"
+    },
+    "outputs": {
+        "redisPrimaryKey": {
+            "value": "[listKeys(variables('redisResourceId')), '2016-04-01').primaryKey]",
+            "type": "string"
+        }
     }
 }
