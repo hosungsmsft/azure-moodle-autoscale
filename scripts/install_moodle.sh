@@ -121,6 +121,7 @@
     mkdir -p /moodle/html
     mkdir -p /moodle/certs
     mkdir -p /moodle/moodledata
+    mkdir -p /moodle/moodledata/muc
     chown -R www-data.www-data /moodle
 
     # install Moodle 
