@@ -156,8 +156,7 @@
     /bin/rm -rf moodle-local_azure_storage-master
     ' > /tmp/setup-moodle.sh 
 
-    sudo -u www-data /tmp/setup-moodle.sh
-    sudo /tmp/setup-moodle.sh                  >> /tmp/apt7.log
+    sudo -u www-data /tmp/setup-moodle.sh >> /tmp/setupmoodle.log
 
     # create cron entry
     # It is scheduled for once per day. It can be changed as needed.
