@@ -13,27 +13,27 @@
         {
             "apiVersion": "[parameters('moodleCommon').computeApi]",
             "location": "[resourceGroup().location]",
-            "name": "[parameters('moodleCommon').gfxAvailabilitySetName]",
+            "name": "[parameters('moodleCommon').elasticAvailabilitySetName]",
             "properties": {
                 "managed": "true",
                 "platformFaultDomainCount": 2,
                 "platformUpdateDomainCount": 5
             },
             "tags": {
-                "displayName": "Gluster Availability Set"
+                "displayName": "Elastic Availability Set"
             },
             "type": "Microsoft.Compute/availabilitySets"
         },
         {
             "apiVersion": "2017-08-01",
             "copy": {
-                "count": "[parameters('moodleCommon').glusterVmCount]",
+                "count": "[parameters('moodleCommon').elasticVmCount]",
                 "name": "vmloop"
             },
             "dependsOn": [
-                "[concat('Microsoft.Compute/availabilitySets/',parameters('moodleCommon').gfxAvailabilitySetName)]"
+                "[concat('Microsoft.Compute/availabilitySets/',parameters('moodleCommon').elasticAvailabilitySetName)]"
             ],
-            "name": "[concat('glustervm',copyindex())]",
+            "name": "[concat('elasticvm',copyindex())]",
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
@@ -45,19 +45,19 @@
                     }
                 },
                 "templateLink": {
-                    "uri": "[concat(    parameters('moodleCommon').baseTemplateUrl,'glustervm.json')]"
+                    "uri": "[concat(    parameters('moodleCommon').baseTemplateUrl,'elasticvm.json')]"
                 }
             },
             "type": "Microsoft.Resources/deployments"
         }
     ],
     "variables": {
-        "documentation1": "This sub-template drives the gluster (scale-out network-attached storage file system) creation process.",
+        "documentation1": "This sub-template drives the elastic (scale-out network-attached storage file system) creation process.",
         "documentation2": "It expects certain values in the 'common' datastructure.",
-        "documentation3": "    computeApi              - the 'managed' resources need to all use this value",
-        "documentation4": "    gfxAvailabilitySetName  - name of availability set for the gluster farm",
-        "documentation5": "    glusterVmCount          - number of nodes to create",
+        "documentation3": "    computeApi                  - the 'managed' resources need to all use this value",
+        "documentation4": "    elasticAvailabilitySetName  - name of availability set for the elastic farm",
+        "documentation5": "    elasticVmCount              - number of nodes to create",
         "documentation6": "This sub-template calls other sub-templates",
-        "documentation7": "    glustervm - number of nodes in the gluster farm"
+        "documentation7": "    elasticvm - number of nodes in the elastic farm"
     }
 }

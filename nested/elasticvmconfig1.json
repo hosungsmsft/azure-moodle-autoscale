@@ -44,13 +44,12 @@
         }
     ],
     "variables": {
-        "cmdExec": "[concat('bash ', parameters('moodleCommon').elasticScriptFilename, ' ', parameters('moodleCommon').elasticNameRoot, ' ', parameters('moodleCommon').subnetSanPrefix, ' data ', parameters('vmNumber'), ' ', parameters('moodleCommon').elasticVmCount)]",
+        "cmdExec": "[concat('bash ', parameters('moodleCommon').elasticScriptFilename, ' ', parameters('moodleCommon').elasticClusterName, ' ', '[concat(parameters('moodleCommon').elasticVmIPPrefix,'0')]', ' ', '[concat(parameters('moodleCommon').elasticVmIPPrefix,'1')]', ' ', '[concat(parameters('moodleCommon').elasticVmIPPrefix,'2')]']",
         "documentation01": "This sub-template applies a specific post-deployment script to the elastic search vms",
         "documentation02": "It expects certain values in the 'common' datastructure.",
         "documentation03": "    ScriptLocation        - partial web URI (equivalent to folder)",
         "documentation04": "    elasticScriptFilename - name of script file",
-        "documentation06": "    elasticNameRoot           - nameroot of elastic farm - note that the code applies a vmNumber to get to the specific node",
-        "documentation07": "    elasticVmCount        - database (mariadb) password",
+        "documentation06": "    elasticNameRoot       - nameroot of elastic farm - note that the code applies a vmNumber to get to the specific node",
         "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').elasticScriptFilename)]"
     }
 }

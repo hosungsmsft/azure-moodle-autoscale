@@ -189,7 +189,7 @@
             "vmSku": "Standard_DS2_v2"
         },
         "ElasticTshirt": "[variables(concat('ElasticSize', parameters('moodleCommon').elasticTshirtSize))]",
-        "asRef": "[       resourceId('Microsoft.Compute/availabilitySets',  parameters('moodleCommon').elasticAvailabilitySetName)]",
+        "asRef": "[resourceId('Microsoft.Compute/availabilitySets',  parameters('moodleCommon').elasticAvailabilitySetName)]",
         "diskLoop": "[concat(variables('vmName'),'-disk')]",
         "documentation01": "This sub-template create the nodes of the elastic search cluster farm",
         "documentation02": "It expects certain values in the 'common' datastructure.",
@@ -210,5 +210,11 @@
         "nicRef": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
         "subnetSanRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName), '/subnets/',parameters('moodleCommon').subnetSan)]",
         "vmName": "[concat(parameters('moodleCommon').elasticNameRoot,parameters('counter'))]"
+    },
+    "outputs": {
+        "elasticVmIP": {
+            "value": "[reference(resourceId('Microsoft.Network/networkInterfaces',variables('nicName')), '2017-11-01').ipConfigurations[0].properties.privateIPAddress]",
+            "type": "string"
+        }
     }
 }

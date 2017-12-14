@@ -22,14 +22,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-glusterNode=$1
-glusterVolume=$2 
-siteFQDN=$3
-syslogserver=$4
+esClusterName=$1
+elasticvm1ip=$2 
+elasticvm2ip=$3
+elasticvm3ip=$4
 
-echo $glusterNode    >> /tmp/vars.txt
-echo $glusterVolume  >> /tmp/vars.txt
-echo $siteFQDN >> /tmp/vars.txt
+echo $esClusterName    >> /tmp/vars.txt
+echo $elasticvm1ip     >> /tmp/vars.txt
+echo $elasticvm2ip     >> /tmp/vars.txt
+echo $elasticvm3ip     >> /tmp/vars.txt
 
 {
 
