@@ -156,6 +156,7 @@
     /bin/rm -rf moodle-local_azure_storage-master
     ' > /tmp/setup-moodle.sh 
 
+    chmod 755 /tmp/setup-moodle.sh
     sudo -u www-data /tmp/setup-moodle.sh >> /tmp/setupmoodle.log
 
     # create cron entry
