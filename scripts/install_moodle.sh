@@ -626,7 +626,7 @@ EOF
    # create redis configuration in /moodle/moodledata/muc/config.php
    cat <<EOF > /moodle/moodledata/muc/config.php
 <?php defined('MOODLE_INTERNAL') || die();
- $configuration = array (
+ \$configuration = array (
   'siteidentifier' => '7a142be09ea65699e4a6f6ef91c0773c',
   'stores' => 
   array (
