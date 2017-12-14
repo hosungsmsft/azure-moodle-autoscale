@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script built for Ubuntu Server 14.04 LTS
+# This script built for Ubuntu Server 16.04 LTS
 # You can customize variables such as MOUNTPOINT, RAIDCHUNKSIZE and so on to your needs.
 # You can also customize it to work with other Linux flavours and versions.
 # If you customize it, copy it to either Azure blob storage or Github so that Azure

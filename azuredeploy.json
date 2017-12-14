@@ -37,6 +37,18 @@
             },
             "type": "string"
         },
+        "elasticTshirtSize": {
+            "allowedValues": [
+                "Small",
+                "Medium",
+                "Large"
+            ],
+            "defaultValue": "Small",
+            "metadata": {
+                "description": "VM size for the elastic search nodes"
+            },
+            "type": "string"
+        },
         "firewallRuleName": {
             "defaultValue": "open-to-the-world",
             "metadata": {
@@ -297,6 +309,26 @@
                 "Microsoft.Resources/deployments/networkTemplate",
                 "Microsoft.Resources/deployments/recoveryTemplate"
             ],
+            "name": "elasticTemplate",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "moodleCommon": {
+                        "value": "[variables('moodleCommon')]"
+                    }
+                },
+                "templateLink": {
+                    "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'elastic.json')]"
+                }
+            },
+            "type": "Microsoft.Resources/deployments"
+        },
+        {
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/networkTemplate",
+                "Microsoft.Resources/deployments/recoveryTemplate"
+            ],
             "name": "glusterTemplate",
             "properties": {
                 "mode": "Incremental",
@@ -314,6 +346,7 @@
         {
             "apiVersion": "2015-01-01",
             "dependsOn": [
+                "Microsoft.Resources/deployments/elasticTemplate",
                 "Microsoft.Resources/deployments/glusterTemplate",
                 "Microsoft.Resources/deployments/recoveryTemplate",
                 "Microsoft.Resources/deployments/redisTemplate",
@@ -384,13 +417,14 @@
         "documentation04": "    redis             - creates a redis cache",
         "documentation05": "    postgresql        - creates a postgresql server",
         "documentation06": "    vnet              - creates a virtual network with three subnets",
-        "documentation07": "    gluster           - creates a gluster file system on a vm farm",
-        "documentation08": "    webvmss           - creates a vm scale set",
-        "documentation09": "    controller        - creates a jumpbox and deploys code",
-        "documentation10": "GlusterFS Sizing guidance",
-        "documentation11": "Small - small number of courses, low interactiviness in the courses, low IOPSs required",
-        "documentation12": "Medium - interactive courses, with uploads; medium number of IOPS required",
-        "documentation13": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
+        "documentation07": "    elastic           - creates a elastic search cluster on a vm farm",
+        "documentation08": "    gluster           - creates a gluster file system on a vm farm",
+        "documentation09": "    webvmss           - creates a vm scale set",
+        "documentation10": "    controller        - creates a jumpbox and deploys code",
+        "documentation11": "GlusterFS Sizing guidance",
+        "documentation12": "Small - small number of courses, low interactiviness in the courses, low IOPSs required",
+        "documentation13": "Medium - interactive courses, with uploads; medium number of IOPS required",
+        "documentation14": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
             "postgresLogin": "[parameters('postgresLogin')]",
             "postgresUsername": "[concat(parameters('postgresLogin'), '@postgres-', variables('resourceprefix'))]",
@@ -407,7 +441,12 @@
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
             "blobStorageAccountType": "[parameters('blobStorageAccountType')]",
             "blobStorageAccountName": "[tolower(concat('abs',variables('resourceprefix')))]",
-            "computeApi": "2016-04-30-preview",
+            "computeApi": "2017-03-30",
+            "elasticAvailabilitySetName": "[concat('elastic-avset-',variables('resourceprefix'))]",
+            "elasticNameRoot": "[concat('elastic-vm-',variables('resourceprefix'))]",
+            "elasticScriptFilename": "install_elastic.sh",
+            "elasticTshirtSize": "[parameters('elasticTshirtSize')]",
+            "elasticVmCount": 3,
             "extBeName": "[concat('lb-backend-',variables('resourceprefix'))]",
             "extFeName": "[concat('lb-frontend-',variables('resourceprefix'))]",
             "extNatPool": "[concat('lb-natpool-',variables('resourceprefix'))]",
