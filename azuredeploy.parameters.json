@@ -6,7 +6,7 @@
                 "moodleVersion":               { "value": "MOODLE_34_STABLE" },
                 "applyScriptsSwitch":          { "value": 1 },
                 "azureBackupSwitch":           { "value": 0 },
-                "dbServerType":                { "value": "postgresql" },
+                "dbServerType":                { "value": "postgres" },
                 "azureBackupSwitch":           { "value": 0 },
                 "blobStorageAccountType":      { "value": "Standard_LRS"},
                 "elasticTshirtSize":           { "value": "Small" },

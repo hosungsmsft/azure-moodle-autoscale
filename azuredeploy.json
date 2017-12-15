@@ -37,6 +37,17 @@
             },
             "type": "string"
         },
+        "dbServerType": {
+            "defaultValue": "postgres",
+            "allowedValues": [
+                "postgres",
+                "mysql"
+            ],
+            "metadata": {
+                "description": "Database type"
+            },
+            "type": "string"
+        },
         "elasticTshirtSize": {
             "allowedValues": [
                 "Small",
@@ -513,7 +524,8 @@
             "vmssName": "[concat('vmss-',variables('resourceprefix'))]",
             "vmssdStorageAccounttName": "[concat('vmss',uniqueString(resourceGroup().id))]",
             "vnetName": "[concat('vnet-',variables('resourceprefix'))]",
-            "vpnType": "[parameters('vpnType')]"
+            "vpnType": "[parameters('vpnType')]",
+            "dbServerType": "[parameters('dbServerType')]"
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "resourceprefix": "[substring(uniqueString(resourceGroup().id, deployment().name), 3, 6)]"
