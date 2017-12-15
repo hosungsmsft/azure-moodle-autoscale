@@ -509,7 +509,7 @@
             "redisDns": "[concat('redis-',variables('resourceprefix'),'.redis.cache.windows.net')]",
             "resourcesPrefix": "[variables('resourceprefix')]",
             "scriptLocation": "https://git.catalyst-au.net/internal/azure/raw/master/scripts/",
-            "serverName": "[concat('parameters('dbServerType'), '-',variables('resourceprefix'))]",
+            "serverName": "[concat(parameters('dbServerType'), '-',variables('resourceprefix'))]",
             "siteURL": "[parameters('siteURL')]",
             "skuCapacityDTU": "[parameters('skuCapacityDTU')]",
             "skuFamily": "[parameters('skuFamily')]",
