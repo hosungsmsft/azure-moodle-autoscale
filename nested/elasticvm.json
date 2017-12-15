@@ -27,7 +27,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
-                                "id": "[variables('subnetSanRef')]"
+                                "id": "[variables('subnetElasticRef')]"
                             }
                         }
                     }
@@ -146,7 +146,7 @@
         "documentation03": " computeApi                  - the 'managed' resources need to all use this value",
         "documentation04": " elasticAvailabilitySetName  - name of availability set for the elastic search cluster farm",
         "documentation05": " vnetName                    - name of virtual network",
-        "documentation06": " subnetSan                   - name of subnet for elastic",
+        "documentation06": " subnetElastic                   - name of subnet for elastic",
         "documentation07": " elasticNameRoot             - nameroot for the elastic nodes - combined with counter to get actual name of each node - nic follow the naming scheme",
         "documentation08": " elasticTshirtSize           - supports flexible sizing - translates to a CPU/MEM/DISK details",
         "documentation09": " sshUsername                 - OS accountusername",
@@ -157,7 +157,7 @@
         "documentation18": " recoveryservicesEnlist      - conditionally enlists the VM into the backup regimen",
         "nicName": "[concat(variables('vmName'),'-nic')]",
         "nicRef": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
-        "subnetSanRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName), '/subnets/',parameters('moodleCommon').subnetSan)]",
+        "subnetElasticRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName), '/subnets/',parameters('moodleCommon').subnetElastic)]",
         "vmName": "[concat(parameters('moodleCommon').elasticNameRoot,parameters('counter'))]"
     },
     "outputs": {
