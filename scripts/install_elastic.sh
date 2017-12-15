@@ -38,7 +38,7 @@ echo $elasticvm3ip     >> /tmp/vars.txt
   wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
   echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
   sudo apt-get -y update
-  sudo apt-get install elasticsearch=5.5.0
+  sudo apt-get -y install elasticsearch=5.5.0
 
   # install the required packages
   sudo apt-get install openjdk-8-jre openjdk-8-jdk default-jre default-jdk -y
