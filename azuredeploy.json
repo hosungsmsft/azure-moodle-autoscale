@@ -495,7 +495,7 @@
             "skuSizeMB": "[parameters('skuSizeMB')]",
             "skuTier": "[parameters('skuTier')]",
             "sslEnforcement": "[parameters('sslEnforcement')]",
-            "subnetElastic": "[concat('web-subnet-',variables('resourceprefix'))]",
+            "subnetElastic": "[concat('elastic-subnet-',variables('resourceprefix'))]",
             "subnetElasticPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),4)))]",
             "subnetElasticRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),4)), '.0/24')]",
             "subnetRedis": "[concat('redis-subnet-',variables('resourceprefix'))]",
