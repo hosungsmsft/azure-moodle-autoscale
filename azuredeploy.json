@@ -217,7 +217,7 @@
             "type": "string"
         },
         "vNetAddressSpace": {
-            "defaultValue": "172.31.0.0",
+            "defaultValue": "172.49.0.0",
             "metadata": {
                 "description": "Address range for the Moodle virtual network - presumed /16 - further subneting during vnet creation"
             },
@@ -441,7 +441,7 @@
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
             "blobStorageAccountType": "[parameters('blobStorageAccountType')]",
             "blobStorageAccountName": "[tolower(concat('abs',variables('resourceprefix')))]",
-            "computeApi": "2017-03-30",
+            "computeApi": "2016-04-30-preview",
             "elasticAvailabilitySetName": "[concat('elastic-avset-',variables('resourceprefix'))]",
             "elasticClusterName": "[concat('es-cluster-',variables('resourceprefix'))]",
             "elasticNameRoot": "[concat('elastic-vm-',variables('resourceprefix'))]",
