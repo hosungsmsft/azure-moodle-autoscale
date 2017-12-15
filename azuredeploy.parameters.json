@@ -3,10 +3,21 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "parameters": {
-                "moodleVersion":        { "value": "MOODLE_34_STABLE" },
-                "applyScriptsSwitch":   { "value": 1 },
-                "azureBackupSwitch":    { "value": 0 },
-                "dbServerType":         { "value": "postgresql" }
+                "moodleVersion":               { "value": "MOODLE_34_STABLE" },
+                "applyScriptsSwitch":          { "value": 1 },
+                "azureBackupSwitch":           { "value": 0 },
+                "dbServerType":                { "value": "postgresql" },
+                "azureBackupSwitch":           { "value": 0 },
+                "blobStorageAccountType":      { "value": "Standard_LRS"},
+                "elasticTshirtSize":           { "value": "Small" },
+                "glusterTshirtSize":           { "value": "Small" },
+                "location":                    { "value": "West US" },
+                "siteURL":                     { "value": "www.example.org" },
+                "skuCapacityDTU":              { "value": 50 },
+                "skuName":                     { "value": "PGSQLB50" },
+                "skuSizeMB":                   { "value": 51200 },
+                "version":                     { "value": 9.6 },
+                "vNetAddressSpace":            { "value": 172.31.0.0 }
         }
 
     }
