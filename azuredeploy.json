@@ -217,7 +217,7 @@
             "type": "string"
         },
         "vNetAddressSpace": {
-            "defaultValue": "172.49.0.0",
+            "defaultValue": "172.31.0.0",
             "metadata": {
                 "description": "Address range for the Moodle virtual network - presumed /16 - further subneting during vnet creation"
             },
