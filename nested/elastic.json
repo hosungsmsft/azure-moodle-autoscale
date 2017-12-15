@@ -15,7 +15,6 @@
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').elasticAvailabilitySetName]",
             "properties": {
-                "managed": "true",
                 "platformFaultDomainCount": 2,
                 "platformUpdateDomainCount": 5
             },
