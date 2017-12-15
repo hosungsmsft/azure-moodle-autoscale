@@ -24,7 +24,7 @@
             "type": "Microsoft.Compute/availabilitySets"
         },
         {
-            "apiVersion": "2017-08-01",
+            "apiVersion": "2015-01-01",
             "copy": {
                 "count": "[parameters('moodleCommon').elasticVmCount]",
                 "name": "vmloop"

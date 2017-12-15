@@ -17,7 +17,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2017-11-01",
+            "apiVersion": "2015-05-01-preview",
             "location": "[resourceGroup().location]",
             "name": "[variables('nicName')]",
             "properties": {
@@ -82,7 +82,7 @@
             "type": "Microsoft.Compute/virtualMachines"
         },
         {
-            "apiVersion": "2017-08-01",
+            "apiVersion": "2015-01-01",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/',variables('vmName'))]"
             ],
@@ -107,7 +107,7 @@
             "type": "Microsoft.Resources/deployments"
         },
         {
-            "apiVersion": "2017-08-01",
+            "apiVersion": "2015-01-01",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/',variables('vmName'))]"
             ],
