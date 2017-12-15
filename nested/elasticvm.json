@@ -40,51 +40,8 @@
         },
         {
             "apiVersion": "[parameters('moodleCommon').computeApi]",
-            "copy": {
-                "count": "[variables('ElasticTshirt').diskCount]",
-                "name": "[variables('diskLoop')]"
-            },
-            "location": "[resourceGroup().location]",
-            "name": "[concat(variables('vmName'),'-datadisk',copyIndex(1))]",
-            "properties": {
-                "accountType": "Premium_LRS",
-                "creationData": {
-                    "createOption": "Empty"
-                },
-                "diskSizeGB": "[variables('ElasticTshirt').diskSize]"
-            },
-            "tags": {
-                "displayName": "Elastic VM Data Disk"
-            },
-            "type": "Microsoft.Compute/disks"
-        },
-        {
-            "apiVersion": "2017-08-01",
             "dependsOn": [
-                "[variables('diskLoop')]"
-            ],
-            "name": "[concat(variables('vmName'),'-diskSelection')]",
-            "properties": {
-                "mode": "Incremental",
-                "parameters": {
-                    "vmDiskCount": {
-                        "value": "[variables('ElasticTshirt').diskCount]"
-                    },
-                    "vmName": {
-                        "value": "[variables('vmName')]"
-                    }
-                },
-                "templateLink": {
-                    "uri": "[concat(parameters('moodleCommon').baseTemplateUrl,'diskSelection.json')]"
-                }
-            },
-            "type": "Microsoft.Resources/deployments"
-        },
-        {
-            "apiVersion": "[parameters('moodleCommon').computeApi]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
-                "[concat('Microsoft.Resources/deployments/',concat(variables('vmName'),'-diskSelection'))]"
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
             ],
             "location": "[resourceGroup().location]",
             "name": "[variables('vmName')]",
@@ -108,7 +65,7 @@
                     "computerName": "[variables('vmName')]"
                 },
                 "storageProfile": {
-                    "dataDisks": "[reference(concat(variables('vmName'),'-diskSelection')).outputs.dataDiskArray.value]",
+                    "dataDisks": [],
                     "imageReference": "[parameters('moodleCommon').osType]",
                     "osDisk": {
                         "createOption": "fromImage",
@@ -174,18 +131,12 @@
     ],
     "variables": {
         "ElasticSizeLarge": {
-            "diskCount": 1,
-            "diskSize": 150,
             "vmSku": "Standard_DS4_v2"
         },
         "ElasticSizeMedium": {
-            "diskCount": 1,
-            "diskSize": 100,
             "vmSku": "Standard_DS3_v2"
         },
         "ElasticSizeSmall": {
-            "diskCount": 1,
-            "diskSize": 50,
             "vmSku": "Standard_DS2_v2"
         },
         "ElasticTshirt": "[variables(concat('ElasticSize', parameters('moodleCommon').elasticTshirtSize))]",
@@ -203,7 +154,6 @@
         "documentation10": " sshPassword                 - OS account password",
         "documentation11": " osType                      - an array of value that specifies the type of VM",
         "documentation15": "This sub-template calls other sub-templates",
-        "documentation16": " diskSelection               - returns an arry of disk names - for flexible sizing",
         "documentation17": " elasticvmconfig             - conditionally applies post-deployment script on the VM",
         "documentation18": " recoveryservicesEnlist      - conditionally enlists the VM into the backup regimen",
         "nicName": "[concat(variables('vmName'),'-nic')]",
