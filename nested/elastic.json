@@ -16,8 +16,8 @@
             "name": "[parameters('moodleCommon').elasticAvailabilitySetName]",
             "properties": {
                 "managed": true,
-                "platformFaultDomainCount": 3,
-                "platformUpdateDomainCount": 3
+                "platformFaultDomainCount": 2,
+                "platformUpdateDomainCount": 5
             },
             "tags": {
                 "displayName": "Elastic Availability Set"
