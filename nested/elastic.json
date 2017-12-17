@@ -15,8 +15,8 @@
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').elasticAvailabilitySetName]",
             "properties": {
-                "platformFaultDomainCount": 2,
-                "platformUpdateDomainCount": 5
+                "platformFaultDomainCount": 3,
+                "platformUpdateDomainCount": 3
             },
             "tags": {
                 "displayName": "Elastic Availability Set"
