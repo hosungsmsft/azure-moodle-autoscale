@@ -91,7 +91,7 @@
             "type": "string"
         },
         "glusterDiskCount": {
-            "defaultValue": "4",
+            "defaultValue": 4,
             "metadata": {
                 "description": "Number of disks in raid0 for gluster"
             },
