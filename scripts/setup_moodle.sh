@@ -39,13 +39,13 @@ echo $siteFQDN >> /tmp/vars.txt
   #configure gluster repository & install gluster client
   sudo add-apt-repository ppa:gluster/glusterfs-3.8 -y
   sudo apt-get -y update
-  sudo apt-get -y install glusterfs-client postgresql-client git
+  sudo apt-get -y install glusterfs-client postgresql-client mysql-client git
 
   # install the base stack
   sudo apt-get -y install nginx php-fpm varnish php php-cli php-curl php-zip
 
   # Moodle requirements
-  sudo apt-get install -y graphviz aspell php-soap php-json php-redis php-bcmath php-gd php-pgsql php-xmlrpc php-intl php-xml php-bz2
+  sudo apt-get install -y graphviz aspell php-soap php-json php-redis php-bcmath php-gd php-pgsql php-mysql php-xmlrpc php-intl php-xml php-bz2
 
   # Mount gluster fs for /moodle
   sudo mkdir -p /moodle

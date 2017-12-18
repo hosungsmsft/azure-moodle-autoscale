@@ -20,13 +20,13 @@
                 "administratorLoginPassword": "[parameters('moodleCommon').dbLoginPassword]",
                 "sslEnforcement": "[parameters('moodleCommon').sslEnforcement]",
                 "storageMB": "[parameters('moodleCommon').skuSizeMB]",
-                "version": "[parameters('moodleCommon').postgresVersion]"
+                "version": "[parameters('moodleCommon').mysqlVersion]"
             },
             "resources": [
                 {
                     "apiVersion": "2016-02-01-privatepreview",
                     "dependsOn": [
-                        "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('moodleCommon').serverName)]"
+                        "[concat('Microsoft.DBforMySQL/servers/', parameters('moodleCommon').serverName)]"
                     ],
                     "location": "[resourceGroup().location]",
                     "name": "[parameters('moodleCommon').firewallRuleName]",
@@ -44,20 +44,20 @@
                 "size": "[parameters('moodleCommon').skuSizeMB]",
                 "tier": "[parameters('moodleCommon').skuTier]"
             },
-            "type": "Microsoft.DBforPostgreSQL/servers"
+            "type": "Microsoft.DBforMySQL/servers"
         }
     ],
     "variables": {
-        "documentation1": "This sub-template creates a postgresql server.  It expects certain values in the 'common' datastructure.",
-        "documentation10": " serverName                 - Postgresql server name",
-        "documentation11": " postgresVersion            - Postgresql version",
-        "documentation2": " administratorLogin          - postgresql admin username",
-        "documentation3": " administratorLoginPassword  - postgresql admin password",
-        "documentation4": " location                    - Postgresql server location",
-        "documentation5": " skuCapacityDTU              - Postgresql database trasaction units",
-        "documentation6": " skuFamily                   - Postgresql sku family",
-        "documentation7": " skuName                    - Postgresql sku name",
-        "documentation8": " skuSizeMB                  - Postgresql sku size in mb",
-        "documentation9": " skuTier                    - Postgresql sku tier"
+        "documentation1": "This sub-template creates a mysql server.  It expects certain values in the 'common' datastructure.",
+        "documentation10": " serverName                 - Mysql server name",
+        "documentation11": " mysqlVersion               - Mysql version",
+        "documentation2": " administratorLogin          - mysql admin username",
+        "documentation3": " administratorLoginPassword  - mysql admin password",
+        "documentation4": " location                    - Mysql server location",
+        "documentation5": " skuCapacityDTU              - Mysql database trasaction units",
+        "documentation6": " skuFamily                   - Mysql sku family",
+        "documentation7": " skuName                     - Mysql sku name",
+        "documentation8": " skuSizeMB                   - Mysql sku size in mb",
+        "documentation9": " skuTier                     - Mysql sku tier"
     }
 }

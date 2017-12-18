@@ -1,12 +1,11 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
         "parameters": {
                 "moodleVersion":               { "value": "MOODLE_34_STABLE" },
                 "applyScriptsSwitch":          { "value": 1 },
                 "azureBackupSwitch":           { "value": 0 },
-                "dbServerType":                { "value": "postgresql" },
+                "dbServerType":                { "value": "postgres" },
                 "azureBackupSwitch":           { "value": 0 },
                 "blobStorageAccountType":      { "value": "Standard_LRS"},
                 "elasticTshirtSize":           { "value": "Small" },
@@ -16,9 +15,9 @@
                 "skuCapacityDTU":              { "value": 50 },
                 "skuName":                     { "value": "PGSQLB50" },
                 "skuSizeMB":                   { "value": 51200 },
-                "version":                     { "value": 9.6 },
-                "vNetAddressSpace":            { "value": 172.31.0.0 }
+                "postgresVersion":             { "value": "9.6" },
+                "mysqlVersion":                { "value": "5.7" },
+                "vNetAddressSpace":            { "value": "172.31.0.0" }
         }
 
-    }
 }

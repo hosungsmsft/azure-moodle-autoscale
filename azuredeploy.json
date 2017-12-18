@@ -37,6 +37,17 @@
             },
             "type": "string"
         },
+        "dbServerType": {
+            "defaultValue": "postgres",
+            "allowedValues": [
+                "postgres",
+                "mysql"
+            ],
+            "metadata": {
+                "description": "Database type"
+            },
+            "type": "string"
+        },
         "elasticTshirtSize": {
             "allowedValues": [
                 "Small",
@@ -52,7 +63,7 @@
         "firewallRuleName": {
             "defaultValue": "open-to-the-world",
             "metadata": {
-                "description": "Postgres firewall rule name"
+                "description": "Database firewall rule name"
             },
             "type": "string"
         },
@@ -105,7 +116,7 @@
             ],
             "defaultValue": "West US",
             "metadata": {
-                "description": "Postgresql server location"
+                "description": "Database server location"
             },
             "type": "string"
         },
@@ -124,10 +135,10 @@
             },
             "type": "string"
         },
-        "postgresLogin": {
-            "defaultValue": "postgresadmin",
+        "dbLogin": {
+            "defaultValue": "dbadmin",
             "metadata": {
-                "description": "postgresql admin username"
+                "description": "Database admin username"
             },
             "type": "string"
         },
@@ -205,7 +216,7 @@
             },
             "type": "string"
         },
-        "version": {
+        "postgresVersion": {
             "allowedValues": [
                 "9.5",
                 "9.6"
@@ -213,6 +224,17 @@
             "defaultValue": "9.6",
             "metadata": {
                 "description": "Postgresql version"
+            },
+            "type": "string"
+        },
+        "mysqlVersion": {
+            "allowedValues": [
+                "5.6",
+                "5.7"
+            ],
+            "defaultValue": "5.7",
+            "metadata": {
+                "description": "Mysql version"
             },
             "type": "string"
         },
@@ -238,7 +260,7 @@
     "resources": [
         {
             "apiVersion": "2015-01-01",
-            "name": "postgresTemplate",
+            "name": "dbTemplate",
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
@@ -247,7 +269,7 @@
                     }
                 },
                 "templateLink": {
-                    "uri": "[concat(variables('moodleCommon').baseTemplateUrl,'postgres.json')]"
+                    "uri": "[concat(variables('moodleCommon').baseTemplateUrl, parameters('dbServerType'), '.json')]"
                 }
             },
             "type": "Microsoft.Resources/deployments"
@@ -377,7 +399,7 @@
             "dependsOn": [
                 "Microsoft.Resources/deployments/controllerTemplate",
                 "Microsoft.Resources/deployments/redisTemplate",
-                "Microsoft.Resources/deployments/postgresTemplate"
+                "Microsoft.Resources/deployments/dbTemplate"
             ],
             "name": "ScaleSetTemplate",
             "properties": {
@@ -412,27 +434,27 @@
     ],
     "variables": {
         "documentation01": "This main-template calls multiple sub-templates to create the moodle system",
-        "documentation02": "    recoveryservices0 - dummy template (see next statement)",
-        "documentation03": "    recoveryservices1 - creates a recovery vault that will be subsequently used by the VM Backup - a paramter swtich controls whethe is is called or bypassed",
-        "documentation04": "    redis             - creates a redis cache",
-        "documentation05": "    postgresql        - creates a postgresql server",
-        "documentation06": "    vnet              - creates a virtual network with three subnets",
-        "documentation07": "    elastic           - creates a elastic search cluster on a vm farm",
-        "documentation08": "    gluster           - creates a gluster file system on a vm farm",
-        "documentation09": "    webvmss           - creates a vm scale set",
-        "documentation10": "    controller        - creates a jumpbox and deploys code",
+        "documentation02": "    recoveryservices0   - dummy template (see next statement)",
+        "documentation03": "    recoveryservices1   - creates a recovery vault that will be subsequently used by the VM Backup - a paramter swtich controls whethe is is called or bypassed",
+        "documentation04": "    redis               - creates a redis cache",
+        "documentation05": "    postgres / mysql  - creates a postgresql / mysql server",
+        "documentation06": "    vnet                - creates a virtual network with three subnets",
+        "documentation07": "    elastic             - creates a elastic search cluster on a vm farm",
+        "documentation08": "    gluster             - creates a gluster file system on a vm farm",
+        "documentation09": "    webvmss             - creates a vm scale set",
+        "documentation10": "    controller          - creates a jumpbox and deploys code",
         "documentation11": "GlusterFS Sizing guidance",
         "documentation12": "Small - small number of courses, low interactiviness in the courses, low IOPSs required",
         "documentation13": "Medium - interactive courses, with uploads; medium number of IOPS required",
         "documentation14": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
-            "postgresLogin": "[parameters('postgresLogin')]",
-            "postgresUsername": "[concat(parameters('postgresLogin'), '@postgres-', variables('resourceprefix'))]",
-            "postgresLoginPassword": "[concat('5%',uniqueString(resourceGroup().id, deployment().name),'*7')]",
+            "dbLogin": "[parameters('dbLogin')]",
+            "dbUsername": "[concat(parameters('dbLogin'), '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
+            "dbLoginPassword": "[concat('5%',uniqueString(resourceGroup().id, deployment().name),'*7')]",
             "sshPassword": "[concat('$4',substring(uniqueString(resourceGroup().id, deployment().name), 4, 4),'2@')]",
             "sshUsername": "[parameters('sshUsername')]",
             "moodleDbUser": "moodle",
-            "moodleDbUserAzure": "[concat('moodle', '@postgres-', variables('resourceprefix'))]",
+            "moodleDbUserAzure": "[concat('moodle', '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
             "moodleDbName": "moodle",
             "moodleDbPass": "[concat('29',uniqueString(resourceGroup().id, deployment().name),'eR')]",
             "moodleAdminPass": "[concat('66',uniqueString(resourceGroup().id, deployment().name),'#1')]",
@@ -473,7 +495,7 @@
             "lbName": "[concat('lb-',variables('resourceprefix'))]",
             "lbPipName": "[concat('lb-pubip-',variables('resourceprefix'))]",
             "location": "[parameters('location')]",
-            "moodleInstallScriptFilename": "install_moodle.sh",
+            "moodleInstallScriptFilename": "[concat(parameters('dbServerType'), '_', 'install_moodle.sh')]",
             "moodleSetupScriptFilename": "setup_moodle.sh",
             "moodleVersion": "[parameters('moodleVersion')]",
             "osType": {
@@ -487,7 +509,7 @@
             "redisDns": "[concat('redis-',variables('resourceprefix'),'.redis.cache.windows.net')]",
             "resourcesPrefix": "[variables('resourceprefix')]",
             "scriptLocation": "https://git.catalyst-au.net/internal/azure/raw/master/scripts/",
-            "serverName": "[concat('postgres-',variables('resourceprefix'))]",
+            "serverName": "[concat(parameters('dbServerType'), '-',variables('resourceprefix'))]",
             "siteURL": "[parameters('siteURL')]",
             "skuCapacityDTU": "[parameters('skuCapacityDTU')]",
             "skuFamily": "[parameters('skuFamily')]",
@@ -509,11 +531,13 @@
             "subnetWebRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),0)), '.0/24')]",
             "vNetAddressSpace": "[parameters('vNetAddressSpace')]",
             "vaultName": "[concat('vault-',variables('resourceprefix'))]",
-            "version": "[parameters('version')]",
+            "postgresVersion": "[parameters('postgresVersion')]",
+            "mysqlVersion": "[parameters('mysqlVersion')]",
             "vmssName": "[concat('vmss-',variables('resourceprefix'))]",
             "vmssdStorageAccounttName": "[concat('vmss',uniqueString(resourceGroup().id))]",
             "vnetName": "[concat('vnet-',variables('resourceprefix'))]",
-            "vpnType": "[parameters('vpnType')]"
+            "vpnType": "[parameters('vpnType')]",
+            "dbServerType": "[parameters('dbServerType')]"
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "resourceprefix": "[substring(uniqueString(resourceGroup().id, deployment().name), 3, 6)]"
