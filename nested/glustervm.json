@@ -41,7 +41,7 @@
         {
             "apiVersion": "[parameters('moodleCommon').computeApi]",
             "copy": {
-                "count": "[variables('GlusterTshirt').diskCount]",
+                "count": "[parameters('moodleCommon').glusterDiskCount]",
                 "name": "[variables('diskLoop')]"
             },
             "location": "[resourceGroup().location]",
@@ -51,7 +51,7 @@
                 "creationData": {
                     "createOption": "Empty"
                 },
-                "diskSizeGB": "[variables('GlusterTshirt').diskSize]"
+                "diskSizeGB": "[parameters('moodleCommon').glusterDiskSize]"
             },
             "tags": {
                 "displayName": "Gluster VM Data Disk"
@@ -68,7 +68,7 @@
                 "mode": "Incremental",
                 "parameters": {
                     "vmDiskCount": {
-                        "value": "[variables('GlusterTshirt').diskCount]"
+                        "value": "[parameters('moodleCommon').glusterDiskCount]"
                     },
                     "vmName": {
                         "value": "[variables('vmName')]"
@@ -93,7 +93,7 @@
                     "id": "[variables( 'asRef')]"
                 },
                 "hardwareProfile": {
-                    "vmSize": "[variables('GlusterTshirt').vmSku]"
+                    "vmSize": "[parameters('moodleCommon').glusterVmSku]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -173,22 +173,6 @@
         }
     ],
     "variables": {
-        "GlusterSizeLarge": {
-            "diskCount": 2,
-            "diskSize": 1023,
-            "vmSku": "Standard_DS4_v2"
-        },
-        "GlusterSizeMedium": {
-            "diskCount": 2,
-            "diskSize": 512,
-            "vmSku": "Standard_DS3_v2"
-        },
-        "GlusterSizeSmall": {
-            "diskCount": 4,
-            "diskSize": 127,
-            "vmSku": "Standard_DS2_v2"
-        },
-        "GlusterTshirt": "[variables(concat('GlusterSize', parameters('moodleCommon').glusterTshirtSize))]",
         "asRef": "[       resourceId('Microsoft.Compute/availabilitySets',  parameters('moodleCommon').gfxAvailabilitySetName)]",
         "diskLoop": "[concat(variables('vmName'),'-disk')]",
         "documentation01": "This sub-template create the nodes of the gluster farm",
@@ -198,7 +182,7 @@
         "documentation05": " vnetName                - name of virtual network",
         "documentation06": " subnetSan               - name of subnet for gluster",
         "documentation07": " gfsNameRoot             - nameroot for the gluster nodes - combined with counter to get actual name of each node - disk and nic follow the naming scheme",
-        "documentation08": " glusterTshirtSize       - supports flexible sizing - translates to a CPU/MEM/DISK details",
+        "documentation08": " glusterVmSku           - VM instance size for gluster nodes",
         "documentation09": " sshUsername           - OS accountusername",
         "documentation10": " sshPassword           - OS account password",
         "documentation11": " osType                  - an array of value that specifies the type of VM",
@@ -206,6 +190,8 @@
         "documentation16": " diskSelection           - returns an arry of disk names - for flexible sizing",
         "documentation17": " glustervmconfig         - conditionally applies post-deployment script on the VM",
         "documentation18": " recoveryservicesEnlist  - conditionally enlists the VM into the backup regimen",
+        "documentation19": " glusterDiskCount        - Number of disks to raid0 for the gluster mount",
+        "documentation20": " glusterDiskSize         - Size per disk for gluster",
         "nicName": "[concat(variables('vmName'),'-nic')]",
         "nicRef": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
         "subnetSanRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName), '/subnets/',parameters('moodleCommon').subnetSan)]",

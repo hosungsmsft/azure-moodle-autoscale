@@ -48,13 +48,8 @@
             },
             "type": "string"
         },
-        "elasticTshirtSize": {
-            "allowedValues": [
-                "Small",
-                "Medium",
-                "Large"
-            ],
-            "defaultValue": "Small",
+        "elasticVmSku": {
+            "defaultValue": "Standard_DS2_v2",
             "metadata": {
                 "description": "VM size for the elastic search nodes"
             },
@@ -88,17 +83,26 @@
             },
             "type": "string"
         },
-        "glusterTshirtSize": {
-            "allowedValues": [
-                "Small",
-                "Medium",
-                "Large"
-            ],
-            "defaultValue": "Small",
+        "glusterVmSku": {
+            "defaultValue": "Standard_DS2_v2",
             "metadata": {
                 "description": "VM size for the gluster nodes"
             },
             "type": "string"
+        },
+        "glusterDiskCount": {
+            "defaultValue": "4",
+            "metadata": {
+                "description": "Number of disks in raid0 for gluster"
+            },
+            "type": "int"
+        },
+        "glusterDiskSize": {
+            "defaultValue": 127,
+            "metadata": {
+                "description": "Size per disk for gluster nodes"
+            },
+            "type": "int"
         },
         "location": {
             "allowedValues": [
@@ -444,9 +448,6 @@
         "documentation09": "    webvmss             - creates a vm scale set",
         "documentation10": "    controller          - creates a jumpbox and deploys code",
         "documentation11": "GlusterFS Sizing guidance",
-        "documentation12": "Small - small number of courses, low interactiviness in the courses, low IOPSs required",
-        "documentation13": "Medium - interactive courses, with uploads; medium number of IOPS required",
-        "documentation14": "Large - very interactive courses, highly concurrent or high number of courses in the same environemnt; burst IOPS required, during certain period of time",
         "moodleCommon": {
             "dbLogin": "[parameters('dbLogin')]",
             "dbUsername": "[concat(parameters('dbLogin'), '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
@@ -468,7 +469,7 @@
             "elasticClusterName": "[concat('es-cluster-',variables('resourceprefix'))]",
             "elasticNameRoot": "[concat('elastic-vm-',variables('resourceprefix'))]",
             "elasticScriptFilename": "install_elastic.sh",
-            "elasticTshirtSize": "[parameters('elasticTshirtSize')]",
+            "elasticVmSku": "[parameters('elasticVmSku')]",
             "elasticVmCount": 3,
             "elasticVmIPPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),1)), '.20')]",
             "extBeName": "[concat('lb-backend-',variables('resourceprefix'))]",
@@ -485,8 +486,9 @@
             "gfsNameRoot": "[concat('gluster-vm-',variables('resourceprefix'))]",
             "gfxAvailabilitySetName": "[concat('gluster-avset-',variables('resourceprefix'))]",
             "glusterScriptFilename": "install_gluster.sh",
-            "glusterTshirtSize": "[parameters('glusterTshirtSize')]",
+            "glusterVmSku": "[parameters('glusterVmSku')]",
             "glusterVmCount": 2,
+            "glusterDiskSize": "[parameters('glusterDiskSize')]",
             "jboxNicName": "[concat('jumpbox-vm-nic-',variables('resourceprefix'))]",
             "jboxNsgName": "[concat('jumpbox-nsg-',variables('resourceprefix'))]",
             "jboxPipName": "[concat('jumpbox-pubip-',variables('resourceprefix'))]",
