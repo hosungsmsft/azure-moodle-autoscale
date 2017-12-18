@@ -338,7 +338,21 @@ EOF
    sed -i "s/;opcache.enable.*/opcache.enable = 1/" $PhpIni
    sed -i "s/;opcache.memory_consumption.*/opcache.memory_consumption = 256/" $PhpIni
    sed -i "s/;opcache.max_accelerated_files.*/opcache.max_accelerated_files = 8000/" $PhpIni
-    
+
+   # fpm config - overload this 
+   cat <<EOF > /etc/php/7.0/fpm/pool.d/www.conf
+[www]
+user = www-data
+group = www-data
+listen = /run/php/php7.0-fpm.sock
+listen.owner = www-data
+listen.group = www-data
+pm = dynamic
+pm.max_children = 200 
+pm.start_servers = 20 
+pm.min_spare_servers = 22 
+pm.max_spare_servers = 30 
+EOF
 
    # Remove the default site. Moodle is the only site we want
    rm -f /etc/nginx/sites-enabled/default
