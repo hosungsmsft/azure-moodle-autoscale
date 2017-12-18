@@ -141,6 +141,13 @@
     #        rm -rf o365-moodle-'$moodleVersion'
     #fi
 
+    # Install ElasticSearch plugin
+    /usr/bin/curl -k --max-redirs 10 https://github.com/catalyst/moodle-search_elastic/archive/master.zip -L -o plugin-elastic.zip
+    /usr/bin/unzip -q plugin-elastic.zip
+    /bin/mkdir -p /moodle/html/moodle/search/engine/elastic
+    /bin/cp -r moodle-search_elastic-master/* /moodle/html/moodle/search/engine/elastic
+    /bin/rm -rf moodle-search_elastic-master
+
     # Install the ObjectFS plugin
     /usr/bin/curl -k --max-redirs 10 https://github.com/catalyst/moodle-tool_objectfs/archive/master.zip -L -o plugin-objectfs.zip
     /usr/bin/unzip -q plugin-objectfs.zip
