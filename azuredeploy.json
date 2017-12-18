@@ -90,17 +90,17 @@
             },
             "type": "string"
         },
-        "glusterDiskCount": {
-            "defaultValue": 4,
-            "metadata": {
-                "description": "Number of disks in raid0 for gluster"
-            },
-            "type": "int"
-        },
         "glusterDiskSize": {
             "defaultValue": 127,
             "metadata": {
                 "description": "Size per disk for gluster nodes"
+            },
+            "type": "int"
+        },
+        "glusterDiskCount": {
+            "defaultValue": 4,
+            "metadata": {
+                "description": "Number of disks in raid0 per gluster node"
             },
             "type": "int"
         },
@@ -489,6 +489,7 @@
             "glusterVmSku": "[parameters('glusterVmSku')]",
             "glusterVmCount": 2,
             "glusterDiskSize": "[parameters('glusterDiskSize')]",
+            "glusterDiskCount": "[parameters('glusterDiskCount')]",
             "jboxNicName": "[concat('jumpbox-vm-nic-',variables('resourceprefix'))]",
             "jboxNsgName": "[concat('jumpbox-nsg-',variables('resourceprefix'))]",
             "jboxPipName": "[concat('jumpbox-pubip-',variables('resourceprefix'))]",
