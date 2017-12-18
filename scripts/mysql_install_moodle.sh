@@ -148,6 +148,12 @@
     /bin/cp -r moodle-search_elastic-master/* /moodle/html/moodle/search/engine/elastic
     /bin/rm -rf moodle-search_elastic-master
 
+    # Install ElasticSearch plugin dependency
+    /usr/bin/curl -k --max-redirs 10 https://github.com/catalyst/moodle-local_aws/archive/master.zip -L -o local-aws.zip
+    /usr/bin/unzip -q local-aws.zip
+    /bin/mkdir -p /moodle/html/moodle/local/aws
+    /bin/cp -r moodle-local_aws-master/* /moodle/html/moodle/local/aws
+
     # Install the ObjectFS plugin
     /usr/bin/curl -k --max-redirs 10 https://github.com/catalyst/moodle-tool_objectfs/archive/master.zip -L -o plugin-objectfs.zip
     /usr/bin/unzip -q plugin-objectfs.zip
