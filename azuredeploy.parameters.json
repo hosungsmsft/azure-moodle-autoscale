@@ -8,6 +8,7 @@
                 "dbServerType":                { "value": "postgres" },
                 "azureBackupSwitch":           { "value": 0 },
                 "blobStorageAccountType":      { "value": "Standard_LRS"},
+                "controllerVmSku":             { "value": "Standard_DS1" },
                 "elasticVmSku":                { "value": "Standard_DS2_v2" },
                 "glusterVmSku":                { "value": "Standard_DS2_v2" },
                 "glusterDiskSize":             { "value": 127 },
