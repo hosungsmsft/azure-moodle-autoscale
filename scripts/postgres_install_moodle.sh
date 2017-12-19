@@ -1607,7 +1607,9 @@ EOF
     sed -i "23 a \$CFG->sslproxy  = 'true';" /moodle/html/moodle/config.php
 
     # Set up elasticsearch plugin
-    sed -i "23 a \$CFG->forced_plugin_settings = array('block_globalsearch' => array('searchengine' => 'Elastic', 'enableglobalsearch' => 'true'), 'search_elastic'  => array('Hostname' => 'http://$elasticVm1IP'));" /moodle/html/moodle/config.php
+    sed -i "23 a \$CFG->forced_plugin_settings = ['search_elastic' => ['hostname' => 'http://$elasticVm1IP']];" /moodle/html/moodle/config.php
+    sed -i "23 a \$CFG->searchengine = 'elastic';" /moodle/html/moodle/config.php
+    sed -i "23 a \$CFG->enableglobalsearch = 'true';" /moodle/html/moodle/config.php
 
     # Set the ObjectFS alternate filesystem
     sed -i "23 a \$CFG->alternative_file_system_class = '\\\tool_objectfs\\\azure_file_system';" /moodle/html/moodle/config.php
