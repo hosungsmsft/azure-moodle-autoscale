@@ -156,7 +156,10 @@
         "skuCapacityDTU": {
             "allowedValues": [
                 50,
-                100
+                100,
+                200,
+                400,
+                800
             ],
             "defaultValue": 50,
             "metadata": {
