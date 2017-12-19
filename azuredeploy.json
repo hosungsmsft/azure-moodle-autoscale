@@ -469,7 +469,7 @@
             "moodleDbUser": "moodle",
             "moodleDbUserAzure": "[concat('moodle', '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
             "moodleDbName": "moodle",
-            "moodleDbPass": "[concat('9(#36^', substring(uniqueString(resourceGroup().id, deployment().name), 5, 8), toUpper('ercq'))]",
+            "moodleDbPass": "[concat('9#36^', substring(uniqueString(resourceGroup().id, deployment().name), 5, 8), toUpper('ercq'))]",
             "moodleAdminPass": "[concat(toUpper('xl'), substring(uniqueString(resourceGroup().id, deployment().name), 6, 7),'<,!1*8')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
