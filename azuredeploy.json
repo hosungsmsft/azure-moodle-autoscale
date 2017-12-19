@@ -48,6 +48,13 @@
             },
             "type": "string"
         },
+        "controllerVmSku": {
+            "defaultValue": "Standard_DS1",
+            "metadata": {
+                "description": "VM size for the controller node"
+            },
+            "type": "string"
+        },
         "elasticVmSku": {
             "defaultValue": "Standard_DS2_v2",
             "metadata": {
@@ -156,7 +163,10 @@
         "skuCapacityDTU": {
             "allowedValues": [
                 50,
-                100
+                100,
+                200,
+                400,
+                800
             ],
             "defaultValue": 50,
             "metadata": {
@@ -194,7 +204,8 @@
         },
         "skuTier": {
             "allowedValues": [
-                "Basic"
+                "Basic",
+                "Standard"
             ],
             "defaultValue": "Basic",
             "metadata": {
@@ -449,6 +460,7 @@
         "documentation10": "    controller          - creates a jumpbox and deploys code",
         "documentation11": "GlusterFS Sizing guidance",
         "moodleCommon": {
+            "controllerVmSku": "[parameters('controllerVmSku')]",
             "dbLogin": "[parameters('dbLogin')]",
             "dbUsername": "[concat(parameters('dbLogin'), '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
             "dbLoginPassword": "[concat('5%',uniqueString(resourceGroup().id, deployment().name),'*7')]",

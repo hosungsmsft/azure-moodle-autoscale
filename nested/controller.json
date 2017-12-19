@@ -116,7 +116,7 @@
             "name": "[parameters('moodleCommon').jboxVmName]",
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_D1"
+                    "vmSize": "[parameters('moodleCommon').controllerVmSku]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [

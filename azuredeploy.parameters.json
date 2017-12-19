@@ -8,6 +8,7 @@
                 "dbServerType":                { "value": "postgres" },
                 "azureBackupSwitch":           { "value": 0 },
                 "blobStorageAccountType":      { "value": "Standard_LRS"},
+                "controllerVmSku":             { "value": "Standard_DS1" },
                 "elasticVmSku":                { "value": "Standard_DS2_v2" },
                 "glusterVmSku":                { "value": "Standard_DS2_v2" },
                 "glusterDiskSize":             { "value": 127 },
@@ -17,6 +18,7 @@
                 "skuCapacityDTU":              { "value": 50 },
                 "skuName":                     { "value": "PGSQLB50" },
                 "skuSizeMB":                   { "value": 51200 },
+                "skuTier":                     { "value": "Basic" },
                 "postgresVersion":             { "value": "9.6" },
                 "mysqlVersion":                { "value": "5.7" },
                 "vNetAddressSpace":            { "value": "172.31.0.0" }

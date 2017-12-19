@@ -50,9 +50,14 @@
         "documentation02": "It expects certain values in the 'common' datastructure.",
         "documentation03": "    ScriptLocation              - web URI",
         "documentation04": "    moodleInstallScriptFilename - name of script file",
-        "documentation05": "    lbDns                       - name of the dns entry for the vmscalse set",
+        "documentation05": "    siteURL                     - URL of the website",
         "documentation06": "    gfsNameRoot                 - nameroot of gluster farm - note that the code applies a 0 to get to the first node",
         "documentation07": "    jboxVmName                  - name of the controller/jumpb ox VM",
+        "documentation08": "    dbServerType                - postgres or mysql",
+        "documentation09": "    moodleDbName                - database name for moodle",
+        "documentation10": "    moodleDbUser                - database user for moodle",
+        "documentation11": "    moodleDbPass                - database password for moodleDbUser",
+        "documentation11": "    moodleAdminPass             - password for moodle admin user",
         "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').moodleInstallScriptFilename)]"
     }
 }
