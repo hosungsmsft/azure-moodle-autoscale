@@ -1,80 +1,66 @@
-# MoodleAzure
-High available, high scalable Moodle deployment using Azure Resource Manager Template
+# *Autoscaling Moodle stack for Postgres and MySQL databases*
 
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fpateixei%2FMoodleAzure%2Fv2%2Fazuredeploy.json)  [![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fpateixei%2FMoodleAzure%2Fv2%2Fazuredeploy.json)
+This work is mostly based on Paulo Teixeira's work here: 
 
-This Azure Resource Manager template creates a clustered, multi-layered moodle environment. 
-With this template we have three main components being deployed: 
-- a web application layer with VMSS and auto-scale enabled
-- a database layer composed of a postgresql Galera cluster 
-- a shared filesystem layer, for the "moodledata" content.
-
-Main differences from other existing Moodle templates:
-- web layer uses a VMScale Set with auto-scale configured, allowing better usage of resources (02 to 10 web nodes possible)
-- database layer was built using postgresql Galera Cluster, in a high-available setup, providing 99.95% SLA
-- filesystem layer (MoodleData) was built on top of VMs with Premium Disks, supporting very intensive IO scenarios; also built on top of GlusterFS, a high scalable storage solution from RedHat (see www.glusterfs.org for details), in a High Available setup (data replication accross cluster nodes, also providing a 99.95% SLA).
-- Customer can define the size (small, medium, large) for database and filesystem layers 
-- Azure Redis Cache is deployed in the solution, to be used as Moodle Session Cache backend (manual setup required in moodle)
-- it was built for Moodle 3.x deployments 
-- Azure Backup can be enabled for VMS hosting postgresql Database and Moodledata content (very important for DR scenarios)
-- Apache is configured with SSL support (using a self-signed certificate), allowing custom certificates with desired.
-
-Summarizing, the following resources will be created during this process:
-
-- a Virtual Machine Scale Set (up to 10 instances) for the web tier, with auto-scale configured
-- 02 nodes Gluster Cluster  (2 Premium disks attached, raid0, a gluster brick in each virtual machine), data replicated accross nodes in a HA setup for the filesystem layer
-- 02 nodes postgresql 10 Active-Active Cluster (Galera Cluster), in a HA setup scenario for the database layer
-- an Internal Load Balancer in front of the postgresql cluster
-- an public Load Balancer in front of the Virtual Machine Scale Set (web layer)
-- a virtual machine used as a JumpBox for the environment, acessible via SSH
-- a redis cache to be used for Moodle Session Cache (manual setup required in Moodle)
-- a lot of underlying resources need for the environment (virtual network, storage accounts, etc)
-
-![Moodle On Azure](./images/moodle-on-azure.jpg)
+This template set deploys the following infrastructure:
+- Autoscaling web frontend layer (Nginx, php-fpm, Varnish)
+- Private virtual network for frontend instances
+- Controller instance running cron and handling syslog for the autoscaled site
+- Load balancer to balance across the autoscaled instances
+- Postgres or MySQL database
+- Azure Redis instance for Moodle caching
+- ObjectFS in Azure blobs (Moodle sitedata)
+- Elasticsearch VM for search indexing in Moodle
+- Dual gluster nodes for high availability access to Moodle files
 
 ## *Parameters for the deployment* 
 
-- resourcesPrefix: Prefix for storage account name, network, virtual machines, and so on. Important: must be a unique value in the azure region; if you reach some error during the deployment, please confirm it's not being used by any other deployment (including from other people)
-- vNetAddressSpace: Address range for the Moodle virtual network - presumed /16 - further subneting during vnet creation
-- moodleVersion: The Moodle version you want to install.
+These can all be customized in the azure.parameters.json file depending on the size of the stack needed.
+
+- moodleVersion: The Moodle version you want to install. Only MOODLE_33_STABLE and MOODLE_34_STABLE are valid due to fixes in Moodle core.
 - glusterTshirtSize: VM size for the gluster nodes (please check for more guidance below)
-- postgresqlTshirtSize: VM size for the postgresql nodes (please check for more guidance below)
-- sshUsername: ssh user name (do not use 'root' or 'administrator', using any of these will cause the deployment to fail)
-- sshPassword: ssh password & moodle 'admin' password
-- postgresqlUserPassword: my sql regular user password
-- postgresqlRootPassword: my sql root user password (take note of this, would be necessary for database maintenance tasks)
-- applyScriptsSwitch: Use '1' ALWAYS; Switch to process or bypass all scripts/extensions; if you use '0' (zero), this template will only create the machines;
+- applyScriptsSwitch: Use '1' ALWAYS; Switch to process or bypass all scripts/extensions; if you use '0' (zero), this template will only create the machines
 - azureBackupSwitch: Switch to configure AzureBackup and enlist VM's; if you use '1', Azure Backup will be configured to backup postgresql and GlusterFS nodes; highly recommended. The backup schedule can be adjusted later in the portal.
-*Accessing Moodle administrative area*
+- dbServerType: The type of database used. Valid entries are "mysql" and "postgres".
+- blobStorageAccountType: The tier of blob storage. Valid entries are "Standard_LRS", "Standard_GRS", "Standard_ZRS", and "Premium_LRS"
+- controllerVmSku: The size of your Controller VM
+- elasticVmSku: The size of the VM used for elasticsearch.
+- glusterVmSku: The size of the VM used for the Gluster storage VMs
+- glusterDiskSize: The size of each individual gluster disk
+- glusterDiskCount: The number of RAID0 disks on each gluster node
+- location: The region in Azure you want to deploy to
+- siteURL: The URL of your Moodle website
+- skuCapacityDTU: The compute units of your database. Valid entries are 50, 100, 200, 400, and 800. Depends on skuTier.
+- skuSizeMB: The disk size of the database instance, in megabytes.
+- skuTier: The tier of database. Current valid entries are "Basic" and "Standard". In order to use higher skuCapacityDTU values you'll need to use Standard.
+- postgresVersion: Version of Postgres. Valid entries are "9.5" and "9.6"
+- mysqlVersion: Version of Mysql. Valid entries are "5.6" and "5.7"
+- vNetAddressSpace: Address range for the Moodle virtual network - presumed /16 - further subneting during vnet creation
 
-In order to access Moodle admin console, please use the username 'admin' (without quotes) and the password you provided during the setup in Azure Portal.
+## *Sizing Considerations and Limitations*
 
-## *Sizing the environment* 
+Depending on what you're doing with Moodle, there are several considerations to make when configuring. The defaults included produce a cluster that is inexpensive but probably too low spec to use beyond single-user Moodle testing.
 
-### Gluster and postgresql
-The setup script will ask you about the 't-shirt size' for database & gluster layers.
-Here's an explanation for each one of them: 
+### Database Sizing
 
-Gluster t-shirt sizes: 
+As of the time of this writing, Azure supports "Basic" and "Standard" tiers for database instances. In addition the skuCapacityDTU defines Compute Units, and the number of those you can use is limited by database tier:
 
-tshirt | VM Size         | Disk Count | Disk Size | Total Size
--------|-----------------|------------|-----------|------------
-Small  | Standard_DS2_v2 |  4         |  127 Gb   | 512 Gb
-Medium | Standard_DS3_v2 |  2         |  512 Gb   | 1 Tb
-Large  | Standard_DS4_v2 |  2         | 1023 Gb   | 2 Tb
+Basic: 50, 100
+Standard: 100, 200, 400, 800
 
-postgresql t-shirt sizes: 
+This value also limits the maximum number of connections, as defined here: https://docs.microsoft.com/en-us/azure/mysql/concepts-limits
 
-tshirt | VM Size         | Disk Count | Disk Size | Total Size
--------|-----------------|------------|-----------|------------
-Small  | Standard_DS2_v2 |  2         |  127 Gb   | 256 Gb
-Medium | Standard_DS3_v2 |  2         |  512 Gb   | 1 Tb
-Large  | Standard_DS4_v2 |  2         | 1023 Gb   | 2 Tb
+As the Moodle database will handle cron processes as well as the website, any public facing website with more than 20 users will likely require upgrading to 100. Once the site reaches 50+ users it will require upgrading to Standard for more compute units. This depends entirely on the individual site. As databases cannot change (or be restored to a different tier) once deployed it is a good idea to slightly overspec your database.
 
-There's no default rule or recommendation in order to decide which tier use for your deployment. 
-However, as an initial guidance, remember that: 
-- Moodle has a strong dependency of database setup; for a high number of simultanous users, consider using medium or large database sizes
-- GlusterFS must be dimensioned considering the space requirements (size of your moodledata) + number of IOPS required. A Moodle deployment where students upload lots of content in a small windows of time would require more IOPS during that window, so consider using medium or large tiers in that case;
+Standard instances have a minimum storage requirement of 128000MB. All database storage, regardless of tier, has a hard upper limit of 1 terrabyte.
+
+### Controller instance sizing
+
+The controller handles both syslog and cron duties. Depending on how big your Moodle cron runs are this may not be sufficient. If cron jobs are very delayed and cron processes are building up on the controller then an upgrade in tier is needed.
+
+### Frontend instances
+
+In general the frontend instances will not be the source of any bottlenecks unless they are severely undersized versus the rest of the cluster. More powerful instances will be needed should fpm processes spawn and exhaust memory during periods of heavy site load. This can also be mitigated against by modifying 
 
 ### The web layer
 
