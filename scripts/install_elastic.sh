@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 esClusterName=$1
-elasticvm1ip=$2 
+elasticvm1ip=$2
 elasticvm2ip=$3
 elasticvm3ip=$4
 
@@ -112,7 +112,7 @@ network.host: [_eth0_, _local_]
 # Pass an initial list of hosts to perform discovery when new node is started:
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
-discovery.zen.ping.unicast.hosts: ["", "", ""]
+discovery.zen.ping.unicast.hosts: ["$elasticvm1ip", "$elasticvm2ip", "$elasticvm3ip"]
 #
 # Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
 #
