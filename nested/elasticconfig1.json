@@ -13,7 +13,49 @@
         {
             "apiVersion": "2015-06-15",
             "location": "[resourceGroup().location]",
-            "name": "[concat(parameters('moodleCommon').elasticVmName,'/','install_elastic')]",
+            "name": "[concat(parameters('moodleCommon').elasticVmName1,'/','install_elastic')]",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.OSTCExtensions",
+                "settings": {
+                    "commandToExecute": "[variables('cmdExec')]",
+                    "fileUris": [
+                        "[variables('scriptUri')]"
+                    ]
+                },
+                "type": "CustomScriptForLinux",
+                "typeHandlerVersion": "1.4"
+            },
+            "tags": {
+                "displayName": "install_elastic"
+            },
+            "type": "Microsoft.Compute/virtualMachines/extensions"
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "name": "[concat(parameters('moodleCommon').elasticVmName2,'/','install_elastic')]",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.OSTCExtensions",
+                "settings": {
+                    "commandToExecute": "[variables('cmdExec')]",
+                    "fileUris": [
+                        "[variables('scriptUri')]"
+                    ]
+                },
+                "type": "CustomScriptForLinux",
+                "typeHandlerVersion": "1.4"
+            },
+            "tags": {
+                "displayName": "install_elastic"
+            },
+            "type": "Microsoft.Compute/virtualMachines/extensions"
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "name": "[concat(parameters('moodleCommon').elasticVmName3,'/','install_elastic')]",
             "properties": {
                 "autoUpgradeMinorVersion": true,
                 "publisher": "Microsoft.OSTCExtensions",
