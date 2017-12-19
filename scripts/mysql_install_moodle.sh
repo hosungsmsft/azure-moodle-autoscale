@@ -1599,4 +1599,9 @@ EOF
     # Set the ObjectFS alternate filesystem
     sed -i "23 a \$CFG->alternative_file_system_class = '\\\tool_objectfs\\\azure_file_system';" /moodle/html/moodle/config.php
 
+   # Turning off services we don't need the jumpbox running
+   service nginx stop
+   service php7.0-fpm stop
+   service varnish stop
+
 }  > /tmp/install.log
