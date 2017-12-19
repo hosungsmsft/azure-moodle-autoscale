@@ -197,7 +197,8 @@
         },
         "skuTier": {
             "allowedValues": [
-                "Basic"
+                "Basic",
+                "Standard"
             ],
             "defaultValue": "Basic",
             "metadata": {
