@@ -38,7 +38,7 @@
     azuremoodledbuser=${14}
     redisDns=${15}
     redisAuth=${16}
-    elastic1VmIP=${17}
+    elasticVm1IP=${17}
 
     echo $moodleVersion        >> /tmp/vars.txt
     echo $glusterNode          >> /tmp/vars.txt
@@ -56,7 +56,7 @@
     echo $azuremoodledbuser    >> /tmp/vars.txt
     echo $redisDns             >> /tmp/vars.txt
     echo $redisAuth            >> /tmp/vars.txt
-    echo $elastic1VmIP         >> /tmp/vars.txt
+    echo $elasticVm1IP         >> /tmp/vars.txt
 
     # create gluster mount point
     mkdir -p /moodle
@@ -1599,7 +1599,7 @@ EOF
     sed -i "23 a \$CFG->sslproxy  = 'true';" /moodle/html/moodle/config.php
 
     # Set up elasticsearch plugin
-    sed -i "23 a \$CFG->forced_plugin_settings = array('block_globalsearch' => array('searchengine' => 'Elastic', 'enableglobalsearch' => 'true'), 'search_elastic'  => array('Hostname' => 'http://$elastic1VmIP'));" /moodle/html/moodle/config.php
+    sed -i "23 a \$CFG->forced_plugin_settings = array('block_globalsearch' => array('searchengine' => 'Elastic', 'enableglobalsearch' => 'true'), 'search_elastic'  => array('Hostname' => 'http://$elasticVm1IP'));" /moodle/html/moodle/config.php
 
     # Set the ObjectFS alternate filesystem
     sed -i "23 a \$CFG->alternative_file_system_class = '\\\tool_objectfs\\\azure_file_system';" /moodle/html/moodle/config.php
