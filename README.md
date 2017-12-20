@@ -36,6 +36,8 @@ These can all be customized in the azure.parameters.json file depending on the s
 - postgresVersion: Version of Postgres. Valid entries are "9.5" and "9.6"
 - mysqlVersion: Version of Mysql. Valid entries are "5.6" and "5.7"
 - vNetAddressSpace: Address range for the Moodle virtual network - presumed /16 - further subneting during vnet creation
+- autoscaleVmSku: The size of the VM used for autoscaling. Currently limited to Standard VMs.
+- autoscaleVmCount: The maximum number (default 10) of instances to scale up to. The minimum is always 2.
 
 ## *Sizing Considerations and Limitations*
 
@@ -50,9 +52,9 @@ Standard: 100, 200, 400, 800
 
 This value also limits the maximum number of connections, as defined here: https://docs.microsoft.com/en-us/azure/mysql/concepts-limits
 
-As the Moodle database will handle cron processes as well as the website, any public facing website with more than 20 users will likely require upgrading to 100. Once the site reaches 50+ users it will require upgrading to Standard for more compute units. This depends entirely on the individual site. As databases cannot change (or be restored to a different tier) once deployed it is a good idea to slightly overspec your database.
+As the Moodle database will handle cron processes as well as the website, any public facing website with more than 20 users will likely require upgrading to 100. Once the site reaches 50+ users it will require upgrading to Standard for more compute units. This depends entirely on the individual site. As MySQL databases cannot change (or be restored to a different tier) once deployed it is a good idea to slightly overspec your database.
 
-Standard instances have a minimum storage requirement of 128000MB. All database storage, regardless of tier, has a hard upper limit of 1 terrabyte.
+Standard instances have a minimum storage requirement of 128000MB. All database storage, regardless of tier, has a hard upper limit of 1 terrabyte. After 128GB you gain additional iops for each GB, so if you're expecting a heavy amount of traffic you will want to oversize your storage.
 
 ### Controller instance sizing
 
@@ -60,12 +62,9 @@ The controller handles both syslog and cron duties. Depending on how big your Mo
 
 ### Frontend instances
 
-In general the frontend instances will not be the source of any bottlenecks unless they are severely undersized versus the rest of the cluster. More powerful instances will be needed should fpm processes spawn and exhaust memory during periods of heavy site load. This can also be mitigated against by modifying 
+In general the frontend instances will not be the source of any bottlenecks unless they are severely undersized versus the rest of the cluster. More powerful instances will be needed should fpm processes spawn and exhaust memory during periods of heavy site load. This can also be mitigated against by increasing the number of VMs but spawning new VMs is slower (and potentially more expensive) than having that capacity already available.
 
-### The web layer
-
-This script deploys a vm scale set (vmss) for the web layer. It's configured with Standard_DS2_v2 instances, with no data-disks, all connected to the GlusterFS cluster (mounted in the /moodle folder where source code, moodledata and ssl certificates resides).
-The VMSS is also configured with auto-scale settings and will run, at minimum 02 instances up to 10 instances of the web application; the trigger for deploying additional instances is based on CPU usage. Those settings can be ajusted in Azure Portal or in the Azure Resources Editor (resources.azure.com).
+## Using the created stack
 
 ## *Updating the source code or Apache SSL certificates* 
 
@@ -74,15 +73,3 @@ In order to proceed with this kind of update, connect to the machine using the r
 - Moodle source code is located at /moodle/html/moodle
 - Apache SSL certificates are located at /moodle/certs
 - Moodledata content is located at /moodle/moodledata
-
-## *Step by step video walkthrough* 
-
-We also have a [step by step video](http://learningcontentdemo.azurewebsites.net/VideoHowToDemoMoodleOnAzure3) showing us how to deploy this template (Thanks to Ingo Laue for his contribution)
-
-This template is aimed to have constant updates, and would include other improvements in the future. 
-
-Hope it helps.
-
-Feedbacks are welcome.
-
-
