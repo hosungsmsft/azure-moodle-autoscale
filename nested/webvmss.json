@@ -117,8 +117,8 @@
                 }
             },
             "sku": {
-                "capacity": 3,
-                "name": "Standard_D2",
+                "capacity": 2,
+                "name": "[parameters('moodleCommon').autoscaleVmSku]",
                 "tier": "Standard"
             },
             "tags": {
@@ -139,8 +139,8 @@
                 "profiles": [
                     {
                         "capacity": {
-                            "default": "4",
-                            "maximum": "10",
+                            "default": "2",
+                            "maximum": "[parameters('moodleCommon').autoscaleVmSku)]",
                             "minimum": "2"
                         },
                         "name": "Profile1",

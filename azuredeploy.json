@@ -55,6 +55,20 @@
             },
             "type": "string"
         },
+        "autoscaleVmSku": {
+            "defaultValue": "Standard_DS2_v2",
+            "metadata": {
+                "description": "VM size for autoscaled nodes"
+            },
+            "type": "string"
+        },
+        "autoscaleVmCount": {
+            "defaultValue": 10,
+            "metadata": {
+                "description": "Maximum number of autoscaled nodes"
+            },
+            "type": "int"
+        },
         "elasticVmSku": {
             "defaultValue": "Standard_DS2_v2",
             "metadata": {
@@ -590,7 +604,9 @@
             "vmssdStorageAccounttName": "[concat('vmss',uniqueString(resourceGroup().id))]",
             "vnetName": "[concat('vnet-',variables('resourceprefix'))]",
             "vpnType": "[parameters('vpnType')]",
-            "dbServerType": "[parameters('dbServerType')]"
+            "dbServerType": "[parameters('dbServerType')]",
+            "autoscaleVmSku": "[parameters('autoscaleVmSku')]",
+            "autoscaleVmCount": "[parameters('autoscaleVmCount')]",
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "resourceprefix": "[substring(uniqueString(resourceGroup().id, deployment().name), 3, 6)]"

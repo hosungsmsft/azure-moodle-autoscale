@@ -21,7 +21,9 @@
                 "skuTier":                     { "value": "Basic" },
                 "postgresVersion":             { "value": "9.6" },
                 "mysqlVersion":                { "value": "5.7" },
-                "vNetAddressSpace":            { "value": "172.31.0.0" }
+                "vNetAddressSpace":            { "value": "172.31.0.0" },
+                "autoscaleVmSku":              { "value": "Standard_DS2_v2" },
+                "autoscaleVmCount":            { "value": 10 }
         }
 
 }
