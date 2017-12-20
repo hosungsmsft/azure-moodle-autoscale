@@ -244,7 +244,7 @@ listen.group = www-data
 pm = dynamic
 pm.max_children = 200 
 pm.start_servers = 20 
-pm.min_spare_servers = 22 
+pm.min_spare_servers = 20 
 pm.max_spare_servers = 30 
 EOF
 
