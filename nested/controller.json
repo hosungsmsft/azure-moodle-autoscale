@@ -30,7 +30,7 @@
                 "dnsSettings": {
                     "domainNameLabel": "[parameters('moodleCommon').jboxPipName]"
                 },
-                "publicIPAllocationMethod": "Dynamic"
+                "publicIPAllocationMethod": "Static"
             },
             "tags": {
                 "displayName": "jboxpip"
@@ -212,5 +212,11 @@
         "nsgRef": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('moodleCommon').jboxNsgName)]",
         "pipRef": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').jboxPipName)]",
         "subnetWebRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName), '/subnets/',parameters('moodleCommon').subnetWeb)]"
+    },
+    "outputs": {
+        "controllerIP": {
+            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('moodleCommon').jboxPipName), '2015-06-15').ipAddress]",
+            "type": "string"
+        }
     }
 }
