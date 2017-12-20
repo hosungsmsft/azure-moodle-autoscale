@@ -460,15 +460,15 @@
     "outputs": {
       "ssh-password": {
         "type": "string",
-        "value": "[parameters('sshPassword')]"
+        "value": "[variables('moodleCommon').sshPassword]"
       },
       "moodle-admin-password": {
         "type": "string",
-        "value": "[parameters('moodleAdminPass')]"
+        "value": "[variables('moodleCommon').moodleAdminPass]"
       },
       "load-balancer-dns": {
         "type": "string",
-        "value": "[parameters('lbDns')]"
+        "value": "[variables('moodleCommon').lbDns]"
       },
       "controller-instance-ip": {
         "type": "string",
@@ -476,7 +476,7 @@
       },
       "database-dns": {
         "type": "string",
-        "value": "[concat(parameters('moodleCommon').dbServerType, '-', parameters('moodleCommon').resourcesPrefix, '.', parameters('moodleCommon').dbServerType, '.database.azure.com')]"
+        "value": "[concat(variables('moodleCommon').dbServerType, '-', variables('moodleCommon').resourcesPrefix, '.', variables('moodleCommon').dbServerType, '.database.azure.com')]"
       }
     },
     "variables": {
