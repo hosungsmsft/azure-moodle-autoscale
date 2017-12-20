@@ -491,6 +491,14 @@
       "database-dns": {
         "type": "string",
         "value": "[concat(variables('moodleCommon').dbServerType, '-', variables('moodleCommon').resourcesPrefix, '.', variables('moodleCommon').dbServerType, '.database.azure.com')]"
+      },
+      "database-admin-username": {
+        "type": "string",
+        "value": "[variables('moodleCommon').dbUsername]"
+      },
+      "database-admin-password": {
+        "type": "string",
+        "value": "[variables('moodleCommon').dbLoginPassword]"
       }
     },
     "variables": {
