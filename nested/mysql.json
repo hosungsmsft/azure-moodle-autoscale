@@ -11,7 +11,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2016-02-01-privatepreview",
+            "apiVersion": "2017-04-30-preview",
             "kind": "",
             "location": "[resourceGroup().location]",
             "name": "[parameters('moodleCommon').serverName]",
