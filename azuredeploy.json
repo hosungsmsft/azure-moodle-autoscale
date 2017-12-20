@@ -399,7 +399,7 @@
                 "Microsoft.Resources/deployments/redisTemplate",
                 "Microsoft.Resources/deployments/blobStorageAccountTemplate"
             ],
-            "name": "ControllerTemplate",
+            "name": "controllerTemplate",
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
@@ -426,7 +426,7 @@
                 "Microsoft.Resources/deployments/redisTemplate",
                 "Microsoft.Resources/deployments/dbTemplate"
             ],
-            "name": "ScaleSetTemplate",
+            "name": "scaleSetTemplate",
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
@@ -472,13 +472,13 @@
       },
       "controller-instance-ip": {
         "type": "string",
-        "value": "zoeweneedthis"
+        "value": "[reference('controllerTemplate').outputs.controllerIP.value]"
       },
       "database-dns": {
         "type": "string",
         "value": "[concat(parameters('moodleCommon').dbServerType, '-', parameters('moodleCommon').resourcesPrefix, '.', parameters('moodleCommon').dbServerType, '.database.azure.com')]"
       }
-    }
+    },
     "variables": {
         "documentation01": "This main-template calls multiple sub-templates to create the moodle system",
         "documentation02": "    recoveryservices0   - dummy template (see next statement)",
