@@ -478,7 +478,7 @@
         "type": "string",
         "value": "[concat(parameters('moodleCommon').dbServerType, '-', parameters('moodleCommon').resourcesPrefix, '.', parameters('moodleCommon').dbServerType, '.database.azure.com')]"
       }
-    }
+    },
     "variables": {
         "documentation01": "This main-template calls multiple sub-templates to create the moodle system",
         "documentation02": "    recoveryservices0   - dummy template (see next statement)",
