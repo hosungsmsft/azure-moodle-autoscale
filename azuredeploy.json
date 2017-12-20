@@ -447,6 +447,28 @@
             "type": "Microsoft.Resources/deployments"
         }
     ],
+    "outputs": {
+      "ssh-password": {
+        "type": "string",
+        "value": "[parameters('sshPassword')]"
+      },
+      "moodle-admin-password": {
+        "type": "string",
+        "value": "[parameters('moodleAdminPass')]"
+      },
+      "load-balancer-dns": {
+        "type": "string",
+        "value": "[parameters('lbDns')]"
+      },
+      "controller-instance-ip": {
+        "type": "string",
+        "value": "zoeweneedthis"
+      },
+      "database-dns": {
+        "type": "string",
+        "value": "[concat(parameters('moodleCommon').dbServerType, '-', parameters('moodleCommon').resourcesPrefix, '.', parameters('moodleCommon').dbServerType, '.database.azure.com')]"
+      }
+    }
     "variables": {
         "documentation01": "This main-template calls multiple sub-templates to create the moodle system",
         "documentation02": "    recoveryservices0   - dummy template (see next statement)",
