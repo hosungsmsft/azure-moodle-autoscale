@@ -140,7 +140,7 @@
                     {
                         "capacity": {
                             "default": "2",
-                            "maximum": "[parameters('moodleCommon').autoscaleVmSku]",
+                            "maximum": "[parameters('moodleCommon').autoscaleVmCount]",
                             "minimum": "2"
                         },
                         "name": "Profile1",

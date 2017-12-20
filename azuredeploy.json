@@ -614,7 +614,7 @@
             "vpnType": "[parameters('vpnType')]",
             "dbServerType": "[parameters('dbServerType')]",
             "autoscaleVmSku": "[parameters('autoscaleVmSku')]",
-            "autoscaleVmCount": "[parameters('autoscaleVmCount')]",
+            "autoscaleVmCount": "[parameters('autoscaleVmCount')]"
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "resourceprefix": "[substring(uniqueString(resourceGroup().id, deployment().name), 3, 6)]"
