@@ -1610,5 +1610,7 @@ EOF
    service nginx stop
    service php7.0-fpm stop
    service varnish stop
+   service varnishncsa stop
+   service varnishlog stop
 
 }  > /tmp/install.log
