@@ -56,7 +56,7 @@
         "documentation4": " location                    - Postgresql server location",
         "documentation5": " skuCapacityDTU              - Postgresql database trasaction units",
         "documentation6": " skuFamily                   - Postgresql sku family",
-        "documentation7": " skuName                    - Postgresql sku name",
+        "documentation7": " skuName                     - Postgresql sku name",
         "documentation8": " skuSizeMB                  - Postgresql sku size in mb",
         "documentation9": " skuTier                    - Postgresql sku tier"
     }
