@@ -74,7 +74,7 @@ worker_processes 2;
 pid /run/nginx.pid;
 
 events {
-	worker_connections 768;
+	worker_connections 2048;
 }
 
 http {
