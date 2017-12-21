@@ -472,18 +472,6 @@
         }
     ],
     "outputs": {
-      "ssh-password": {
-        "type": "string",
-        "value": "[variables('moodleCommon').sshPassword]"
-      },
-      "moodle-admin-password": {
-        "type": "string",
-        "value": "[variables('moodleCommon').moodleAdminPass]"
-      },
-      "load-balancer-dns": {
-        "type": "string",
-        "value": "[variables('moodleCommon').lbDns]"
-      },
       "controller-instance-ip": {
         "type": "string",
         "value": "[reference('controllerTemplate').outputs.controllerIP.value]"
@@ -499,6 +487,14 @@
       "database-admin-password": {
         "type": "string",
         "value": "[variables('moodleCommon').dbLoginPassword]"
+      },
+      "moodle-admin-password": {
+        "type": "string",
+        "value": "[variables('moodleCommon').moodleAdminPass]"
+      },
+      "load-balancer-dns": {
+        "type": "string",
+        "value": "[variables('moodleCommon').lbDns]"
       }
     },
     "variables": {
@@ -514,36 +510,32 @@
         "documentation10": "    controller          - creates a jumpbox and deploys code",
         "documentation11": "GlusterFS Sizing guidance",
         "moodleCommon": {
-            "controllerVmSku": "[parameters('controllerVmSku')]",
-            "dbLogin": "[parameters('dbLogin')]",
-            "dbUsername": "[concat(parameters('dbLogin'), '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
-            "dbLoginPassword": "[concat(substring(uniqueString(resourceGroup().id, deployment().name), 2, 11), '*7', toUpper('pfiwb'))]",
-            "sshPassword": "[concat(toUpper('ds'), substring(uniqueString(resourceGroup().id, deployment().name), 4, 9), '2@%5')]",
-            "sshUsername": "[parameters('sshUsername')]",
-            "moodleDbUser": "moodle",
-            "moodleDbUserAzure": "[concat('moodle', '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
-            "moodleDbName": "moodle",
-            "moodleDbPass": "[concat('9(#36^', substring(uniqueString(resourceGroup().id, deployment().name), 5, 8), toUpper('ercq'))]",
-            "moodleAdminPass": "[concat(toUpper('xl'), substring(uniqueString(resourceGroup().id, deployment().name), 6, 7),'<,!1*8')]",
             "applyScriptsSwitch": "[parameters('applyScriptsSwitch')]",
+            "autoscaleVmCount": "[parameters('autoscaleVmCount')]",
+            "autoscaleVmSku": "[parameters('autoscaleVmSku')]",
             "azureBackupSwitch": "[parameters( 'azureBackupSwitch')]",
             "baseTemplateUrl": "https://git.catalyst-au.net/internal/azure/raw/master/nested/",
-            "blobStorageAccountType": "[parameters('blobStorageAccountType')]",
             "blobStorageAccountName": "[tolower(concat('abs',variables('resourceprefix')))]",
+            "blobStorageAccountType": "[parameters('blobStorageAccountType')]",
             "computeApi": "2016-04-30-preview",
+            "controllerVmSku": "[parameters('controllerVmSku')]",
+            "dbLogin": "[parameters('dbLogin')]",
+            "dbLoginPassword": "[concat(substring(uniqueString(resourceGroup().id, deployment().name), 2, 11), '*7', toUpper('pfiwb'))]",
+            "dbServerType": "[parameters('dbServerType')]",
+            "dbUsername": "[concat(parameters('dbLogin'), '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
             "elasticAvailabilitySetName": "[concat('elastic-avset-',variables('resourceprefix'))]",
             "elasticClusterName": "[concat('es-cluster-',variables('resourceprefix'))]",
             "elasticNicName1": "[concat('elastic-vm-nic-01-',variables('resourceprefix'))]",
             "elasticNicName2": "[concat('elastic-vm-nic-02-',variables('resourceprefix'))]",
             "elasticNicName3": "[concat('elastic-vm-nic-03-',variables('resourceprefix'))]",
-            "elasticVmName": "[concat('elastic-vm-',variables('resourceprefix'))]",
-            "elasticVmName1": "[concat('elastic-vm-01-',variables('resourceprefix'))]",
-            "elasticVmName2": "[concat('elastic-vm-02-',variables('resourceprefix'))]",
-            "elasticVmName3": "[concat('elastic-vm-03-',variables('resourceprefix'))]",
             "elasticScriptFilename": "install_elastic.sh",
             "elasticVm1IP": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),4)), '.20')]",
             "elasticVm2IP": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),4)), '.21')]",
             "elasticVm3IP": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),4)), '.22')]",
+            "elasticVmName": "[concat('elastic-vm-',variables('resourceprefix'))]",
+            "elasticVmName1": "[concat('elastic-vm-01-',variables('resourceprefix'))]",
+            "elasticVmName2": "[concat('elastic-vm-02-',variables('resourceprefix'))]",
+            "elasticVmName3": "[concat('elastic-vm-03-',variables('resourceprefix'))]",
             "extBeName": "[concat('lb-backend-',variables('resourceprefix'))]",
             "extFeName": "[concat('lb-frontend-',variables('resourceprefix'))]",
             "extNatPool": "[concat('lb-natpool-',variables('resourceprefix'))]",
@@ -557,11 +549,11 @@
             "gatewayType": "[parameters('gatewayType')]",
             "gfsNameRoot": "[concat('gluster-vm-',variables('resourceprefix'))]",
             "gfxAvailabilitySetName": "[concat('gluster-avset-',variables('resourceprefix'))]",
-            "glusterScriptFilename": "install_gluster.sh",
-            "glusterVmSku": "[parameters('glusterVmSku')]",
-            "glusterVmCount": 2,
-            "glusterDiskSize": "[parameters('glusterDiskSize')]",
             "glusterDiskCount": "[parameters('glusterDiskCount')]",
+            "glusterDiskSize": "[parameters('glusterDiskSize')]",
+            "glusterScriptFilename": "install_gluster.sh",
+            "glusterVmCount": 2,
+            "glusterVmSku": "[parameters('glusterVmSku')]",
             "jboxNicName": "[concat('jumpbox-vm-nic-',variables('resourceprefix'))]",
             "jboxNsgName": "[concat('jumpbox-nsg-',variables('resourceprefix'))]",
             "jboxPipName": "[concat('jumpbox-pubip-',variables('resourceprefix'))]",
@@ -570,9 +562,15 @@
             "lbName": "[concat('lb-',variables('resourceprefix'))]",
             "lbPipName": "[concat('lb-pubip-',variables('resourceprefix'))]",
             "location": "[parameters('location')]",
+            "moodleAdminPass": "[concat(toUpper('xl'), substring(uniqueString(resourceGroup().id, deployment().name), 6, 7),'<,!1*8')]",
+            "moodleDbName": "moodle",
+            "moodleDbPass": "[concat('9(#36^', substring(uniqueString(resourceGroup().id, deployment().name), 5, 8), toUpper('ercq'))]",
+            "moodleDbUser": "moodle",
+            "moodleDbUserAzure": "[concat('moodle', '@', parameters('dbServerType'), '-', variables('resourceprefix'))]",
             "moodleInstallScriptFilename": "[concat(parameters('dbServerType'), '_', 'install_moodle.sh')]",
             "moodleSetupScriptFilename": "setup_moodle.sh",
             "moodleVersion": "[parameters('moodleVersion')]",
+            "mysqlVersion": "[parameters('mysqlVersion')]",
             "osType": {
                 "offer": "UbuntuServer",
                 "publisher": "Canonical",
@@ -580,6 +578,7 @@
                 "version": "latest"
             },
             "policyName": "[concat('policy-',variables('resourceprefix'))]",
+            "postgresVersion": "[parameters('postgresVersion')]",
             "redisCacheName": "[concat('redis-',variables('resourceprefix'))]",
             "redisDns": "[concat('redis-',variables('resourceprefix'),'.redis.cache.windows.net')]",
             "resourcesPrefix": "[variables('resourceprefix')]",
@@ -591,6 +590,9 @@
             "skuName": "[parameters('skuName')]",
             "skuSizeMB": "[parameters('skuSizeMB')]",
             "skuTier": "[parameters('skuTier')]",
+            "sshPassword": "[concat(toUpper('ds'), substring(uniqueString(resourceGroup().id, deployment().name), 4, 9), '2@%5')]",
+            "sshPublicKey": "[parameters('sshPublicKey')]",
+            "sshUsername": "[parameters('sshUsername')]",
             "sslEnforcement": "[parameters('sslEnforcement')]",
             "subnetElastic": "[concat('elastic-subnet-',variables('resourceprefix'))]",
             "subnetElasticPrefix": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),4)))]",
@@ -606,15 +608,10 @@
             "subnetWebRange": "[concat( variables('octets')[0], '.', variables('octets')[1], '.', string(add(int(variables('octets')[2]),0)), '.0/24')]",
             "vNetAddressSpace": "[parameters('vNetAddressSpace')]",
             "vaultName": "[concat('vault-',variables('resourceprefix'))]",
-            "postgresVersion": "[parameters('postgresVersion')]",
-            "mysqlVersion": "[parameters('mysqlVersion')]",
             "vmssName": "[concat('vmss-',variables('resourceprefix'))]",
             "vmssdStorageAccounttName": "[concat('vmss',uniqueString(resourceGroup().id))]",
             "vnetName": "[concat('vnet-',variables('resourceprefix'))]",
-            "vpnType": "[parameters('vpnType')]",
-            "dbServerType": "[parameters('dbServerType')]",
-            "autoscaleVmSku": "[parameters('autoscaleVmSku')]",
-            "autoscaleVmCount": "[parameters('autoscaleVmCount')]"
+            "vpnType": "[parameters('vpnType')]"
         },
         "octets": "[split(parameters('vNetAddressSpace'), '.')]",
         "resourceprefix": "[substring(uniqueString(resourceGroup().id, deployment().name), 3, 6)]"

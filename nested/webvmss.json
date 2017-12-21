@@ -90,9 +90,16 @@
                         ]
                     },
                     "osProfile": {
-                        "adminPassword": "[parameters('moodleCommon').sshPassword]",
                         "adminUsername": "[parameters('moodleCommon').sshUsername]",
-                        "computerNamePrefix": "[parameters('moodleCommon').vmssName]"
+                        "computerNamePrefix": "[parameters('moodleCommon').vmssName]",
+                        "linuxConfiguration": {
+                            "disablePasswordAuthentication": true,
+                            "ssh": {
+                                "publicKeys": [
+                                    "keyData": "[parameters('moodleCommon').sshPublicKey]"
+                                ]
+                            }
+                        }
                     },
                     "storageProfile": {
                         "imageReference": "[parameters('moodleCommon').osType]",

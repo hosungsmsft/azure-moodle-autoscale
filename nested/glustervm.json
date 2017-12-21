@@ -103,9 +103,16 @@
                     ]
                 },
                 "osProfile": {
-                    "adminPassword": "[parameters('moodleCommon').sshPassword]",
                     "adminUsername": "[parameters('moodleCommon').sshUsername]",
-                    "computerName": "[variables('vmName')]"
+                    "computerName": "[variables('vmName')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                "keyData": "[parameters('moodleCommon').sshPublicKey]"
+                            ]
+                        }
+                    }
                 },
                 "storageProfile": {
                     "dataDisks": "[reference(concat(variables('vmName'),'-diskSelection')).outputs.dataDiskArray.value]",

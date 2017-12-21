@@ -2105,8 +2105,8 @@ EOF
    service varnishlog stop
 
    # make sure Moodle can read its code directory but not write
-   sudo chown -R admin:www-data /moodle/html/moodle
-   sudo find /moodle/html/moodle -type f -exec chmod 740 {} +
-   sudo find /moodle/html/moodle -type d -exec chmod 750 {} +
+   sudo chown -R root.root /moodle/html/moodle
+   sudo find /moodle/html/moodle -type f -exec chmod 644 '{}' \;
+   sudo find /moodle/html/moodle -type d -exec chmod 755 '{}' \;
 
 }  > /tmp/install.log
