@@ -34,6 +34,10 @@ echo $elasticvm3ip     >> /tmp/vars.txt
 
 {
 
+  # make sure the system does automatic update
+  sudo apt-get -y update
+  sudo apt-get -y install unattended-upgrades
+
   # configure elastic search repository & install elastic search
   wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
   echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
@@ -41,7 +45,7 @@ echo $elasticvm3ip     >> /tmp/vars.txt
   sudo apt-get -y install elasticsearch=5.5.0
 
   # install the required packages
-  sudo apt-get install openjdk-8-jre openjdk-8-jdk default-jre default-jdk -y
+  sudo apt-get install -y openjdk-8-jre openjdk-8-jdk default-jre default-jdk
 
   # Configure elasticsearch
   cat <<EOF > /etc/elasticsearch/elasticsearch.yml
