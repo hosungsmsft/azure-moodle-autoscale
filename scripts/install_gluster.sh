@@ -34,6 +34,10 @@ RAIDPARTITION="/dev/md1p1"
 # An set of disks to ignore from partitioning and formatting
 BLACKLIST="/dev/sda|/dev/sdb"
 
+# make sure the system does automatic update
+sudo apt-get -y update
+sudo apt-get -y install unattended-upgrades
+
 {
         check_os() {
             grep ubuntu /proc/version > /dev/null 2>&1
