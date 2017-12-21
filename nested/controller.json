@@ -132,8 +132,10 @@
                         "disablePasswordAuthentication": true,
                         "ssh": {
                             "publicKeys": [
-                                "path": "[concat('/home/', parameters('moodleCommon').sshUsername, '/.ssh/authorized_keys']",
-                                "keyData": "[parameters('moodleCommon').sshPublicKey]"
+                                {
+                                    "path": "[concat('/home/', parameters('moodleCommon').sshUsername, '/.ssh/authorized_keys']",
+                                    "keyData": "[parameters('moodleCommon').sshPublicKey]"
+                                }
                             ]
                         }
                     }
