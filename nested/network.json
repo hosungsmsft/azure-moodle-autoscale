@@ -151,20 +151,6 @@
                         }
                     }
                 ],
-                "inboundNatPools": [
-                    {
-                        "name": "[parameters('moodleCommon').extNatPool]",
-                        "properties": {
-                            "backendPort": 22,
-                            "frontendIPConfiguration": {
-                                "id": "[variables('extFeID')]"
-                            },
-                            "frontendPortRangeEnd": 50119,
-                            "frontendPortRangeStart": 50000,
-                            "protocol": "tcp"
-                        }
-                    }
-                ],
                 "loadBalancingRules": [
                     {
                         "name": "Http",
@@ -235,7 +221,6 @@
         "extBeID": "[concat(variables('extLbID'),'/backendAddressPools/',parameters('moodleCommon').extBeName)]",
         "extFeID": "[concat(variables('extLbID'),'/frontendIPConfigurations/',parameters('moodleCommon').extFeName)]",
         "extLbID": "[resourceId('Microsoft.Network/loadBalancers',parameters('moodleCommon').lbName)]",
-        "extNatPoolID": "[concat(variables('extLbID'),'/inboundNatPools/',parameters('moodleCommon').extNatPool)]",
         "extProbeID": "[concat(variables('extLbID'),'/probes/',parameters('moodleCommon').extProbe)]",
         "gatewaySubnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('moodleCommon').vnetName),'/subnets/',parameters('moodleCommon').gatewaySubnet)]",
         "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]"
