@@ -110,7 +110,7 @@
                         "ssh": {
                             "publicKeys": [
                                 {
-                                    "path": "[concat('/home/', parameters('moodleCommon').sshUsername, '/.ssh/authorized_keys']",
+                                    "path": "[concat('/home/', parameters('moodleCommon').sshUsername, '/.ssh/authorized_keys')]",
                                     "keyData": "[parameters('moodleCommon').sshPublicKey]"
                                 }
                             ]
