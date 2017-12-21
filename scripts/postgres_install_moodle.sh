@@ -2106,7 +2106,7 @@ EOF
 
    # Set up cronned sql dump
    cat <<EOF > /etc/cron.d/sql-backup
-   22 02 * * * root /usr/bin/pg_dump -Fc -h $mysqlIP -U ${azuremoodledbuser} ${moodledbname} > /moodle/db-backup-`date +\%Y\%m\%d`.sql
+   22 02 * * * root /usr/bin/pg_dump -Fc -h $mysqlIP -U ${azuremoodledbuser} ${moodledbname} > /moodle/db-backup.sql
 EOF
 
 
