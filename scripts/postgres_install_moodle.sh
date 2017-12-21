@@ -1140,7 +1140,6 @@ EOF
     psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_accountname', '$wabsacctname');" $moodledbname
     psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_container', 'objectfs');" $moodledbname
     psql -h $postgresIP -U $azuremoodledbuser -c "INSERT INTO mdl_config_plugins (plugin, name, value) VALUES ('tool_objectfs', 'azure_sastoken', '$sas');" $moodledbname
-    rm -f /root/.pgpass
 
     echo -e "\n\rDone! Installation completed!\n\r"
 
@@ -2104,6 +2103,12 @@ EOF
 
     # Set the ObjectFS alternate filesystem
     sed -i "23 a \$CFG->alternative_file_system_class = '\\\tool_objectfs\\\azure_file_system';" /moodle/html/moodle/config.php
+
+   # Set up cronned sql dump
+   cat <<EOF > /etc/cron.d/sql-backup
+   22 02 * * * root /usr/bin/pg_dump -Fc -h $mysqlIP -U ${azuremoodledbuser} ${moodledbname} > /moodle/db-backup-`date +\%Y\%m\%d`.sql
+EOF
+
 
    # Turning off services we don't need the jumpbox running
    service nginx stop
