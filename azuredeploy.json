@@ -238,6 +238,9 @@
             "type": "string"
         },
         "sshPublicKey": {
+            "metadata": {
+                "description": "ssh public key"
+            },
             "type": "string"
         },
         "sshUsername": {
