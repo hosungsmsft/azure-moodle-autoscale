@@ -2097,6 +2097,11 @@ EOF
     # Set the ObjectFS alternate filesystem
     sed -i "23 a \$CFG->alternative_file_system_class = '\\\tool_objectfs\\\azure_file_system';" /moodle/html/moodle/config.php
 
+   # Set up cronned sql dump
+   cat <<EOF > /etc/cron.d/sql-backup
+   22 02 * * * root /usr/bin/mysqldump -h $mysqlIP -u ${azuremoodledbuser} -p'${moodledbpass}' --databases ${moodledbname} | gzip > /moodle/db-backup-`date +\%Y\%m\%d`.sql.gz
+EOF
+
    # Turning off services we don't need the jumpbox running
    service nginx stop
    service php7.0-fpm stop
