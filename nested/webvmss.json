@@ -90,9 +90,19 @@
                         ]
                     },
                     "osProfile": {
-                        "adminPassword": "[parameters('moodleCommon').sshPassword]",
                         "adminUsername": "[parameters('moodleCommon').sshUsername]",
-                        "computerNamePrefix": "[parameters('moodleCommon').vmssName]"
+                        "computerNamePrefix": "[parameters('moodleCommon').vmssName]",
+                        "linuxConfiguration": {
+                            "disablePasswordAuthentication": true,
+                            "ssh": {
+                                "publicKeys": [
+                                    {
+                                        "path": "[concat('/home/', parameters('moodleCommon').sshUsername, '/.ssh/authorized_keys')]",
+                                        "keyData": "[parameters('moodleCommon').sshPublicKey]"
+                                    }
+                                ]
+                            }
+                        }
                     },
                     "storageProfile": {
                         "imageReference": "[parameters('moodleCommon').osType]",

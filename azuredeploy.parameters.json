@@ -2,28 +2,29 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
         "parameters": {
-                "moodleVersion":               { "value": "MOODLE_34_STABLE" },
                 "applyScriptsSwitch":          { "value": 1 },
+                "autoscaleVmCount":            { "value": 10 },
+                "autoscaleVmSku":              { "value": "Standard_DS2_v2" },
                 "azureBackupSwitch":           { "value": 0 },
-                "dbServerType":                { "value": "postgres" },
                 "azureBackupSwitch":           { "value": 0 },
                 "blobStorageAccountType":      { "value": "Standard_LRS"},
                 "controllerVmSku":             { "value": "Standard_DS1" },
+                "dbServerType":                { "value": "postgres" },
                 "elasticVmSku":                { "value": "Standard_DS2_v2" },
-                "glusterVmSku":                { "value": "Standard_DS2_v2" },
-                "glusterDiskSize":             { "value": 127 },
                 "glusterDiskCount":            { "value": 4 },
+                "glusterDiskSize":             { "value": 127 },
+                "glusterVmSku":                { "value": "Standard_DS2_v2" },
                 "location":                    { "value": "West US" },
+                "moodleVersion":               { "value": "MOODLE_34_STABLE" },
+                "mysqlVersion":                { "value": "5.7" },
+                "postgresVersion":             { "value": "9.6" },
                 "siteURL":                     { "value": "www.example.org" },
                 "skuCapacityDTU":              { "value": 50 },
                 "skuName":                     { "value": "PGSQLB50" },
                 "skuSizeMB":                   { "value": 51200 },
                 "skuTier":                     { "value": "Basic" },
-                "postgresVersion":             { "value": "9.6" },
-                "mysqlVersion":                { "value": "5.7" },
-                "vNetAddressSpace":            { "value": "172.31.0.0" },
-                "autoscaleVmSku":              { "value": "Standard_DS2_v2" },
-                "autoscaleVmCount":            { "value": 10 }
+                "sshPublicKey":                { "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfe+g6ecdsbhUA9WbJgvWCZI8nEX7qNGlQ8tvH8fMLHFz9zX1lIkDhlMJJ4/uXZjHc3nKZV1O6ic94LMtn1+fFMkyhBlXAP76RvAX6QOe7hc37/wxg4vvGjN8s1CULX6lTpKVhHUFDxgfbA8Uilj8TcFFh6Ezc8J1S2aHWfOzdJlsWnI8OzprU4SE/sY5SXqt4AxkGhq7qLSxHWkYyKvhyQ4iASpJaSh626SwhOwZHpXUVhpwH/BEWRuj8sgL5MEW0mFxx3Q/GINOLXQBG5h8BWxQprFDwm4mbKYuFVcCSarhIfzaEl2n+LqaIFhDgzkHrG5MXlVHi15xPKFziW6mB" },
+                "vNetAddressSpace":            { "value": "172.31.0.0" }
         }
 
 }
