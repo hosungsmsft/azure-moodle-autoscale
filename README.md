@@ -1,6 +1,10 @@
 # *Autoscaling Moodle stack for Postgres and MySQL databases*
 
-This work is mostly based on Paulo Teixeira's work here: 
+This work is mostly based on Paulo Teixeira's work. It adds several configurable features and switches to a web stack with caching. It also uses Azure resources for Redis, ObjectFS and Databases. 
+
+After deploying these templates will provide you with a new Moodle site with caching for speed and scaling frontends to handle PHP load. The filesystem behind it is mirrored for high availability and optionally backed up through Azure. Filesystem permissions and options have also been tuned to make Moodle more secure than a default install.
+
+## What this stack will give you
 
 This template set deploys the following infrastructure:
 - Autoscaling web frontend layer (Nginx, php-fpm, Varnish)
@@ -13,9 +17,27 @@ This template set deploys the following infrastructure:
 - Elasticsearch VM for search indexing in Moodle
 - Dual gluster nodes for high availability access to Moodle files
 
+## How to use these templates
+
+Once you've checked out the templates from git, you'll want to use the [Azure CLI tool](https://docs.microsoft.com/en-us/cli/azure/overview?view=azure-cli-latest) to deploy them. First off you'll want to create a group with these:
+
+`az group create --name <stackname> --location <location>`
+
+Note that some locations in Azure might not support features or certain VM tiers.
+
+Next you'll want to either deploy and enter in all parameters manually:
+
+`az group deployment create --name moodle-autoscale --resource-group <stackname> --template-file azuredeploy.json`
+
+Alternatively, you can configure all your variables in the "azuredeploy.parameters.json" file and run:
+
+`az group deployment create --name moodle-autoscale --resource-group <stackname> --template-file azuredeploy.json --parameters azuredeploy.parameters.json`
+
+Depending on what tiers you selected for VMs and the database you will be looking at roughly 1-2 hours for a full deploy. See below for selectable parameters.
+
 ## *Parameters for the deployment* 
 
-These can all be customized in the azure.parameters.json file depending on the size of the stack needed.
+These can all be customized in the azure.parameters.json file (or entered in manually) depending on the size of the stack needed.
 
 - moodleVersion: The Moodle version you want to install. Only MOODLE_33_STABLE and MOODLE_34_STABLE are valid due to fixes in Moodle core.
 - glusterTshirtSize: VM size for the gluster nodes (please check for more guidance below)
@@ -44,12 +66,14 @@ These can all be customized in the azure.parameters.json file depending on the s
 
 Depending on what you're doing with Moodle, there are several considerations to make when configuring. The defaults included produce a cluster that is inexpensive but probably too low spec to use beyond single-user Moodle testing.
 
+It should be noted that as of the time of this writing both Postgres and MySQL databases are in preview at Azure. In the future larger DB sizes or different VM sizes will be available. The templates will allow you to select whatever size you want, but there are restrictions in place (VMs with certain storage types, disk size for database tiers, etc) that may prevent certains selections from working together.
+
 ### *Database Sizing*
 
 As of the time of this writing, Azure supports "Basic" and "Standard" tiers for database instances. In addition the skuCapacityDTU defines Compute Units, and the number of those you can use is limited by database tier:
 
-Basic: 50, 100
-Standard: 100, 200, 400, 800
+- Basic: 50, 100
+- Standard: 100, 200, 400, 800
 
 This value also limits the maximum number of connections, as defined here: https://docs.microsoft.com/en-us/azure/mysql/concepts-limits
 
@@ -65,9 +89,13 @@ The controller handles both syslog and cron duties. Depending on how big your Mo
 
 In general the frontend instances will not be the source of any bottlenecks unless they are severely undersized versus the rest of the cluster. More powerful instances will be needed should fpm processes spawn and exhaust memory during periods of heavy site load. This can also be mitigated against by increasing the number of VMs but spawning new VMs is slower (and potentially more expensive) than having that capacity already available.
 
+It is worth noting that the memory allowances on these instances allow for more memory than they may be able to provide with lower instance tiers. This is intentional as you can opt to run larger VMs with more memory and not require manual configuration. FPM also allows for a very large number of threads which prevents the system from failing during many small jobs.
+
 ### *Observed Situations in Testing*
 
-Running a load test simulating multiple simultaneous users going through typical Moodle activity, the following setups were noted as performing adequately:
+Running a load test simulating multiple simultaneous users going through typical Moodle activity, it was observed with the largest available (800 compute units, 1TB storage) database that Moodle would support 200-300 concurrent users. After this it was bottlenecked on the database.
+
+Note that this is sustained traffic over a long (hours) period of time.
 
 ## *Using the created stack*
 
@@ -80,15 +108,18 @@ In testing, stacks typically took between 1 and 2 hours to finish, depending on 
 - database-admin-username: The master account (not Moodle) username for your database.
 - database-admin-password: The master account password for your database.
 
+Once moodle has been created, and with DNS pointing to the load balancer, you should be able to load the siteurl you entered and log in with "admin" and the password supplied in the moodle-admin-password output.
+
+
 ### *Updating Moodle code/settings*
 
 Your controller VM has Moodle code and data stored on /moodle. The code is stored in /moodle/html/moodle/. This is also mounted to your autoscaled frontends so all changes are instant. Depending on how large your Gluster disks are sized, it may be helpful to keep multiple older versions (/moodle/html1, /moodle/html2, etc) to roll back if needed.
 
 ### *Getting an SQL dump*
 
-If your database is small enough to fit, you may be able to get an SQL dump of your Moodle db by dumping it to /moodle/. Otherwise, you'll want to do this remotely by connecting to the hostname shown in the database-dns output using the database-admin-username and database-admin-password. This is a good idea to do routinely in order to have an easily restored database backup.
+A daily sql dump of your database is taken at 02:22 and saved to /moodle/db-backup.sql(.gz). If your database is small enough to fit, you may be able to get a more current SQL dump of your Moodle db by dumping it to /moodle/. Otherwise, you'll want to do this remotely by connecting to the hostname shown in the database-dns output using the database-admin-username and database-admin-password.
 
-Note: Azure does NOT currently back up Postgres/MySQL databases.
+While Azure does not currently back up Postgres/MySQL databases, by dumping it to /moodle it is included in the Gluster VM backups should you enable Recovery Services in your parameters.
 
 ### *Azure Recovery Services*
 
@@ -115,7 +146,7 @@ How long this takes depends entirely on the size of your database and the speed 
 The self-signed cert generated by the template is suitable for very basic testing, but a public website will want a real cert. After purchasing a trusted certificate, it can be copied to the following files to be ready immediately:
 
 - /moodle/certs/nginx.key: Your certificate's private key
-- /moodle/certs/nginx.crt: Your combined signed certificate and trust chain certificates.
+- /moodle/certs/nginx.crt: Your combined signed certificate and trust chain certificate(s).
 
 Once replaced these changes become effective immediately.
 
