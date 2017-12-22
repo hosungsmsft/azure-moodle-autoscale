@@ -2104,9 +2104,15 @@ EOF
     # Set the ObjectFS alternate filesystem
     sed -i "23 a \$CFG->alternative_file_system_class = '\\\tool_objectfs\\\azure_file_system';" /moodle/html/moodle/config.php
 
+   # Get a new version of Postgres to match Azure version
+   add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+   wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+   apt-get update
+   apt-get install postgresql-client-9.6
+
    # Set up cronned sql dump
    cat <<EOF > /etc/cron.d/sql-backup
-   22 02 * * * root /usr/bin/pg_dump -Fc -h $postgresIP -U ${azuremoodledbuser} ${moodledbname} > /moodle/db-backup.sql
+22 02 * * * root /usr/bin/pg_dump -Fc -h $postgresIP -U ${azuremoodledbuser} ${moodledbname} > /moodle/db-backup.sql
 EOF
 
 
