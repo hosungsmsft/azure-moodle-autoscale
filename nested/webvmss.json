@@ -83,11 +83,6 @@
                                                         "id": "[variables('extBeID')]"
                                                     }
                                                 ],
-                                                "loadBalancerInboundNatPools": [
-                                                    {
-                                                        "id": "[variables('extNatPoolID')]"
-                                                    }
-                                                ],
                                                 "subnet": {
                                                     "id": "[variables('subnetWebRef')]"
                                                 }
@@ -207,7 +202,6 @@
         "extBeID": "[concat(variables('extLbID'),'/backendAddressPools/',parameters('moodleCommon').extBeName)]",
         "extFeID": "[concat(variables('extLbID'),'/frontendIPConfigurations/',parameters('moodleCommon').extFeName)]",
         "extLbID": "[resourceId('Microsoft.Network/loadBalancers',parameters('moodleCommon').lbName)]",
-        "extNatPoolID": "[concat(variables('extLbID'),'/inboundNatPools/',parameters('moodleCommon').extNatPool)]",
         "extProbeID": "[concat(variables('extLbID'),'/probes/',parameters('moodleCommon').extProbe  )]",
         "pipID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('moodleCommon').lbPipName)]",
         "scriptUri": "[concat(parameters('moodleCommon').ScriptLocation,parameters('moodleCommon').moodleSetupScriptFilename)]",

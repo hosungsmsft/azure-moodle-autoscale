@@ -151,20 +151,6 @@
                         }
                     }
                 ],
-                "inboundNatPools": [
-                    {
-                        "name": "[parameters('moodleCommon').extNatPool]",
-                        "properties": {
-                            "backendPort": 22,
-                            "frontendIPConfiguration": {
-                                "id": "[variables('extFeID')]"
-                            },
-                            "frontendPortRangeEnd": 50119,
-                            "frontendPortRangeStart": 50000,
-                            "protocol": "tcp"
-                        }
-                    }
-                ],
                 "loadBalancingRules": [
                     {
                         "name": "Http",
