@@ -23,7 +23,6 @@
                 "skuName":                     { "value": "PGSQLB50" },
                 "skuSizeMB":                   { "value": 51200 },
                 "skuTier":                     { "value": "Basic" },
-                "sshPublicKey":                { "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfe+g6ecdsbhUA9WbJgvWCZI8nEX7qNGlQ8tvH8fMLHFz9zX1lIkDhlMJJ4/uXZjHc3nKZV1O6ic94LMtn1+fFMkyhBlXAP76RvAX6QOe7hc37/wxg4vvGjN8s1CULX6lTpKVhHUFDxgfbA8Uilj8TcFFh6Ezc8J1S2aHWfOzdJlsWnI8OzprU4SE/sY5SXqt4AxkGhq7qLSxHWkYyKvhyQ4iASpJaSh626SwhOwZHpXUVhpwH/BEWRuj8sgL5MEW0mFxx3Q/GINOLXQBG5h8BWxQprFDwm4mbKYuFVcCSarhIfzaEl2n+LqaIFhDgzkHrG5MXlVHi15xPKFziW6mB" },
                 "vNetAddressSpace":            { "value": "172.31.0.0" }
         }
 
