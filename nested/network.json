@@ -155,6 +155,7 @@
                     {
                         "name": "[parameters('moodleCommon').extNatPool]",
                         "properties": {
+                            "backendPort": 22,
                             "frontendIPConfiguration": {
                                 "id": "[variables('extFeID')]"
                             },
