@@ -494,6 +494,10 @@
         "type": "string",
         "value": "[variables('moodleCommon').dbLoginPassword]"
       },
+      "first-frontend-vm-ip": {
+        "type": "string",
+        "value": "[reference('scaleSetTemplate').outputs.webvm1IP.value]"
+      },
       "moodle-admin-password": {
         "type": "string",
         "value": "[variables('moodleCommon').moodleAdminPass]"
