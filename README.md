@@ -93,7 +93,7 @@ It is worth noting that the memory allowances on these instances allow for more 
 
 ### *Observed Situations in Testing*
 
-Running a load test simulating multiple simultaneous users going through typical Moodle activity, it was observed with the largest available (800 compute units, 1TB storage) database instance thit was observed with the largest available (800 compute units, 1TB storage) database that Moodle would support 200-300 concurrent users.
+Running a load test simulating multiple simultaneous users going through typical Moodle activity, it was observed with the largest available (800 compute units, 1TB storage) database that Moodle would support 200-300 concurrent users. After this it was bottlenecked on the database.
 
 Note that this is sustained traffic over a long (hours) period of time.
 
