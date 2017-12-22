@@ -50,8 +50,8 @@ It should be noted that as of the time of this writing both Postgres and MySQL d
 
 As of the time of this writing, Azure supports "Basic" and "Standard" tiers for database instances. In addition the skuCapacityDTU defines Compute Units, and the number of those you can use is limited by database tier:
 
-Basic: 50, 100
-Standard: 100, 200, 400, 800
+- Basic: 50, 100
+- Standard: 100, 200, 400, 800
 
 This value also limits the maximum number of connections, as defined here: https://docs.microsoft.com/en-us/azure/mysql/concepts-limits
 
@@ -71,8 +71,8 @@ In general the frontend instances will not be the source of any bottlenecks unle
 
 Running a load test simulating multiple simultaneous users going through typical Moodle activity, it was observed with the largest available (800 compute units, 1TB storage) database instance thit was observed with the largest available (800 compute units, 1TB storage) database that Moodle would support the following concurrent users:
 
-Postgres:
-MySQL:
+- Postgres:
+- MySQL:
 
 Note that this is sustained traffic over a long (hours) period of time.
 
