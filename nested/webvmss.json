@@ -207,5 +207,11 @@
         "wadCfgxStart": "[concat(variables('wadLogs'),variables('wadPerfCounter'),'<Metrics resourceId=\"')]",
         "wadLogs": "<WadCfg><DiagnosticMonitorConfiguration>",
         "wadPerfCounter": "<PerformanceCounters scheduledTransferPeriod=\"PT1M\"><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentProcessorTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU percentage guest OS\" locale=\"en-us\"/></PerformanceCounterConfiguration></PerformanceCounters>"
+    },
+    "outputs": {
+        "webvm1IP": {
+            "value": "[reference(concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('moodleCommon').vmssName, 'virtualMachines/0/networkInterfaces/vmssnic')).ipConfigurations[0].properties.privateIPAddress]",
+            "type": "string"
+        }
     }
 }
