@@ -210,7 +210,7 @@
     },
     "outputs": {
         "webvm1IP": {
-            "value": "[reference(concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('moodleCommon').vmssName, 'virtualMachines/0/networkInterfaces/vmssnic')).ipConfigurations[0].properties.privateIPAddress]",
+            "value": "[reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('moodleCommon').vmssName, '/virtualMachines/0/networkInterfaces/vmssnic')).ipConfigurations[0].properties.privateIPAddress]",
             "type": "string"
         }
     }
