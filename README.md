@@ -2,6 +2,8 @@
 
 This work is mostly based on Paulo Teixeira's work. It adds several configurable features and switches to a web stack with caching. It also uses Azure resources for Redis, ObjectFS and Databases. 
 
+## What this stack will give you
+
 This template set deploys the following infrastructure:
 - Autoscaling web frontend layer (Nginx, php-fpm, Varnish)
 - Private virtual network for frontend instances
@@ -13,9 +15,27 @@ This template set deploys the following infrastructure:
 - Elasticsearch VM for search indexing in Moodle
 - Dual gluster nodes for high availability access to Moodle files
 
+## How to use these templates
+
+Once you've checked out the templates from git, you'll want to use the [Azure CLI tool(https://docs.microsoft.com/en-us/cli/azure/overview?view=azure-cli-latest)] to deploy them. First off you'll want to create a group with these:
+
+`az group create --name <stackname> --location <location>`
+
+Note that some locations in Azure might not support features or certain VM tiers.
+
+Next you'll want to either deploy and enter in all parameters manually:
+
+`az group deployment create --name moodle-autoscale --resource-group <stackname> --template-file azuredeploy.json`
+
+Alternatively, you can configure all your variables in the "azuredeploy.parameters.json" file and run:
+
+`az group deployment create --name moodle-autoscale --resource-group <stackname> --template-file azuredeploy.json --parameters azuredeploy.parameters.json`
+
+Depending on what tiers you selected for VMs and the database you will be looking at roughly 1-2 hours for a full deploy. See below for selectable parameters.
+
 ## *Parameters for the deployment* 
 
-These can all be customized in the azure.parameters.json file depending on the size of the stack needed.
+These can all be customized in the azure.parameters.json file (or entered in manually) depending on the size of the stack needed.
 
 - moodleVersion: The Moodle version you want to install. Only MOODLE_33_STABLE and MOODLE_34_STABLE are valid due to fixes in Moodle core.
 - glusterTshirtSize: VM size for the gluster nodes (please check for more guidance below)
