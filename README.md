@@ -2,6 +2,8 @@
 
 This work is mostly based on Paulo Teixeira's work. It adds several configurable features and switches to a web stack with caching. It also uses Azure resources for Redis, ObjectFS and Databases. 
 
+After deploying these templates will provide you with a new Moodle site with caching for speed and scaling frontends to handle PHP load. The filesystem behind it is mirrored for high availability and optionally backed up through Azure. Filesystem permissions and options have also been tuned to make Moodle more secure than a default install.
+
 ## What this stack will give you
 
 This template set deploys the following infrastructure:
@@ -17,7 +19,7 @@ This template set deploys the following infrastructure:
 
 ## How to use these templates
 
-Once you've checked out the templates from git, you'll want to use the [Azure CLI tool(https://docs.microsoft.com/en-us/cli/azure/overview?view=azure-cli-latest)] to deploy them. First off you'll want to create a group with these:
+Once you've checked out the templates from git, you'll want to use the [Azure CLI tool](https://docs.microsoft.com/en-us/cli/azure/overview?view=azure-cli-latest) to deploy them. First off you'll want to create a group with these:
 
 `az group create --name <stackname> --location <location>`
 
@@ -87,12 +89,11 @@ The controller handles both syslog and cron duties. Depending on how big your Mo
 
 In general the frontend instances will not be the source of any bottlenecks unless they are severely undersized versus the rest of the cluster. More powerful instances will be needed should fpm processes spawn and exhaust memory during periods of heavy site load. This can also be mitigated against by increasing the number of VMs but spawning new VMs is slower (and potentially more expensive) than having that capacity already available.
 
+It is worth noting that the memory allowances on these instances allow for more memory than they may be able to provide with lower instance tiers. This is intentional as you can opt to run larger VMs with more memory and not require manual configuration. FPM also allows for a very large number of threads which prevents the system from failing during many small jobs.
+
 ### *Observed Situations in Testing*
 
-Running a load test simulating multiple simultaneous users going through typical Moodle activity, it was observed with the largest available (800 compute units, 1TB storage) database instance thit was observed with the largest available (800 compute units, 1TB storage) database that Moodle would support the following concurrent users:
-
-- Postgres:
-- MySQL:
+Running a load test simulating multiple simultaneous users going through typical Moodle activity, it was observed with the largest available (800 compute units, 1TB storage) database instance thit was observed with the largest available (800 compute units, 1TB storage) database that Moodle would support 200-300 concurrent users.
 
 Note that this is sustained traffic over a long (hours) period of time.
 
