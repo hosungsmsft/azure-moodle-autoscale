@@ -125,26 +125,6 @@
             },
             "type": "int"
         },
-        "location": {
-            "allowedValues": [
-                "East Asia",
-                "East US 2",
-                "East US",
-                "Japan East",
-                "Japan West",
-                "North Central US",
-                "North Europe",
-                "South Central US",
-                "Southeast Asia",
-                "West Europe",
-                "West US"
-            ],
-            "defaultValue": "West US",
-            "metadata": {
-                "description": "Database server location"
-            },
-            "type": "string"
-        },
         "moodleVersion": {
             "allowedValues": [
                 "MOODLE_34_STABLE",
@@ -571,7 +551,6 @@
             "lbDns": "[concat('lb-',variables('resourceprefix'),'.',resourceGroup().location,'.cloudapp.azure.com')]",
             "lbName": "[concat('lb-',variables('resourceprefix'))]",
             "lbPipName": "[concat('lb-pubip-',variables('resourceprefix'))]",
-            "location": "[parameters('location')]",
             "moodleAdminPass": "[concat(toUpper('xl'), substring(uniqueString(resourceGroup().id, deployment().name), 6, 7),'<,!1*8')]",
             "moodleDbName": "moodle",
             "moodleDbPass": "[concat('9(#36^', substring(uniqueString(resourceGroup().id, deployment().name), 5, 8), toUpper('ercq'))]",
