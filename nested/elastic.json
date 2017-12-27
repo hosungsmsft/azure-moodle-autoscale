@@ -42,7 +42,7 @@
             "name": "[parameters('moodleCommon').elasticVmName1]",
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_D1"
+                    "vmSize": "[parameters('moodleCommon').elasticVmSku]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -157,7 +157,7 @@
             "name": "[parameters('moodleCommon').elasticVmName2]",
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_D1"
+                    "vmSize": "[parameters('moodleCommon').elasticVmSku]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -262,7 +262,7 @@
             "name": "[parameters('moodleCommon').elasticVmName3]",
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_D1"
+                    "vmSize": "[parameters('moodleCommon').elasticVmSku]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [
