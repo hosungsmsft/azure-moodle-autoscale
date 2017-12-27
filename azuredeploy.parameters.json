@@ -6,7 +6,6 @@
                 "autoscaleVmCount":            { "value": 10 },
                 "autoscaleVmSku":              { "value": "Standard_DS2_v2" },
                 "azureBackupSwitch":           { "value": 0 },
-                "azureBackupSwitch":           { "value": 0 },
                 "blobStorageAccountType":      { "value": "Standard_LRS"},
                 "controllerVmSku":             { "value": "Standard_DS1" },
                 "dbServerType":                { "value": "postgres" },
